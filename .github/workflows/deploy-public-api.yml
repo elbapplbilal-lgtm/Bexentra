@@ -13,6 +13,8 @@ jobs:
           node-version: '22'
       - name: Install Neon CLI
         run: npm install -g neonctl
+      - name: Install function dependency
+        run: npm install pg@8.13.1 --no-save
       - name: Deploy public API function
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
