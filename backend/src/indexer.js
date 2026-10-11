@@ -28,12 +28,12 @@ async function persist(chain,height,hash,time,txHashes){
   await client.query("BEGIN");
   await client.query(
    "INSERT INTO indexed_blocks(chain,height,block_hash,block_time,transaction_count) VALUES($1,$2,$3,$4,$5) ON CONFLICT(chain,height) DO UPDATE SET block_hash=EXCLUDED.block_hash,block_time=EXCLUDED.block_time,transaction_count=EXCLUDED.transaction_count,indexed_at=NOW()",
-   [chain,height,hash,time,hashes.length]
+   [chain,height,hash,time,txs.length]
   );
-  if(hashes.length){
+  if(txs.length){
    await client.query(
-    "INSERT INTO indexed_transactions(chain,tx_hash,block_height) SELECT $1,x,$2 FROM unnest($3::text[]) AS x ON CONFLICT(chain,tx_hash) DO UPDATE SET block_height=EXCLUDED.block_height,indexed_at=NOW()",
-    [chain,height,hashes]
+    "INSERT INTO indexed_transactions(chain,tx_hash,block_height,sender,recipient) SELECT $1,x.hash,$2,x.sender,x.recipient FROM jsonb_to_recordset($3::jsonb) AS x(hash text,sender text,recipient text) ON CONFLICT(chain,tx_hash) DO UPDATE SET block_height=EXCLUDED.block_height,sender=COALESCE(EXCLUDED.sender,indexed_transactions.sender),recipient=COALESCE(EXCLUDED.recipient,indexed_transactions.recipient),indexed_at=NOW()",
+    [chain,height,JSON.stringify(txs)]
    );
   }
   await client.query(
@@ -50,13 +50,13 @@ async function persist(chain,height,hash,time,txHashes){
 }
 
 async function fetchBnbBlock(height){
- const b=await rpc("bnb","eth_getBlockByNumber",["0x"+height.toString(16),false]);
+ const b=await rpc("bnb","eth_getBlockByNumber",["0x"+height.toString(16),true]);
  if(!b)throw Error("BNB block unavailable");
  return {
   height,
   hash:b.hash,
   time:new Date(safeNumber(b.timestamp)*1000),
-  txHashes:Array.isArray(b.transactions)?b.transactions:[]
+  transactions:Array.isArray(b.transactions)?b.transactions.map(tx=>({hash:tx.hash,sender:tx.from||null,recipient:tx.to||null})):[]
  };
 }
 
@@ -73,7 +73,7 @@ async function fetchSolanaBlock(slot){
   height:slot,
   hash:b.blockhash,
   time:b.blockTime?new Date(b.blockTime*1000):null,
-  txHashes:Array.isArray(b.signatures)?b.signatures:[]
+  transactions:Array.isArray(b.signatures)?b.signatures.map(hash=>({hash,sender:null,recipient:null})):[]
  };
 }
 
@@ -105,7 +105,7 @@ async function cycleBatch(chain){
 
  // Persist in order so indexer_state is always a contiguous cursor.
  for(const block of fetched){
-  await persist(chain,block.height,block.hash,block.time,block.txHashes);
+  await persist(chain,block.height,block.hash,block.time,block.transactions);
  }
  console.log(chain,"indexed",start,"..",end,"tip",tip);
  return fetched.length;
