@@ -8,16 +8,16 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Blockchain Explorer</title>
-<link rel="stylesheet" href="public/home.css?v=23">
+<link rel="stylesheet" href="public/home.css?v=24">
 </head>
 <body class="bex-home">
 
 <header class="app-header">
   <a class="brand" href="./" aria-label="BEXENTRA"><span class="brand-name">BEXENTRA</span><span class="brand-logo">B</span></a>
   <div class="header-tools">
-    <div class="network-pill"><img class="network-logo" src="public/bnb-mark.svg" alt=""><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
-    <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
+    <div class="network-pill"><img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain"><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
   </div>
 </header>
 
@@ -59,7 +59,7 @@
   <section id="stats" class="stats-card">
     <div class="section-title"><div><span class="title-icon">▥</span><b>إحصائيات المستكشف</b></div><span id="statsLive" class="live-label"><i></i> مباشر</span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon purple">◇</span><small>آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em>BNB Chain</em></article>
+      <article><span class="stat-icon purple">◇</span><small>آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
       <article><span class="stat-icon blue">⌁</span><small>الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
       <article><span class="stat-icon green">ϟ</span><small>حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
       <article><span class="stat-icon blue">▤</span><small>المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em>أحدث عينة</em></article>
@@ -87,6 +87,6 @@
   <a class="active" href="#dashboard"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 
-<script src="public/app.js?v=23" defer></script>
+<script src="public/app.js?v=24" defer></script>
 </body>
 </html>

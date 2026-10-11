@@ -23,9 +23,8 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
       SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
-      INDEXER_BATCH_SIZE: '8'
-      INDEXER_MAX_BACKLOG: '400'
-      INDEXER_ACTIVE_MS: '100'
+      INDEXER_LIVE_WINDOW: '4'
+      INDEXER_ACTIVE_MS: '250'
       INDEXER_IDLE_MS: '2000'
     steps:
       - name: Checkout repository
