@@ -8,16 +8,11 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Blockchain Explorer</title>
-<link rel="stylesheet" href="public/home.css?v=24">
-<link rel="stylesheet" href="public/header.css?v=26">
-<link rel="stylesheet" href="public/hero.css?v=27">
-<link rel="stylesheet" href="public/stats.css?v=28">
-<link rel="stylesheet" href="public/data.css?v=29">
-<link rel="stylesheet" href="public/nav.css?v=30">
+<link rel="stylesheet" href="public/home.css?v=32">
 </head>
 <body class="bex-home">
 
-<header class="app-header header-v26">
+<header class="app-header">
   <div class="header-left">
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
     <div class="network-pill">
@@ -41,7 +36,7 @@
 <div id="menuBackdrop" class="menu-backdrop"></div>
 
 <main id="dashboard" class="app-shell">
-  <section class="hero-card hero-v27">
+  <section class="hero-card">
     <div class="world-glow"></div><div class="grid-glow"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
     <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
@@ -68,7 +63,7 @@
     </div>
   </section>
 
-  <section id="stats" class="stats-card stats-v28">
+  <section id="stats" class="stats-card">
     <div class="section-title"><div><span class="title-icon">▥</span><b>إحصائيات المستكشف</b></div><span id="statsLive" class="live-label"><i></i> مباشر</span></div>
     <div class="stats-grid">
       <article><span class="stat-icon purple">◇</span><small>آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
@@ -79,7 +74,7 @@
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
-  <section id="blocks" class="data-card data-v29">
+  <section id="blocks" class="data-card">
     <div class="data-head"><div><span class="data-icon">◇</span><h2>أحدث البلوكات</h2></div><button id="refreshBlocks" type="button">تحديث ↻</button></div>
     <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
   </section>
@@ -92,13 +87,13 @@
   <section class="safety-note"><span>✓</span><div><b>قراءة عامة فقط</b><small>BEXENTRA لا يطلب ربط محفظتك أو كلمات الاسترداد أو المفتاح الخاص.</small></div></section>
 </main>
 
-<nav class="bottom-nav bottom-v30" aria-label="التنقل">
+<nav class="bottom-nav" aria-label="التنقل">
   <a href="#transactions"><span>⇄</span><b>المعاملات</b></a>
   <a href="#blocks"><span>▦</span><b>البلوكات</b></a>
   <a href="explorer.html"><span>⌕</span><b>Explorer</b></a>
   <a class="active" href="#dashboard"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 
-<script src="public/app.js?v=24" defer></script>
+<script src="public/app.js?v=32" defer></script>
 </body>
 </html>
