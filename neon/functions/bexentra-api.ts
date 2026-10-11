@@ -17,7 +17,16 @@ export default async function handler(req){
   if(u.pathname.endsWith("/transactions")){const r=await db().query("SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 ORDER BY block_height DESC LIMIT $2",[chain,limit]);return json({chain,transactions:r.rows})}
   if(u.pathname.endsWith("/tx")){const hash=u.searchParams.get("hash")||"";if(!hash||hash.length>128)return json({error:"Invalid hash"},400);const r=await db().query("SELECT * FROM indexed_transactions WHERE chain=$1 AND tx_hash=$2",[chain,hash]);return json(r.rows[0]||{error:"Not indexed"},r.rowCount?200:404)}
   if(u.pathname.endsWith("/block")){const height=u.searchParams.get("height")||"";if(!/^\\d+$/.test(height))return json({error:"Invalid height"},400);const r=await db().query("SELECT * FROM indexed_blocks WHERE chain=$1 AND height=$2",[chain,height]);return json(r.rows[0]||{error:"Not indexed"},r.rowCount?200:404)}
-  if(u.pathname.endsWith("/address")){const address=u.searchParams.get("address")||"";if(!address||address.length>128)return json({error:"Invalid address"},400);const r=await db().query("SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (sender=$2 OR recipient=$2) ORDER BY block_height DESC LIMIT $3",[chain,address,limit]);return json({chain,address,transactions:r.rows})}
+  if(u.pathname.endsWith("/address")){
+   let address=u.searchParams.get("address")||"";
+   if(!address||address.length>128)return json({error:"Invalid address"},400);
+   if(chain==="bnb"&&!address.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(address))address="0x"+address;
+   const sql=chain==="bnb"
+    ?"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (lower(sender)=lower($2) OR lower(recipient)=lower($2)) ORDER BY block_height DESC LIMIT $3"
+    :"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (sender=$2 OR recipient=$2) ORDER BY block_height DESC LIMIT $3";
+   const r=await db().query(sql,[chain,address,limit]);
+   return json({chain,address,transactions:r.rows});
+  }
   return json({error:"Not found"},404);
  }catch(e){console.error(e);return json({error:"Service unavailable"},503)}
 }
