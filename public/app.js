@@ -1,68 +1,13 @@
-
-const BNB_RPC = "https://bsc-dataseed.binance.org/";
-
-async function bnbRequest(method, params) {
-  const response = await fetch(BNB_RPC, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: method,
-      params: params
-    })
-  });
-
-  if (!response.ok) {
-    throw new Error("تعذر الاتصال بالشبكة");
-  }
-
-  const data = await response.json();
-
-  if (data.error) {
-    throw new Error(data.error.message);
-  }
-
-  return data.result;
-}
-
-async function searchBlockchain() {
-  const input = document.getElementById("searchInput");
-  const result = document.getElementById("result");
-
-  if (!input || !result) return;
-
-  const address = input.value.trim();
-
-  if (!/^0x[a-fA-F0-9]{40}$/.test(address)) {
-    result.textContent =
-      "دخل عنوان محفظة BNB صحيح، يبدأ بـ 0x";
-    return;
-  }
-
-  result.textContent = "جاري البحث...";
-
-  try {
-    const [balance, block] = await Promise.all([
-      bnbRequest("eth_getBalance", [address, "latest"]),
-      bnbRequest("eth_blockNumber", [])
-    ]);
-
-    const bnb = Number(BigInt(balance)) / 1e18;
-    const blockNumber = Number(BigInt(block));
-
-    result.textContent =
-      "الشبكة: BNB Smart Chain\n" +
-      "العنوان: " + address + "\n" +
-      "الرصيد: " + bnb.toFixed(6) + " BNB\n" +
-      "آخر بلوك: " + blockNumber;
-
-    result.style.whiteSpace = "pre-wrap";
-
-  } catch (error) {
-    result.textContent =
-      "تعذر جلب البيانات. قد يكون الاتصال المباشر بالشبكة محظوراً من المتصفح.";
-  }
-}
+"use strict";
+const $=id=>document.getElementById(id);
+const network=$("network"),input=$("searchInput"),result=$("result");
+const RPC={solana:"https://api.mainnet-beta.solana.com",bnb:"https://bsc-dataseed.binance.org/"};
+function row(label,value){const d=document.createElement("div");d.className="detail";const a=document.createElement("span");a.textContent=label;const b=document.createElement("b");b.textContent=String(value);d.append(a,b);return d}
+function showError(message){result.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=message;result.append(p)}
+async function rpc(chain,method,params){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);try{const response=await fetch(RPC[chain],{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({jsonrpc:"2.0",id:1,method,params}),signal:controller.signal});if(!response.ok)throw Error("HTTP "+response.status);const json=await response.json();if(json.error)throw Error(json.error.message||"RPC error");return json.result}finally{clearTimeout(timeout)}}
+function isValid(address,chain){return chain==="bnb"?/^0x[a-fA-F0-9]{40}$/.test(address):/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(address)}
+network.addEventListener("change",()=>{input.placeholder=network.value==="solana"?"أدخل عنوان محفظة Solana":"أدخل عنوان محفظة BNB يبدأ بـ 0x";result.replaceChildren()});
+$("searchForm").addEventListener("submit",async e=>{e.preventDefault();const chain=network.value,address=input.value.trim();if(!isValid(address,chain)){showError("صيغة العنوان غير صحيحة للشبكة المختارة.");return}result.textContent="جاري الاتصال بالشبكة...";try{let balance,height;if(chain==="bnb"){const values=await Promise.all([rpc(chain,"eth_getBalance",[address,"latest"]),rpc(chain,"eth_blockNumber",[])]);balance=(Number(BigInt(values[0]))/1e18).toLocaleString("en-US",{maximumFractionDigits:8});height=Number(BigInt(values[1])).toLocaleString("en-US")}else{const values=await Promise.all([rpc(chain,"getBalance",[address]),rpc(chain,"getSlot",[])]);balance=(values[0].value/1e9).toLocaleString("en-US",{maximumFractionDigits:9});height=values[1].toLocaleString("en-US")}result.replaceChildren();const h=document.createElement("p");h.className="result-title";h.textContent="نتيجة البحث";result.append(h,row("الشبكة",chain==="bnb"?"BNB Smart Chain":"Solana"),row("العنوان",address),row("الرصيد",balance+(chain==="bnb"?" BNB":" SOL")),row(chain==="bnb"?"آخر بلوك":"آخر Slot",height));}catch(err){showError("تعذر الاتصال بمزوّد بيانات الشبكة من المتصفح. حاول لاحقاً؛ بعض خدمات RPC تمنع الطلبات المباشرة.")}});
+const coins=[["bitcoin","BTC","Bitcoin"],["ethereum","ETH","Ethereum"],["solana","SOL","Solana"],["binancecoin","BNB","BNB"]];
+async function prices(){const box=$("prices");box.textContent="جاري تحميل الأسعار...";try{const response=await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd",{headers:{accept:"application/json"}});if(!response.ok)throw Error("Unavailable");const data=await response.json();box.replaceChildren();for(const [id,symbol,name] of coins){const line=document.createElement("div");line.className="price-line";const label=document.createElement("span");label.textContent=name+" ("+symbol+")";const value=document.createElement("strong");value.className="usd";value.textContent=typeof data[id]?.usd==="number"?"$"+data[id].usd.toLocaleString("en-US",{maximumFractionDigits:4}):"غير متوفر";line.append(label,value);box.append(line)}}catch{box.textContent="الأسعار غير متاحة حالياً. اضغط تحديث للمحاولة مرة أخرى."}}
+$("refreshPrices").addEventListener("click",prices);prices();
