@@ -9,11 +9,11 @@ function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-
 function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return Math.floor(d)+"s ago";if(d<3600)return Math.floor(d/60)+"m ago";if(d<86400)return Math.floor(d/3600)+"h ago";return Math.floor(d/86400)+"d ago"}
 function setIndexStatus(v){
  if(!indexStatus||!indexStatusNote)return;
- if(!v){indexStatus.textContent="● لا بيانات";indexStatus.className="status-stale";indexStatusNote.textContent="No indexed timestamp";return}
- const mins=Math.max(0,(Date.now()-new Date(v).getTime())/60000);
- if(mins<10){indexStatus.textContent="● حديث";indexStatus.className="status-good";indexStatusNote.textContent="Updated "+ago(v)}
- else if(mins<45){indexStatus.textContent="● بانتظار دورة";indexStatus.className="status-wait";indexStatusNote.textContent="Updated "+ago(v)}
- else{indexStatus.textContent="● قديم";indexStatus.className="status-stale";indexStatusNote.textContent="Updated "+ago(v)}
+ if(!v){indexStatus.textContent="● لا بيانات";indexStatus.className="status-stale";indexStatusNote.textContent="No indexed timestamp";const live=$("statsLive");if(live)live.textContent="غير متصل";return}
+ const mins=Math.max(0,(Date.now()-new Date(v).getTime())/60000);const live=$("statsLive");
+ if(mins<10){indexStatus.textContent="● محدث";indexStatus.className="status-good";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> مباشر"}
+ else if(mins<45){indexStatus.textContent="● قريب";indexStatus.className="status-wait";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> قريب من المباشر"}
+ else{indexStatus.textContent="● قديم";indexStatus.className="status-stale";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> يحتاج تحديث"}
 }
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
@@ -78,7 +78,8 @@ network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-networ
 try{const savedNetwork=localStorage.getItem("bexentra-network");if(savedNetwork==="bnb"||savedNetwork==="solana")network.value=savedNetwork}catch{}
 const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
 loadDashboard();
-$("mobileSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;$("globalInput").value=q;if(/^\d+$/.test(q))$("searchType").value="block";else $("searchType").value="auto";$("globalSearch").requestSubmit();$("globalResult").scrollIntoView({behavior:"smooth",block:"center"})});
+const mobileSearch=$("mobileSearch");
+if(mobileSearch)mobileSearch.addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q),q)});
 
 const quickRefresh=$("quickRefresh");if(quickRefresh)quickRefresh.addEventListener("click",loadDashboard);
 const menu=$("mobileMenu"),backdrop=$("menuBackdrop"),menuToggle=$("menuToggle"),menuClose=$("menuClose");
