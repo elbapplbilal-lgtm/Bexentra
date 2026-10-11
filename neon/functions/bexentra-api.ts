@@ -1,4 +1,4 @@
-import pg from "npm:pg@8.13.1";
+import pg from "pg";
 const { Pool } = pg;
 let pool;
 function db(){if(!pool){const url=Deno.env.get("DATABASE_URL");if(!url)throw new Error("DATABASE_URL is not configured");pool=new Pool({connectionString:url,ssl:{rejectUnauthorized:false},max:2})}return pool}
