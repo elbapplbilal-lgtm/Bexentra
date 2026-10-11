@@ -1,0 +1,43 @@
+name: BEXENTRA Mainnet Indexer
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bexentra-mainnet-indexer
+  cancel-in-progress: false
+
+jobs:
+  index-mainnet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
+      SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+      INDEXER_POLL_MS: '3000'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify database secret exists
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::Add DATABASE_URL under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Index finalized BNB and Solana blocks (bounded run)
+        run: timeout --signal=TERM --kill-after=10s 230s node src/indexer.js || test "$?" -eq 124
