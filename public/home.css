@@ -37,3 +37,31 @@ html,body{overflow-x:hidden}
  .quick-grid>a,.quick-grid>button{min-height:62px}
  .stats-card{margin-top:10px}
 }
+
+/* V24 correctness + mobile cleanup */
+.mobile-menu{
+  right:0!important;
+  left:auto!important;
+  transform:translateX(110%)!important;
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
+}
+.mobile-menu.open{
+  transform:translateX(0)!important;
+  visibility:visible;
+  opacity:1;
+  pointer-events:auto;
+}
+.menu-backdrop{visibility:hidden}
+.menu-backdrop.show{visibility:visible}
+@media(max-width:520px){
+  .header-tools{gap:7px}
+  .menu-button{order:0}
+  .network-pill{order:1}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .stats-grid article{min-height:108px;padding:10px 7px}
+  .stats-grid strong{font-size:14px}
+  .stats-grid small{font-size:8px}
+  .stats-grid em{font-size:7px}
+}
