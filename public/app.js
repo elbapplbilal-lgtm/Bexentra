@@ -90,4 +90,4 @@ if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>set
 
 let refreshTimer=setInterval(()=>{if(!document.hidden)loadDashboard()},15000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadDashboard()});
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("public/sw.js").catch(()=>{}));
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
