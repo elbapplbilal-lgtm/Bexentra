@@ -60,3 +60,38 @@ function applyTheme(dark){document.body.classList.toggle("dark-mode",dark);theme
 let dark=false;try{dark=localStorage.getItem("bexentra-dark")==="1"}catch{}
 applyTheme(dark);
 themeToggle.addEventListener("click",()=>{dark=!dark;applyTheme(dark);try{localStorage.setItem("bexentra-dark",dark?"1":"0")}catch{}});
+
+/* Live recent blocks from public RPC; backend-indexed history will require a deployed API. */
+const recentBlocks=$("recentBlocks");
+async function loadRecentBlocks(){
+ const chain=network.value;
+ recentBlocks.textContent="جاري جلب أحدث البلوكات...";
+ try{
+  const rows=[];
+  if(chain==="bnb"){
+   const latest=Number(BigInt(await rpc("bnb","eth_blockNumber",[])));
+   for(let i=0;i<4;i++){
+    const block=await rpc("bnb","eth_getBlockByNumber",["0x"+(latest-i).toString(16),false]);
+    if(!block)continue;
+    rows.push({height:Number(BigInt(block.number)),count:block.transactions?.length??0,time:new Date(Number(BigInt(block.timestamp))*1000).toLocaleString("ar-MA"),url:"https://bscscan.com/block/"+Number(BigInt(block.number))});
+   }
+  }else{
+   const slot=await rpc("solana","getSlot",[{commitment:"confirmed"}]);
+   const slots=await rpc("solana","getBlocks",[Math.max(0,slot-40),slot,{commitment:"confirmed"}]);
+   for(const height of (slots||[]).slice(-4).reverse()){
+    rows.push({height,count:null,time:null,url:"https://solscan.io/block/"+height});
+   }
+  }
+  if(network.value!==chain)return;
+  recentBlocks.replaceChildren();
+  if(!rows.length){recentBlocks.textContent="لا توجد بيانات متاحة حالياً.";return}
+  for(const block of rows){
+   const line=document.createElement("div");line.className="block-line";
+   const a=document.createElement("a");a.href=block.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=(chain==="bnb"?"Block #":"Slot #")+block.height.toLocaleString("en-US");
+   const detail=document.createElement("span");detail.textContent=block.count===null?"Solana Mainnet":block.count+" معاملة";
+   line.append(a,detail);recentBlocks.append(line);
+  }
+ }catch(error){if(network.value===chain)failAt(recentBlocks,"تعذر جلب البلوكات مباشرة. مزوّد RPC العام قد يمنع الطلبات من المتصفح؛ الفهرس الخلفي لا يزال منفصلاً عن الموقع.")}
+}
+$("refreshBlocks").addEventListener("click",loadRecentBlocks);
+network.addEventListener("change",()=>{recentBlocks.textContent="اضغط تحديث لعرض بلوكات الشبكة المختارة."});
