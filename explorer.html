@@ -9,13 +9,14 @@
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Explorer Detail</title>
 <link rel="stylesheet" href="public/style.css?v=24">
+<link rel="stylesheet" href="public/nav.css?v=30">
+<link rel="stylesheet" href="public/explorer-detail.css?v=31">
 </head>
-<body class="detail-page">
+<body class="detail-page detail-v31">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
-<header class="topbar">
-  <a class="brand" href="./"><span class="logo"><span>B</span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></a>
-  <nav class="desktop-nav"><a href="./">الرئيسية</a><a class="active" href="#">Explorer</a></nav>
-  <div class="nav-actions"><a class="back-chip" href="./">← رجوع</a></div>
+<header class="detail-header">
+  <a class="detail-back" href="./">← رجوع</a>
+  <a class="detail-brand" href="./"><span>BEXENTRA</span><b>B</b></a>
 </header>
 <main class="detail-shell">
   <section class="detail-hero">
@@ -58,13 +59,13 @@
     <div id="addressFeed" class="feed"></div>
   </section>
 </main>
-<nav class="mobile-bottom-nav">
-  <a href="./"><span>⌂</span><b>الرئيسية</b></a>
-  <a class="active" href="#"><span>⌕</span><b>Explorer</b></a>
-  <a href="./#blocks"><span>▦</span><b>البلوكات</b></a>
+<nav class="bottom-nav bottom-v30">
   <a href="./#transactions"><span>⇄</span><b>المعاملات</b></a>
+  <a href="./#blocks"><span>▦</span><b>البلوكات</b></a>
+  <a class="active" href="#"><span>⌕</span><b>Explorer</b></a>
+  <a href="./"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 <footer><div class="brand"><span class="logo"><span>B</span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></div><span>Indexed explorer · 2026</span></footer>
-<script src="public/explorer.js?v=24" defer></script>
+<script src="public/explorer.js?v=31" defer></script>
 </body>
 </html>
