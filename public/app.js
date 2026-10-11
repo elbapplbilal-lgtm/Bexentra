@@ -50,7 +50,7 @@ function internalExplorer(chain,type,id){return "explorer.html?chain="+encodeURI
 function detectType(q,forced="auto"){
  if(forced!=="auto")return forced;
  if(/^\d+$/.test(q))return "block";
- if(network.value==="bnb"&&/^0x[a-fA-F0-9]{40}$/.test(q))return "address";
+ if(network.value==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return "address";
  if(network.value==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return "address";
  return "tx";
 }
