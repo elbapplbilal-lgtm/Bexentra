@@ -1,11 +1,11 @@
 import pg from "pg";
 const { Pool } = pg;
 let pool;
-function db(){if(!pool){const url=Deno.env.get("DATABASE_URL");if(!url)throw new Error("DATABASE_URL is not configured");pool=new Pool({connectionString:url,ssl:{rejectUnauthorized:false},max:2})}return pool}
+function db(){if(!pool){const url=process.env.DATABASE_URL;if(!url)throw new Error("DATABASE_URL is not configured");pool=new Pool({connectionString:url,ssl:{rejectUnauthorized:false},max:2})}return pool}
 const cors={"Access-Control-Allow-Origin":"https://elbapplbilal-lgtm.github.io","Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"Content-Type","Cache-Control":"public, max-age=10","Content-Type":"application/json; charset=utf-8"};
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:cors});
 const chains=new Set(["bnb","solana"]);
-Deno.serve(async req=>{
+export default async function handler(req){
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
  if(req.method!=="GET")return json({error:"Method not allowed"},405);
  try{
@@ -20,4 +20,4 @@ Deno.serve(async req=>{
   if(u.pathname.endsWith("/address")){const address=u.searchParams.get("address")||"";if(!address||address.length>128)return json({error:"Invalid address"},400);const r=await db().query("SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (sender=$2 OR recipient=$2) ORDER BY block_height DESC LIMIT $3",[chain,address,limit]);return json({chain,address,transactions:r.rows})}
   return json({error:"Not found"},404);
  }catch(e){console.error(e);return json({error:"Service unavailable"},503)}
-});
+}
