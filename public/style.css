@@ -1,4 +1,18 @@
+body {
+  background: #080f20;
+  color: #ffffff;
+}
 
+header {
+  background: linear-gradient(135deg, #07142e, #2457d6);
+  color: white;
+}
+
+.card {
+  background: #14213d;
+  color: white;
+  border: 1px solid #3756a0;
+}
 :root {
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
