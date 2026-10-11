@@ -16,6 +16,7 @@ async function loadDashboard(){
  try{
   const [bs,ts]=await Promise.all([blocks(chain),txs(chain)]);
   if(network.value!==chain)return;
+  $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?ts.length+"+":"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?bs.length+"+":"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent="لا توجد بلوكات مفهرسة لهذه الشبكة بعد.";
   bs.slice(0,6).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="BK";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=explorer(chain,"block",b.height);a.target="_blank";a.rel="noopener";a.textContent=(chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" معاملات";m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.indexed_at);r.append(i,m,side);rb.append(r)});
@@ -32,3 +33,4 @@ $("globalSearch").addEventListener("submit",async e=>{e.preventDefault();const q
 $("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);network.addEventListener("change",()=>{$("globalResult").replaceChildren();$("txResult").replaceChildren();loadDashboard()});
 const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
 loadDashboard();
+$("mobileSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;$("globalInput").value=q;if(/^\d+$/.test(q))$("searchType").value="block";else $("searchType").value="auto";$("globalSearch").requestSubmit();$("globalResult").scrollIntoView({behavior:"smooth",block:"center"})});
