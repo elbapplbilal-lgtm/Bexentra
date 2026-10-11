@@ -29,8 +29,26 @@ async function findTx(hash,target){
  try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"المعاملة غير موجودة في الجزء المفهرس حالياً.");return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,"تعذر البحث حالياً.")}
 }
 $("txForm").addEventListener("submit",e=>{e.preventDefault();findTx($("txInput").value.trim(),$("txResult"))});
-$("globalSearch").addEventListener("submit",async e=>{e.preventDefault();const q=$("globalInput").value.trim(),type=$("searchType").value,target=$("globalResult");if(!q)return;if(type==="block"||(/^\d+$/.test(q)&&type==="auto")){try{const rows=await api("indexed_blocks","select=*&chain=eq."+network.value+"&height=eq."+q+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"البلوك غير موجود في الفهرس الحالي.");return}const b=rows[0];target.append(detail("Block / Slot",b.height),detail("Hash",b.block_hash),detail("Transactions",b.transaction_count),detail("Indexed",b.indexed_at))}catch{fail(target,"تعذر البحث.")}return}if(type==="tx"||type==="auto"){findTx(q,target);return}fail(target,"بحث العناوين الكامل سيتم تفعيله مع توسيع الفهرس.")});
+$("globalSearch").addEventListener("submit",async e=>{e.preventDefault();const q=$("globalInput").value.trim(),type=$("searchType").value,target=$("globalResult");if(!q)return;if(type==="block"||(/^\d+$/.test(q)&&type==="auto")){try{const rows=await api("indexed_blocks","select=*&chain=eq."+network.value+"&height=eq."+q+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"البلوك غير موجود في الفهرس الحالي.");return}const b=rows[0];target.append(detail("Block / Slot",b.height),detail("Hash",b.block_hash),detail("Transactions",b.transaction_count),detail("Indexed",b.indexed_at))}catch{fail(target,"تعذر البحث.")}return}if(type==="address"){findAddress(q,target);return}if(type==="tx"){findTx(q,target);return}if(type==="auto"){const looksBnb=/^0x[a-fA-F0-9]{40}$/.test(q);const looksSol=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q);if(looksBnb||looksSol){findAddress(q,target);return}findTx(q,target);return}fail(target,"نوع البحث غير مدعوم.")});
 $("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);network.addEventListener("change",()=>{$("globalResult").replaceChildren();$("txResult").replaceChildren();loadDashboard()});
 const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
 loadDashboard();
+
+async function findAddress(address,target){
+ const chain=network.value;target.textContent="جاري البحث في النشاط المفهرس...";
+ try{
+  const cols="select=chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at";
+  const [sent,received]=await Promise.all([
+   api("indexed_transactions",cols+"&chain=eq."+chain+"&sender=eq."+encodeURIComponent(address)+"&order=block_height.desc&limit=20"),
+   api("indexed_transactions",cols+"&chain=eq."+chain+"&recipient=eq."+encodeURIComponent(address)+"&order=block_height.desc&limit=20")
+  ]);
+  const rows=[...sent,...received].filter((v,i,a)=>a.findIndex(x=>x.tx_hash===v.tx_hash)===i).sort((x,y)=>Number(y.block_height)-Number(x.block_height)).slice(0,20);
+  target.replaceChildren();
+  const note=document.createElement("p");note.className="result-title";note.textContent="النشاط المفهرس فقط · "+rows.length+" معاملة";target.append(note);
+  if(!rows.length){const p=document.createElement("p");p.className="error";p.textContent="لم نجد نشاطاً لهذا العنوان داخل الجزء المفهرس حالياً.";target.append(p);return}
+  rows.forEach(t=>{const r=document.createElement("div");r.className="address-tx";const dir=document.createElement("b");dir.textContent=t.sender===address?"إرسال":"استقبال";const link=document.createElement("a");link.href=explorer(chain,"tx",t.tx_hash);link.target="_blank";link.rel="noopener";link.textContent=short(t.tx_hash,9);const block=document.createElement("small");block.textContent="Block "+Number(t.block_height).toLocaleString("en-US");r.append(dir,link,block);target.append(r)})
+ }catch(e){fail(target,"تعذر البحث عن نشاط العنوان حالياً.")}
+}
+$("addressForm").addEventListener("submit",e=>{e.preventDefault();findAddress($("addressInput").value.trim(),$("addressResult"))});
+
 $("mobileSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;$("globalInput").value=q;if(/^\d+$/.test(q))$("searchType").value="block";else $("searchType").value="auto";$("globalSearch").requestSubmit();$("globalResult").scrollIntoView({behavior:"smooth",block:"center"})});
