@@ -1,15 +1,40 @@
 "use strict";
 const $=id=>document.getElementById(id);
-const API="https://ep-little-frog-b530n23k.apirest.c-7.us-east-2.aws.neon.tech/neondb/rest/v1";
+const API="https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech";
 const network=$("network");
 const esc=s=>String(s??"");
 function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-n):s}
 function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return Math.floor(d)+"s ago";if(d<3600)return Math.floor(d/60)+"m ago";return Math.floor(d/3600)+"h ago"}
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
-async function api(table,query){const url=API+"/"+table+"?"+query;const r=await fetch(url,{method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){const body=await r.text().catch(()=>"");throw Error("API "+r.status+" "+body.slice(0,120))}return r.json()}
-async function blocks(chain,limit=8){return api("indexed_blocks","select=chain,height,block_hash,block_time,transaction_count,indexed_at&chain=eq."+chain+"&order=height.desc&limit="+limit)}
-async function txs(chain,limit=8){return api("indexed_transactions","select=chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at&chain=eq."+chain+"&order=block_height.desc&limit="+limit)}
+// Public read-only API. Never send a database password or JWT to the browser.
+async function request(path,params){
+ const url=new URL(API+path);
+ for(const [key,value] of Object.entries(params))url.searchParams.set(key,String(value));
+ let response;
+ try{response=await fetch(url,{method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"}})}
+ catch(e){throw Error("تعذر الاتصال بالخادم: "+e.message)}
+ if(!response.ok){let body={};try{body=await response.json()}catch{}throw Error("API "+response.status+": "+(body.error||response.statusText))}
+ return response.json();
+}
+async function blocks(chain,limit=8){const data=await request("/blocks",{chain,limit});return data.blocks||[]}
+async function txs(chain,limit=8){const data=await request("/transactions",{chain,limit});return data.transactions||[]}
+async function api(table,query){
+ const q=new URLSearchParams(query),chain=(q.get("chain")||"eq.bnb").replace(/^eq\\./,"");
+ if(table==="indexed_blocks"){
+  const height=q.get("height");
+  if(height){try{return [await request("/block",{chain,height:height.replace(/^eq\\./,"")})]}catch(e){if(e.message.includes("404"))return [];throw e}}
+  return blocks(chain,Number(q.get("limit"))||8);
+ }
+ if(table==="indexed_transactions"){
+  const hash=q.get("tx_hash");
+  if(hash){try{return [await request("/tx",{chain,hash:hash.replace(/^eq\\./,"")})]}catch(e){if(e.message.includes("404"))return [];throw e}}
+  const address=(q.get("sender")||q.get("recipient")||"").replace(/^eq\\./,"");
+  if(address){const data=await request("/address",{chain,address,limit:Number(q.get("limit"))||20});return data.transactions||[]}
+  return txs(chain,Number(q.get("limit"))||8);
+ }
+ throw Error("Unsupported resource");
+}
 function explorer(chain,type,id){if(chain==="bnb")return "https://bscscan.com/"+(type==="tx"?"tx/":"block/")+id;return "https://solscan.io/"+(type==="tx"?"tx/":"block/")+id}
 async function loadDashboard(){
  const chain=network.value; $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";$("recentBlocks").textContent="جاري التحميل...";$("recentTransactions").textContent="جاري التحميل...";
