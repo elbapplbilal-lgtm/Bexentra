@@ -7,7 +7,7 @@ function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-
 function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return Math.floor(d)+"s ago";if(d<3600)return Math.floor(d/60)+"m ago";return Math.floor(d/3600)+"h ago"}
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
-async function api(table,query){const r=await fetch(API+"/"+table+"?"+query,{headers:{Accept:"application/json"}});if(!r.ok)throw Error("API "+r.status);return r.json()}
+async function api(table,query){const url=API+"/"+table+"?"+query;const r=await fetch(url,{method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){const body=await r.text().catch(()=>"");throw Error("API "+r.status+" "+body.slice(0,120))}return r.json()}
 async function blocks(chain,limit=8){return api("indexed_blocks","select=chain,height,block_hash,block_time,transaction_count,indexed_at&chain=eq."+chain+"&order=height.desc&limit="+limit)}
 async function txs(chain,limit=8){return api("indexed_transactions","select=chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at&chain=eq."+chain+"&order=block_height.desc&limit="+limit)}
 function explorer(chain,type,id){if(chain==="bnb")return "https://bscscan.com/"+(type==="tx"?"tx/":"block/")+id;return "https://solscan.io/"+(type==="tx"?"tx/":"block/")+id}
