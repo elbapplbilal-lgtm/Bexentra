@@ -61,37 +61,23 @@ let dark=false;try{dark=localStorage.getItem("bexentra-dark")==="1"}catch{}
 applyTheme(dark);
 themeToggle.addEventListener("click",()=>{dark=!dark;applyTheme(dark);try{localStorage.setItem("bexentra-dark",dark?"1":"0")}catch{}});
 
-/* Live recent blocks from public RPC; backend-indexed history will require a deployed API. */
+/* Recent blocks from BEXENTRA's read-only Neon Data API. */
 const recentBlocks=$("recentBlocks");
+const DATA_API="https://ep-little-frog-b530n23k.apirest.c-7.us-east-2.aws.neon.tech/neondb/rest/v1";
+async function indexedBlocks(chain){
+ const url=DATA_API+"/indexed_blocks?select=chain,height,block_hash,block_time,transaction_count,indexed_at&chain=eq."+encodeURIComponent(chain)+"&order=height.desc&limit=8";
+ const response=await fetch(url,{headers:{Accept:"application/json"}});
+ if(!response.ok)throw Error("Data API HTTP "+response.status);
+ return response.json();
+}
 async function loadRecentBlocks(){
- const chain=network.value;
- recentBlocks.textContent="جاري جلب أحدث البلوكات...";
+ const chain=network.value;recentBlocks.textContent="جاري جلب أحدث البلوكات من فهرس BEXENTRA...";
  try{
-  const rows=[];
-  if(chain==="bnb"){
-   const latest=Number(BigInt(await rpc("bnb","eth_blockNumber",[])));
-   for(let i=0;i<4;i++){
-    const block=await rpc("bnb","eth_getBlockByNumber",["0x"+(latest-i).toString(16),false]);
-    if(!block)continue;
-    rows.push({height:Number(BigInt(block.number)),count:block.transactions?.length??0,time:new Date(Number(BigInt(block.timestamp))*1000).toLocaleString("ar-MA"),url:"https://bscscan.com/block/"+Number(BigInt(block.number))});
-   }
-  }else{
-   const slot=await rpc("solana","getSlot",[{commitment:"confirmed"}]);
-   const slots=await rpc("solana","getBlocks",[Math.max(0,slot-40),slot,{commitment:"confirmed"}]);
-   for(const height of (slots||[]).slice(-4).reverse()){
-    rows.push({height,count:null,time:null,url:"https://solscan.io/block/"+height});
-   }
-  }
-  if(network.value!==chain)return;
-  recentBlocks.replaceChildren();
-  if(!rows.length){recentBlocks.textContent="لا توجد بيانات متاحة حالياً.";return}
-  for(const block of rows){
-   const line=document.createElement("div");line.className="block-line";
-   const a=document.createElement("a");a.href=block.url;a.target="_blank";a.rel="noopener noreferrer";a.textContent=(chain==="bnb"?"Block #":"Slot #")+block.height.toLocaleString("en-US");
-   const detail=document.createElement("span");detail.textContent=block.count===null?"Solana Mainnet":block.count+" معاملة";
-   line.append(a,detail);recentBlocks.append(line);
-  }
- }catch(error){if(network.value===chain)failAt(recentBlocks,"تعذر جلب البلوكات مباشرة. مزوّد RPC العام قد يمنع الطلبات من المتصفح؛ الفهرس الخلفي لا يزال منفصلاً عن الموقع.")}
+  const rows=await indexedBlocks(chain);if(network.value!==chain)return;recentBlocks.replaceChildren();
+  if(!rows.length){recentBlocks.textContent="لا توجد بلوكات مفهرسة لهذه الشبكة حالياً.";return}
+  for(const block of rows.slice(0,4)){const line=document.createElement("div");line.className="block-line";const a=document.createElement("a");a.href=chain==="bnb"?"https://bscscan.com/block/"+block.height:"https://solscan.io/block/"+block.height;a.target="_blank";a.rel="noopener noreferrer";a.textContent=(chain==="bnb"?"Block #":"Slot #")+Number(block.height).toLocaleString("en-US");const detail=document.createElement("span");detail.textContent=(block.transaction_count??0)+" معاملة · BEXENTRA Index";line.append(a,detail);recentBlocks.append(line)}
+ }catch(error){if(network.value===chain)failAt(recentBlocks,"تعذر قراءة فهرس BEXENTRA حالياً. حاول التحديث بعد قليل.")}
 }
 $("refreshBlocks").addEventListener("click",loadRecentBlocks);
 network.addEventListener("change",()=>{recentBlocks.textContent="اضغط تحديث لعرض بلوكات الشبكة المختارة."});
+loadRecentBlocks();
