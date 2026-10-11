@@ -8,14 +8,14 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Blockchain Explorer</title>
-<link rel="stylesheet" href="public/home.css?v=22">
+<link rel="stylesheet" href="public/home.css?v=23">
 </head>
 <body class="bex-home">
 
 <header class="app-header">
   <a class="brand" href="./" aria-label="BEXENTRA"><span class="brand-name">BEXENTRA</span><span class="brand-logo">B</span></a>
   <div class="header-tools">
-    <div class="network-pill"><span class="chain-glyph bnb-glyph">◆</span><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
+    <div class="network-pill"><img class="network-logo" src="public/bnb-mark.svg" alt=""><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
     <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
   </div>
@@ -31,11 +31,10 @@
 <main id="dashboard" class="app-shell">
   <section class="hero-card">
     <div class="world-glow"></div><div class="grid-glow"></div>
-    <div class="chain-cube sol-cube"><span>≋</span></div>
-    <div class="chain-cube bnb-cube"><span>◆</span></div>
+    <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
+    <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
 
     <div class="hero-copy">
-      <span class="index-badge"><i></i> BEXENTRA INDEX · MAINNET</span>
       <h1>أوضح. أسرع. أذكى.</h1>
       <p>ابحث في البيانات المفهرسة لـ BEXENTRA على BNB Chain وSolana من واجهة واحدة مصممة للهاتف أولاً.</p>
       <div class="trust-pills"><span>▤ Indexed data</span><span>⌁ Multi-chain</span><span>▣ Read-only</span></div>
@@ -88,6 +87,6 @@
   <a class="active" href="#dashboard"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 
-<script src="public/app.js?v=22" defer></script>
+<script src="public/app.js?v=23" defer></script>
 </body>
 </html>
