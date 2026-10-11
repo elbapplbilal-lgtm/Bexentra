@@ -1,0 +1,11 @@
+{
+  "name":"BEXENTRA Blockchain Explorer",
+  "short_name":"BEXENTRA",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#050b16",
+  "theme_color":"#050b16",
+  "description":"Indexed BNB Chain and Solana explorer",
+  "icons":[{"src":"public/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

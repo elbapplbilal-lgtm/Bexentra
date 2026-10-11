@@ -45,7 +45,15 @@ async function api(table,query){
  }
  throw Error("Unsupported resource");
 }
-function explorer(chain,type,id){if(chain==="bnb")return "https://bscscan.com/"+(type==="tx"?"tx/":"block/")+id;return "https://solscan.io/"+(type==="tx"?"tx/":"block/")+id}
+function externalExplorer(chain,type,id){if(chain==="bnb")return "https://bscscan.com/"+(type==="tx"?"tx/":"block/")+id;return "https://solscan.io/"+(type==="tx"?"tx/":"block/")+id}
+function internalExplorer(chain,type,id){return "explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(type)+"&q="+encodeURIComponent(id)}
+function detectType(q,forced="auto"){
+ if(forced!=="auto")return forced;
+ if(/^\d+$/.test(q))return "block";
+ if(network.value==="bnb"&&/^0x[a-fA-F0-9]{40}$/.test(q))return "address";
+ if(network.value==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return "address";
+ return "tx";
+}
 async function loadDashboard(){
  const chain=network.value; $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent="جاري التحميل...";$("recentTransactions").textContent="جاري التحميل...";
  try{
@@ -54,18 +62,20 @@ async function loadDashboard(){
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?ts.length+"+":"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";setIndexStatus(bs[0]?.indexed_at);
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent="لا توجد بلوكات مفهرسة لهذه الشبكة بعد.";
-  bs.slice(0,6).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="BK";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=explorer(chain,"block",b.height);a.target="_blank";a.rel="noopener";a.textContent=(chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" معاملات";m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.indexed_at);r.append(i,m,side);rb.append(r)});
+  bs.slice(0,6).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="BK";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=(chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" معاملات";m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.indexed_at);r.append(i,m,side);rb.append(r)});
   const rt=$("recentTransactions");rt.replaceChildren();if(!ts.length)rt.textContent="لا توجد معاملات مفهرسة لهذه الشبكة بعد.";
-  ts.slice(0,6).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="TX";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=explorer(chain,"tx",t.tx_hash);a.target="_blank";a.rel="noopener";a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent="Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status||"indexed";r.append(i,m,side);rt.append(r)});
+  ts.slice(0,6).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="TX";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent="Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status||"indexed";r.append(i,m,side);rt.append(r)});
  }catch(e){const msg="خطأ الاتصال: "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
 async function findTx(hash,target){
  const chain=network.value;target.textContent="جاري البحث في فهرس BEXENTRA...";
  try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"المعاملة غير موجودة في الجزء المفهرس حالياً.");return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,"تعذر البحث حالياً.")}
 }
-$("txForm").addEventListener("submit",e=>{e.preventDefault();findTx($("txInput").value.trim(),$("txResult"))});
-$("globalSearch").addEventListener("submit",async e=>{e.preventDefault();const q=$("globalInput").value.trim(),type=$("searchType").value,target=$("globalResult");if(!q)return;if(type==="block"||(/^\d+$/.test(q)&&type==="auto")){try{const rows=await api("indexed_blocks","select=*&chain=eq."+network.value+"&height=eq."+q+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"البلوك غير موجود في الفهرس الحالي.");return}const b=rows[0];target.append(detail("Block / Slot",b.height),detail("Hash",b.block_hash),detail("Transactions",b.transaction_count),detail("Indexed",b.indexed_at))}catch{fail(target,"تعذر البحث.")}return}if(type==="tx"||type==="auto"){findTx(q,target);return}fail(target,"بحث العناوين الكامل سيتم تفعيله مع توسيع الفهرس.")});
-$("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);network.addEventListener("change",()=>{$("globalResult").replaceChildren();$("txResult").replaceChildren();loadDashboard()});
+$("txForm").addEventListener("submit",e=>{e.preventDefault();const q=$("txInput").value.trim();if(q)location.href=internalExplorer(network.value,"tx",q)});
+$("globalSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("globalInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q,$("searchType").value),q)});
+$("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);
+network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-network",network.value)}catch{}$("globalResult").replaceChildren();$("txResult").replaceChildren();loadDashboard()});
+try{const savedNetwork=localStorage.getItem("bexentra-network");if(savedNetwork==="bnb"||savedNetwork==="solana")network.value=savedNetwork}catch{}
 const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
 loadDashboard();
 $("mobileSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;$("globalInput").value=q;if(/^\d+$/.test(q))$("searchType").value="block";else $("searchType").value="auto";$("globalSearch").requestSubmit();$("globalResult").scrollIntoView({behavior:"smooth",block:"center"})});
@@ -77,3 +87,7 @@ if(menuToggle)menuToggle.addEventListener("click",()=>setMenu(true));
 if(menuClose)menuClose.addEventListener("click",()=>setMenu(false));
 if(backdrop)backdrop.addEventListener("click",()=>setMenu(false));
 if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
+
+let refreshTimer=setInterval(()=>{if(!document.hidden)loadDashboard()},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadDashboard()});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("public/sw.js").catch(()=>{}));
