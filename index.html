@@ -9,16 +9,24 @@
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Blockchain Explorer</title>
 <link rel="stylesheet" href="public/home.css?v=24">
+<link rel="stylesheet" href="public/header.css?v=26">
 </head>
 <body class="bex-home">
 
-<header class="app-header">
-  <a class="brand" href="./" aria-label="BEXENTRA"><span class="brand-name">BEXENTRA</span><span class="brand-logo">B</span></a>
-  <div class="header-tools">
+<header class="app-header header-v26">
+  <div class="header-left">
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
-    <div class="network-pill"><img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain"><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
-    <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
+    <div class="network-pill">
+      <img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain">
+      <select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select>
+      <i class="network-live"></i>
+    </div>
   </div>
+  <a class="brand" href="./" aria-label="BEXENTRA">
+    <span class="brand-name">BEXENTRA</span>
+    <span class="brand-logo">B</span>
+  </a>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
 </header>
 
 <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
