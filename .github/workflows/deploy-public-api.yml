@@ -1,0 +1,21 @@
+name: Deploy BEXENTRA Public API
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Neon CLI
+        run: npm install -g neonctl
+      - name: Deploy public API function
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+        run: |
+          test -n "$NEON_API_KEY" || { echo "::error::Add NEON_API_KEY repository secret"; exit 1; }
+          neon functions deploy bexentra-api --src neon/functions/bexentra-api.ts --project-id late-sound-85663882 --branch-id br-old-sun-b5txcoym
