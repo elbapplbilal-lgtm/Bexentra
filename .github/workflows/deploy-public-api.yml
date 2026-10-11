@@ -18,4 +18,4 @@ jobs:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
         run: |
           test -n "$NEON_API_KEY" || { echo "::error::Add NEON_API_KEY repository secret"; exit 1; }
-          neon functions deploy bexentra-api --src neon/functions/bexentra-api.ts --project-id late-sound-85663882 --branch-id br-old-sun-b5txcoym
+          neon functions deploy bexentraapi --src neon/functions/bexentra-api.ts --project-id late-sound-85663882 --branch-id br-old-sun-b5txcoym
