@@ -22,4 +22,4 @@ async function load(){if(!query){showError("ما كاين حتى بحث. رجع 
 $("detailSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("detailInput").value.trim();if(!q)return;const t=detect(q,$("detailType").value);location.href="explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(t)+"&q="+encodeURIComponent(q)});
 $("detailInput").value=query;
 load();
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("public/sw.js").catch(()=>{}));
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
