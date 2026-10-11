@@ -3,10 +3,12 @@ const $=id=>document.getElementById(id);
 const API="https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech";
 const network=$("network");
 const heroNetwork=$("heroNetwork");
+const networkIcon=$("networkIcon"),summaryChainLabel=$("summaryChainLabel");
 const indexStatus=$("indexStatus"),indexStatusNote=$("indexStatusNote");
 const esc=s=>String(s??"");
 function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-n):s}
-function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return Math.floor(d)+"s ago";if(d<3600)return Math.floor(d/60)+"m ago";if(d<86400)return Math.floor(d/3600)+"h ago";return Math.floor(d/86400)+"d ago"}
+function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return"منذ "+Math.floor(d)+" ثانية";if(d<3600)return"منذ "+Math.floor(d/60)+" دقيقة";if(d<86400)return"منذ "+Math.floor(d/3600)+" ساعة";return"منذ "+Math.floor(d/86400)+" يوم"}
+function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
 function setIndexStatus(v){
  if(!indexStatus||!indexStatusNote)return;
  if(!v){indexStatus.textContent="● لا بيانات";indexStatus.className="status-stale";indexStatusNote.textContent="No indexed timestamp";const live=$("statsLive");if(live)live.textContent="غير متصل";return}
@@ -55,7 +57,7 @@ function detectType(q,forced="auto"){
  return "tx";
 }
 async function loadDashboard(){
- const chain=network.value; $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent="جاري التحميل...";$("recentTransactions").textContent="جاري التحميل...";
+ const chain=network.value;syncNetworkUI(); $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent="جاري التحميل...";$("recentTransactions").textContent="جاري التحميل...";
  try{
   const [bs,ts]=await Promise.all([blocks(chain),txs(chain)]);
   if(network.value!==chain)return;
@@ -74,8 +76,9 @@ async function findTx(hash,target){
 const txForm=$("txForm");if(txForm)txForm.addEventListener("submit",e=>{e.preventDefault();const q=$("txInput").value.trim();if(q)location.href=internalExplorer(network.value,"tx",q)});
 $("globalSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("globalInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q,$("searchType").value),q)});
 $("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);
-network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-network",network.value)}catch{}const gr=$("globalResult");if(gr)gr.replaceChildren();const tr=$("txResult");if(tr)tr.replaceChildren();loadDashboard()});
+network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-network",network.value)}catch{}syncNetworkUI();const gr=$("globalResult");if(gr)gr.replaceChildren();const tr=$("txResult");if(tr)tr.replaceChildren();loadDashboard()});
 try{const savedNetwork=localStorage.getItem("bexentra-network");if(savedNetwork==="bnb"||savedNetwork==="solana")network.value=savedNetwork}catch{}
+syncNetworkUI();
 const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
 loadDashboard();
 const mobileSearch=$("mobileSearch");
