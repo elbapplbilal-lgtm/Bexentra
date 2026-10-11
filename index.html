@@ -1,49 +1,8 @@
-
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bexentra | مستكشف البلوك تشين</title>
-<link rel="stylesheet" href="public/style.css">
-</head>
-<body>
-<header>
-  <h2>🔷 BEXENTRA</h2>
-  <p>مستكشف البلوك تشين</p>
-</header>
-
-<main>
-  <section class="card">
-    <h1>استكشف عالم البلوك تشين</h1>
-    <p>ابحث عن محفظة على شبكة Solana</p>
-    <input id="searchInput" placeholder="أدخل عنوان المحفظة">
-    <button onclick="searchBlockchain()">🔍 بحث</button>
-    <div id="result"></div>
-  </section>
-
-  <section class="card">
-    <h2>🌐 الشبكات</h2>
-    <p>Solana — البحث عن المحافظ</p>
-    <p>BNB Chain — قريباً</p>
-  </section>
-
-  <section class="card">
-    <h2>📊 العملات الرقمية</h2>
-    <p>Bitcoin (BTC)</p>
-    <p>Ethereum (ETH)</p>
-    <p>Solana (SOL)</p>
-    <p>BNB</p>
-    <small>الأسعار المباشرة لم تُفعّل بعد.</small>
-  </section>
-
-  <section class="card">
-    <h2>⚙️ الإعدادات</h2>
-    <p>اللغة: العربية</p>
-    <p>التصميم: أزرق وأبيض</p>
-  </section>
-</main>
-
-<script src="public/app.js"></script>
-</body>
-</html>
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08152e"><title>BEXENTRA | Blockchain Explorer</title><link rel="stylesheet" href="public/style.css"></head>
+<body><header class="top"><nav class="nav"><a class="brand" href="./">◆ BEXENTRA</a><span class="tag">Blockchain Explorer · Beta</span></nav><div class="hero"><span class="eyebrow">مستكشف شبكات البلوك تشين</span><h1>استكشف البلوك تشين<br><em>بوضوح وسرعة</em></h1><p>ابحث عن عنوان محفظة على Solana أو BNB Chain وتابع معلومات الشبكة من مكان واحد.</p></div></header>
+<main><section class="search-panel"><div class="section-title"><div><span class="eyebrow dark">BLOCKCHAIN SEARCH</span><h2>البحث في الشبكات</h2></div><span class="live"><i></i>بيانات الشبكة العامة</span></div><form id="searchForm"><label for="network">اختر الشبكة</label><select id="network"><option value="solana">Solana (SOL)</option><option value="bnb">BNB Smart Chain (BNB)</option></select><label for="searchInput">عنوان المحفظة</label><div class="search-row"><input id="searchInput" autocomplete="off" spellcheck="false" placeholder="أدخل عنوان محفظة Solana" required><button type="submit">⌕ بحث</button></div></form><div id="result" role="status" aria-live="polite"></div><p class="hint">خدمة قراءة فقط. لا تطلب منك ربط محفظتك أو إدخال كلمات الاسترداد.</p></section>
+<section class="stats"><article class="stat"><span>الشبكات المتاحة</span><strong>02</strong><small>Solana · BNB Chain</small></article><article class="stat"><span>نوع البحث</span><strong>Wallet</strong><small>الرصيد ومعلومات الشبكة</small></article><article class="stat"><span>الوصول</span><strong>Public</strong><small>بدون تسجيل دخول</small></article></section>
+<section class="content-grid"><article class="panel"><div class="panel-head"><h2>◈ الشبكات</h2><span class="muted">Networks</span></div><div class="network"><span class="coin sol">◎</span><div><strong>Solana</strong><small>رصيد SOL · بيانات الشبكة</small></div><span class="status">متاحة</span></div><div class="network"><span class="coin bnb">◆</span><div><strong>BNB Smart Chain</strong><small>رصيد BNB · رقم آخر بلوك</small></div><span class="status">متاحة</span></div></article>
+<article class="panel"><div class="panel-head"><h2>▥ أسعار العملات</h2><button class="subtle" id="refreshPrices" type="button">تحديث ↻</button></div><div id="prices"><p class="muted">جاري تحميل الأسعار...</p></div><small class="muted">أسعار بالدولار من واجهة CoinGecko العامة، وقد تتأخر أو لا تتوفر مؤقتاً.</small></article></section>
+<section class="panel about"><h2>لماذا BEXENTRA؟</h2><p>واجهة مبسطة لاستكشاف بيانات البلوك تشين العامة. هذا إصدار تجريبي؛ لا يقدم حالياً فهرسة كاملة للمعاملات أو العقود الذكية مثل المستكشفات الكبيرة.</p></section></main><footer>◆ BEXENTRA <span>© 2026 · Explorer Beta</span></footer><script src="public/app.js" defer></script></body></html>
