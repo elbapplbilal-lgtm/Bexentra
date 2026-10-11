@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bexentra | Blockchain Explorer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h2>🔷 BEXENTRA</h2>
+  <p>مستكشف البلوك تشين</p>
+</header>
+
+<main>
+  <section class="card">
+    <h1>استكشف عالم البلوك تشين</h1>
+    <p>ابحث عن محافظ Solana وتابع معلومات الشبكات.</p>
+
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="أدخل عنوان محفظة Solana"
+    >
+
+    <button onclick="searchBlockchain()">
+      🔍 بحث
+    </button>
+
+    <div id="result"></div>
+  </section>
+
+  <section class="card">
+    <h2>🌐 الشبكات</h2>
+    <p>🟣 Solana — بحث عن المحافظ</p>
+    <p>🟡 BNB Chain — قريباً</p>
+  </section>
+
+  <section class="card">
+    <h2>📊 أسعار العملات</h2>
+    <p>BTC — Bitcoin</p>
+    <p>ETH — Ethereum</p>
+    <p>SOL — Solana</p>
+    <p>BNB — BNB</p>
+    <small>الأسعار المباشرة لم تُفعّل بعد.</small>
+  </section>
+
+  <section class="card">
+    <h2>⚙️ الإعدادات</h2>
+    <p>اللغة: العربية</p>
+    <p>التصميم: أزرق وأبيض</p>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
