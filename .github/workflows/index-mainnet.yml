@@ -3,7 +3,7 @@ name: BEXENTRA Mainnet Indexer
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/5 * * * *'
 
 permissions:
   contents: read
@@ -23,7 +23,10 @@ jobs:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
       SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
-      INDEXER_POLL_MS: '3000'
+      INDEXER_BATCH_SIZE: '8'
+      INDEXER_MAX_BACKLOG: '400'
+      INDEXER_ACTIVE_MS: '100'
+      INDEXER_IDLE_MS: '2000'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,5 +42,5 @@ jobs:
           fi
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-      - name: Index finalized BNB and Solana blocks (bounded run)
-        run: timeout --signal=TERM --kill-after=10s 230s node src/indexer.js || test "$?" -eq 124
+      - name: Keep BEXENTRA near the mainnet tips
+        run: timeout --signal=TERM --kill-after=10s 245s node src/indexer.js || test "$?" -eq 124
