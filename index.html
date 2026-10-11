@@ -3,90 +3,101 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#020b18">
+<meta name="theme-color" content="#020915">
 <meta name="description" content="BEXENTRA blockchain explorer for indexed BNB Chain and Solana data">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
 <title>BEXENTRA | Blockchain Explorer</title>
-<link rel="stylesheet" href="public/home.css?v=24">
+<link rel="stylesheet" href="public/home.css?v=25">
 </head>
-<body class="bex-home">
+<body>
 
 <header class="app-header">
-  <a class="brand" href="./" aria-label="BEXENTRA"><span class="brand-name">BEXENTRA</span><span class="brand-logo">B</span></a>
-  <div class="header-tools">
+  <div class="header-left">
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
-    <div class="network-pill"><img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain"><select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select><i class="network-live"></i></div>
-    <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
+    <div class="network-pill">
+      <img id="networkIcon" src="public/bnb-mark.svg" alt="BNB Chain">
+      <select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select>
+      <i></i>
+    </div>
   </div>
+  <a class="brand" href="./"><span class="brand-name">BEXENTRA</span><span class="brand-logo">B</span></a>
+  <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
 </header>
 
 <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
   <div class="mobile-menu-head"><b>BEXENTRA</b><button id="menuClose" type="button">×</button></div>
-  <a href="#dashboard">الرئيسية</a><a href="#blocks">البلوكات</a><a href="#transactions">المعاملات</a><a href="explorer.html">Explorer</a>
+  <a href="#dashboard">الرئيسية</a>
+  <a href="#blocks">البلوكات</a>
+  <a href="#transactions">المعاملات</a>
+  <a href="explorer.html">Explorer</a>
   <p>مستكشف عام للقراءة فقط. لا ندخل إلى محفظتك ولا نطلب Seed Phrase.</p>
 </aside>
 <div id="menuBackdrop" class="menu-backdrop"></div>
 
 <main id="dashboard" class="app-shell">
   <section class="hero-card">
-    <div class="world-glow"></div><div class="grid-glow"></div>
-    <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
-    <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
+    <div class="globe"></div>
+    <div class="glow-grid"></div>
+
+    <div class="chain-card solana-card"><img src="public/solana-mark.svg" alt="Solana"></div>
+    <div class="chain-card bnb-card"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
 
     <div class="hero-copy">
+      <span class="hero-badge">BEXENTRA INDEX · MAINNET <i></i></span>
       <h1>أوضح. أسرع. أذكى.</h1>
-      <p>ابحث في البيانات المفهرسة لـ BEXENTRA على BNB Chain وSolana من واجهة واحدة مصممة للهاتف أولاً.</p>
+      <p>استكشف بيانات BEXENTRA المفهرسة على BNB Chain وSolana من واجهة واحدة متطورة ومصممة للهاتف أولاً.</p>
       <div class="trust-pills"><span>▤ Indexed data</span><span>⌁ Multi-chain</span><span>▣ Read-only</span></div>
     </div>
 
     <form id="globalSearch" class="hero-search">
-      <div class="search-mark">⌕</div>
+      <button type="submit">استكشف</button>
       <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="ابحث بعنوان، Tx Hash أو رقم بلوك">
       <select id="searchType" aria-label="نوع البحث"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
-      <button type="submit">استكشف</button>
+      <div class="search-mark">⌕</div>
     </form>
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="#blocks"><span class="quick-icon">▦</span><div><b>البلوكات</b><small>تصفح أحدث البيانات</small></div><i>‹</i></a>
-      <a href="#transactions"><span class="quick-icon">⇄</span><div><b>المعاملات</b><small>تصفح أحدث النشاط</small></div><i>‹</i></a>
-      <button id="quickRefresh" type="button"><span class="quick-icon">↻</span><div><b>تحديث</b><small>إعادة جلب البيانات</small></div><i>‹</i></button>
+      <a href="#transactions"><span class="quick-icon">⇄</span><div><b>المعاملات</b><small>آخر النشاط</small></div><i>‹</i></a>
+      <a href="#blocks"><span class="quick-icon">◇</span><div><b>البلوكات</b><small>أحدث البيانات</small></div><i>‹</i></a>
       <a href="#stats"><span class="quick-icon">◎</span><div><b>الشبكات</b><small>BNB + Solana</small></div><i>‹</i></a>
+      <button id="quickRefresh" type="button"><span class="quick-icon">↻</span><div><b>تحديث</b><small>إعادة الجلب</small></div><i>‹</i></button>
     </div>
   </section>
 
   <section id="stats" class="stats-card">
-    <div class="section-title"><div><span class="title-icon">▥</span><b>إحصائيات المستكشف</b></div><span id="statsLive" class="live-label"><i></i> مباشر</span></div>
+    <div class="section-title">
+      <div><span class="title-icon">▥</span><b>إحصائيات المستكشف</b></div>
+      <span id="statsLive" class="live-label"><i></i> مباشر</span>
+    </div>
     <div class="stats-grid">
       <article><span class="stat-icon purple">◇</span><small>آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
       <article><span class="stat-icon blue">⌁</span><small>الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
       <article><span class="stat-icon green">ϟ</span><small>حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
       <article><span class="stat-icon blue">▤</span><small>المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em>أحدث عينة</em></article>
     </div>
-    <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
+    <div class="hidden-metrics"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
   <section id="blocks" class="data-card">
-    <div class="data-head"><div><span class="data-icon">◇</span><h2>أحدث البلوكات</h2></div><button id="refreshBlocks" type="button">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon">◇</span><h2>أحدث البلوكات</h2></div><button id="refreshBlocks" type="button">عرض الكل ‹</button></div>
     <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
   </section>
 
   <section id="transactions" class="data-card">
-    <div class="data-head"><div><span class="data-icon">⇄</span><h2>أحدث المعاملات</h2></div><button id="refreshTx" type="button">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon">⇄</span><h2>أحدث المعاملات</h2></div><button id="refreshTx" type="button">عرض الكل ‹</button></div>
     <div id="recentTransactions" class="feed">جاري تحميل المعاملات...</div>
   </section>
-
-  <section class="safety-note"><span>✓</span><div><b>قراءة عامة فقط</b><small>BEXENTRA لا يطلب ربط محفظتك أو كلمات الاسترداد أو المفتاح الخاص.</small></div></section>
 </main>
 
-<nav class="bottom-nav" aria-label="التنقل">
+<nav class="bottom-nav">
   <a href="#transactions"><span>⇄</span><b>المعاملات</b></a>
   <a href="#blocks"><span>▦</span><b>البلوكات</b></a>
   <a href="explorer.html"><span>⌕</span><b>Explorer</b></a>
   <a class="active" href="#dashboard"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 
-<script src="public/app.js?v=24" defer></script>
+<script src="public/app.js?v=25" defer></script>
 </body>
 </html>
