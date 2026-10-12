@@ -105,10 +105,12 @@ async function cycle(chain){
  const previous=await state(chain,tip);
  if(previous>=tip)return 0;
 
- const start=Math.max(previous+1,tip-liveWindow+1);
+ // Never silently skip unindexed blocks when the worker falls behind.
+ const start=previous+1;
+ const end=Math.min(tip,start+liveWindow-1);
  let saved=0;
 
- for(let height=start;height<=tip;height++){
+ for(let height=start;height<=end;height++){
   const block=chain==="bnb"?await fetchBnbBlock(height):await fetchSolanaBlock(height);
   if(block){
    await persist(chain,block.height,block.hash,block.time,block.transactions);
@@ -117,7 +119,7 @@ async function cycle(chain){
    await advance(chain,height);
   }
  }
- console.log(chain,"processed",start,"..",tip,"saved",saved);
+ console.log(chain,"processed",start,"..",end,"tip",tip,"saved",saved);
  return saved;
 }
 
