@@ -16,13 +16,35 @@ function ago(v){
  return window.BexentraPrefs?.get("language")==="en"?value+" "+tr(unit)+" "+tr("time.ago"):tr("time.ago")+" "+value+" "+tr(unit);
 }
 function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
+function paintIndexSignal(mode){
+ for(const id of ["heroSignal"]){
+  const el=$(id);if(!el)continue;
+  el.classList.toggle("is-recent",mode==="recent");
+  el.classList.toggle("is-stale",mode==="stale");
+ }
+ const el=document.querySelector(".network-live");
+ if(el){el.classList.toggle("is-recent",mode==="recent");el.classList.toggle("is-stale",mode==="stale")}
+}
+function makeIcon(name){
+ const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+ svg.setAttribute("class","ui-icon");svg.setAttribute("aria-hidden","true");
+ const use=document.createElementNS("http://www.w3.org/2000/svg","use");
+ use.setAttribute("href","public/neon-icons.svg#"+name);
+ svg.append(use);return svg;
+}
+function rowNavigation(el,url){
+ el.classList.add("feed-row-link");
+ el.tabIndex=0;el.setAttribute("role","link");
+ el.addEventListener("click",e=>{if(e.target.closest("a,button"))return;location.href=url});
+ el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();location.href=url}});
+}
 function setIndexStatus(v){
  if(!indexStatus||!indexStatusNote)return;
- if(!v || !Number.isFinite(new Date(v).getTime()) || new Date(v).getTime()>Date.now()+60000){indexStatus.textContent="● "+tr("stats.noData");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.noTimestamp");const live=$("statsLive");if(live)live.textContent=tr("stats.offline");return}
+ if(!v || !Number.isFinite(new Date(v).getTime()) || new Date(v).getTime()>Date.now()+60000){paintIndexSignal("off");indexStatus.textContent="● "+tr("stats.noData");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.noTimestamp");const live=$("statsLive");if(live)live.textContent=tr("stats.offline");return}
  const mins=Math.max(0,(Date.now()-new Date(v).getTime())/60000);const live=$("statsLive");
- if(mins<10){indexStatus.textContent="● "+tr("stats.updated");indexStatus.className="status-good";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.live")}
- else if(mins<45){indexStatus.textContent="● "+tr("stats.recent");indexStatus.className="status-wait";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.nearLive")}
- else{indexStatus.textContent="● "+tr("stats.stale");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.needsUpdate")}
+ if(mins<10){paintIndexSignal("recent");indexStatus.textContent="● "+tr("stats.updated");indexStatus.className="status-good";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.live")}
+ else if(mins<45){paintIndexSignal("stale");indexStatus.textContent="● "+tr("stats.recent");indexStatus.className="status-wait";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.nearLive")}
+ else{paintIndexSignal("stale");indexStatus.textContent="● "+tr("stats.stale");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.needsUpdate")}
 }
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
@@ -71,9 +93,9 @@ async function loadDashboard(){
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";setIndexStatus(bs[0]?.indexed_at);
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
-  bs.slice(0,3).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="◇";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" "+tr("api.transactionsUnit");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.block_time||b.indexed_at);r.append(i,m,side);rb.append(r)});
+  bs.slice(0,3).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.append(makeIcon("blocks"));const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" "+tr("api.transactionsUnit");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.block_time||b.indexed_at);r.append(i,m,side);rowNavigation(r,a.href);rb.append(r)});
   const rt=$("recentTransactions");rt.replaceChildren();if(!ts.length)rt.textContent=tr("api.emptyTx");
-  ts.slice(0,3).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="⇄";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent=t.sender||t.recipient?(short(t.sender||"—",6)+" → "+short(t.recipient||"—",6)):"Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status==="failed"?tr("api.failed"):t.status==="success"?tr("api.confirmed"):tr("api.indexed");r.append(i,m,side);rt.append(r)});
+  ts.slice(0,3).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.append(makeIcon("transactions"));const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent=t.sender||t.recipient?(short(t.sender||"—",6)+" → "+short(t.recipient||"—",6)):"Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status==="failed"?tr("api.failed"):t.status==="success"?tr("api.confirmed"):tr("api.indexed");r.append(i,m,side);rowNavigation(r,a.href);rt.append(r)});
  }catch(e){const msg=tr("api.error")+" "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
 async function findTx(hash,target){
