@@ -77,8 +77,8 @@ async function loadDashboard(){
  }catch(e){const msg=tr("api.error")+" "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
 async function findTx(hash,target){
- const chain=network.value;target.textContent="جاري البحث في فهرس BEXENTRA...";
- try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"المعاملة غير موجودة في الجزء المفهرس حالياً.");return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,"تعذر البحث حالياً.")}
+ const chain=network.value;target.textContent=tr("api.finding");
+ try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,tr("api.txMissing"));return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,tr("api.txError"))}
 }
 const txForm=$("txForm");if(txForm)txForm.addEventListener("submit",e=>{e.preventDefault();const q=$("txInput").value.trim();if(q)location.href=internalExplorer(network.value,"tx",q)});
 $("globalSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("globalInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q,$("searchType").value),q)});
