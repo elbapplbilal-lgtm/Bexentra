@@ -1,0 +1,49 @@
+/* BEXENTRA Stage 1 — mobile-first blue interface refinement.
+   Non-destructive layer over home.css; no mock blockchain values. */
+:root{--bg:#020713;--panel:#07172e;--line:#1b70c6;--blue:#4da5ff;--cyan:#2be8f1}
+body.bex-home{background:radial-gradient(ellipse 85% 34% at 50% 0%,#0b3a76 0%,#04162d 44%,transparent 100%),#020713}
+.app-header{border-bottom-color:#1762ac;background:rgba(2,10,26,.92);box-shadow:0 6px 30px #0051b01c}
+.app-shell{max-width:1040px}
+.hero-card{margin-top:12px;border-color:#277de2;background:radial-gradient(ellipse at 50% 12%,#10478c80,transparent 49%),linear-gradient(170deg,#061b3b,#030c1d 80%);box-shadow:inset 0 0 65px #127bde20,0 0 26px #006ce128}
+.hero-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 12%,#43c7ff28,transparent 37%);z-index:0}
+.world-glow{width:min(78vw,420px);height:245px;top:-73px;border-color:#48adff66;box-shadow:0 0 65px #057ce74d,inset 0 0 50px #1160ba33}
+.chain-cube{top:92px}
+.hero-copy h1{font-size:clamp(31px,8vw,58px);line-height:1.25;margin:86px 0 8px;text-shadow:0 0 24px #078eff60}
+.hero-copy p{font-size:clamp(12px,3.15vw,16px);max-width:580px;line-height:1.85}
+.trust-pills{gap:7px;margin-top:15px;flex-wrap:wrap}
+.trust-pills span{font-size:10px;padding:7px 10px;border-color:#2277c3;background:#06172dd9}
+.hero-search{margin-top:23px;min-height:64px;border:1px solid #6ebdff;background:#061a35;box-shadow:0 0 0 3px #1687ee30,0 0 30px #1687ee40;grid-template-columns:34px minmax(0,1fr) 100px}
+.search-mark{color:#69baff}
+.hero-search input{color:#eff8ff;font-size:13px}
+.hero-search input::placeholder{color:#a2b9d7;opacity:1}
+.hero-search button{font-size:13px;background:linear-gradient(135deg,#3ea7ff,#0863e9)}
+.quick-grid{gap:10px;margin-top:17px}
+.quick-grid>a,.quick-grid>button{min-height:77px;padding:10px;gap:9px;border-color:#236fba;background:linear-gradient(135deg,#0a2850,#05152b);box-shadow:inset 0 1px #75bfff20,0 5px 18px #0005}
+.quick-icon{width:39px;height:39px;font-size:22px}
+.quick-grid b{font-size:14px}
+.quick-grid small{font-size:10px;line-height:1.4}
+.stats-card,.data-card{margin-top:14px;padding:14px;border-color:#2169ae;background:linear-gradient(145deg,#071e3a,#041225);box-shadow:inset 0 1px #70b9ff19,0 9px 26px #0005}
+.section-title b,.data-head h2{font-size:15px}
+.live-label{font-size:11px}
+.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stats-grid article{min-height:128px;padding:13px 6px;border-color:#1c5e9b}
+.stat-icon{width:34px;height:34px;flex-basis:34px;font-size:18px}
+.stats-grid small{font-size:11px;min-height:auto}
+.stats-grid strong{font-size:clamp(12px,3.5vw,18px);white-space:normal;overflow-wrap:anywhere}
+.stats-grid em{font-size:10px}
+.data-head button{font-size:11px;padding:8px 12px}
+.feed-row{grid-template-columns:38px minmax(0,1fr) auto;min-height:64px;gap:10px}
+.feed-icon{width:37px;height:37px;font-size:13px}
+.feed-main a,.feed-main b{font-size:13px}
+.feed-main small{font-size:10px;line-height:1.5}
+.feed-side{max-width:108px;font-size:10px;padding:7px 9px}
+.error{font-size:12px;line-height:1.6}
+.safety-note{padding:13px}.safety-note b{font-size:13px}.safety-note small{font-size:11px;line-height:1.6}
+.bottom-nav{height:72px;background:#031126f5;border-top-color:#2476c8}
+.bottom-nav a b{font-size:11px}.bottom-nav a span{font-size:24px}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #6fdfff;outline-offset:3px}
+button:hover,.quick-grid>a:hover{filter:brightness(1.13)}
+@media(max-width:350px){.hero-search{grid-template-columns:24px minmax(0,1fr) 76px}.hero-search button{font-size:11px}.quick-grid b{font-size:12px}.quick-grid small{font-size:9px}.stats-grid strong{font-size:12px}}
+@media(min-width:700px){.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.hero-card{padding:30px 34px 25px}.chain-cube{top:130px}.hero-copy h1{margin-top:96px}.quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.stats-grid article{min-height:150px}}
+@media(min-width:821px){.bottom-nav{display:none}.hero-search{grid-template-columns:50px minmax(0,1fr) 145px}.hero-search input{font-size:16px}.hero-search button{font-size:15px}.stats-grid strong{font-size:17px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
