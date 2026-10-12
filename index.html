@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#020b18">
+<meta name="theme-color" content="#020a1c">
+<meta name="color-scheme" content="dark light">
 <meta name="description" content="BEXENTRA blockchain explorer for indexed BNB Chain and Solana data">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
@@ -11,12 +12,16 @@
 <link rel="stylesheet" href="public/home.css?v=32">
 <link rel="stylesheet" href="public/stage1.css?v=1">
 <link rel="stylesheet" href="public/visual-v2.css?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public/neon-premium.css?v=1">
 </head>
 <body class="bex-home">
 
 <header class="app-header">
   <div class="header-left">
-    <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><span></span><span></span><span></span></button>
+    <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#menu"></use></svg></button>
     <div class="network-pill">
       <img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain">
       <select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select>
@@ -27,31 +32,31 @@
     <span class="brand-name">BEXENTRA</span>
     <span class="brand-logo">B</span>
   </a>
-  <button id="settingsToggle" data-open-settings class="settings-trigger" type="button" data-i18n-aria="menu.settings" aria-label="الإعدادات" title="Settings">⚙</button>
+  <button id="settingsToggle" data-open-settings class="settings-trigger" type="button" data-i18n-aria="menu.settings" aria-label="الإعدادات" title="Settings"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#settings"></use></svg></button>
 </header>
 
 <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
   <div class="mobile-menu-head"><b>BEXENTRA</b><button id="menuClose" type="button" aria-label="Close">×</button></div>
-  <a href="#dashboard" data-i18n="menu.home">الرئيسية</a><a href="#blocks" data-i18n="menu.blocks">البلوكات</a><a href="#transactions" data-i18n="menu.transactions">المعاملات</a><a href="explorer.html" data-i18n="menu.explorer">Explorer</a><button class="menu-settings-entry" data-open-settings type="button">⚙ <span data-i18n="menu.settings">الإعدادات</span></button>
+  <a href="#dashboard" data-i18n="menu.home">الرئيسية</a><a href="#blocks" data-i18n="menu.blocks">البلوكات</a><a href="#transactions" data-i18n="menu.transactions">المعاملات</a><a href="explorer.html" data-i18n="menu.explorer">Explorer</a><button class="menu-settings-entry" data-open-settings type="button"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#settings"></use></svg> <span data-i18n="menu.settings">الإعدادات</span></button>
   <p data-i18n="menu.safety">مستكشف عام للقراءة فقط. لا ندخل إلى محفظتك ولا نطلب Seed Phrase.</p>
 </aside>
 <div id="menuBackdrop" class="menu-backdrop"></div>
 
 <main id="dashboard" class="app-shell">
   <section class="hero-card">
-    <div class="world-glow"></div><div class="grid-glow"></div>
+    <div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
     <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
 
     <div class="hero-copy">
-      <div class="hero-overline"><span class="hero-overline-symbol">▤</span><span data-i18n="hero.overline">BEXENTRA INDEX · MAINNET</span><i></i></div>
+      <div class="hero-overline"><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg><span data-i18n="hero.overline">BEXENTRA INDEX · MAINNET</span><i id="heroSignal" class="signal-dot awaiting" aria-hidden="true"></i></div>
       <h1 data-i18n="hero.title">أوضح. أسرع. أذكى.</h1>
       <p data-i18n="hero.description">استكشف البيانات الحقيقية المفهرسة على BNB Chain وSolana، من واجهة واحدة مصممة للهاتف.</p>
-      <div class="trust-pills"><span><b>▤</b> <span data-i18n="hero.indexed">بيانات مفهرسة</span></span><span><b>⌁</b> <span data-i18n="hero.multichain">متعدد الشبكات</span></span><span><b>▣</b> <span data-i18n="hero.readonly">قراءة فقط</span></span></div>
+      <div class="trust-pills"><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg> <span data-i18n="hero.indexed">بيانات مفهرسة</span></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg> <span data-i18n="hero.multichain">متعدد الشبكات</span></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#shield"></use></svg> <span data-i18n="hero.readonly">قراءة فقط</span></span></div>
     </div>
 
     <form id="globalSearch" class="hero-search">
-      <div class="search-mark">⌕</div>
+      <div class="search-mark"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></div>
       <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك" data-i18n-placeholder="search.placeholder" aria-label="Blockchain search">
       <select id="searchType" aria-label="نوع البحث"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
       <button type="submit" data-i18n="search.button">استكشف</button>
@@ -59,42 +64,42 @@
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="#blocks"><span class="quick-icon">▦</span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><i>‹</i></a>
-      <a href="#transactions"><span class="quick-icon">⇄</span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><i>‹</i></a>
-      <button id="quickRefresh" type="button"><span class="quick-icon">↻</span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><i>‹</i></button>
-      <a href="#stats"><span class="quick-icon">◎</span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><i>‹</i></a>
+      <a href="#blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="#transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <button id="quickRefresh" type="button"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#refresh"></use></svg></span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></button>
+      <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
     </div>
   </section>
 
   <section id="stats" class="stats-card">
-    <div class="section-title"><div><span class="title-icon">▥</span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
+    <div class="section-title"><div><span class="title-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon purple">◇</span><small data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
-      <article><span class="stat-icon blue">⌁</span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
-      <article><span class="stat-icon green">ϟ</span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
-      <article><span class="stat-icon blue">▤</span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
+      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><small data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
+      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
     </div>
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
   <section id="blocks" class="data-card">
-    <div class="data-head"><div><span class="data-icon">◇</span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
     <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
   </section>
 
   <section id="transactions" class="data-card data-v29">
-    <div class="data-head"><div><span class="data-icon">⇄</span><h2 data-i18n="data.transactions">أحدث المعاملات</h2></div><button id="refreshTx" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><h2 data-i18n="data.transactions">أحدث المعاملات</h2></div><button id="refreshTx" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
     <div id="recentTransactions" class="feed">جاري تحميل المعاملات...</div>
   </section>
 
-  <section class="safety-note"><span>✓</span><div><b data-i18n="safety.title">بيانات عامة للقراءة فقط</b><small data-i18n="safety.description">BEXENTRA ما كيطلبش كلمة السر أو المفتاح الخاص أو كلمات استرداد المحفظة.</small></div></section>
+  <section class="safety-note"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#shield"></use></svg></span><div><b data-i18n="safety.title">بيانات عامة للقراءة فقط</b><small data-i18n="safety.description">BEXENTRA ما كيطلبش كلمة السر أو المفتاح الخاص أو كلمات استرداد المحفظة.</small></div></section>
 </main>
 
 <nav class="bottom-nav" aria-label="التنقل">
-  <a href="#transactions"><span>⇄</span><b data-i18n="nav.transactions">المعاملات</b></a>
-  <a href="#blocks"><span>▦</span><b data-i18n="nav.blocks">البلوكات</b></a>
-  <a href="explorer.html"><span>⌕</span><b data-i18n="nav.explorer">Explorer</b></a>
-  <a class="active" href="#dashboard"><span>⌂</span><b data-i18n="nav.home">الرئيسية</b></a>
+  <a href="#transactions"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><b data-i18n="nav.transactions">المعاملات</b></a>
+  <a href="#blocks"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><b data-i18n="nav.blocks">البلوكات</b></a>
+  <a href="explorer.html"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></span><b data-i18n="nav.explorer">Explorer</b></a>
+  <a class="active" href="#dashboard"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#home"></use></svg></span><b data-i18n="nav.home">الرئيسية</b></a>
 </nav>
 
 <div id="settingsOverlay" class="settings-overlay" hidden>
@@ -112,6 +117,6 @@
 </div>
 <script src="public/preferences.js?v=2" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=34" defer></script>
+<script src="public/app.js?v=35" defer></script>
 </body>
 </html>
