@@ -119,7 +119,7 @@
  function close(){const panel=document.getElementById("settingsOverlay");if(!panel)return;panel.hidden=true;document.body.classList.remove("settings-open");focusedBefore?.focus?.()}
  function init(){
   apply();
-  document.querySelectorAll("[data-open-settings]").forEach(el=>el.addEventListener("click",()=>{document.getElementById("mobileMenu")?.classList.remove("open");document.getElementById("menuBackdrop")?.classList.remove("show");open()}));
+  document.querySelectorAll("[data-open-settings]").forEach(el=>el.addEventListener("click",()=>{const menu=document.getElementById("mobileMenu");menu?.classList.remove("open");menu?.setAttribute("aria-hidden","true");document.getElementById("menuBackdrop")?.classList.remove("show");open()}));
   document.querySelectorAll("[data-close-settings]").forEach(el=>el.addEventListener("click",close));
   document.getElementById("settingsOverlay")?.addEventListener("click",e=>{if(e.target.id==="settingsOverlay")close()});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
