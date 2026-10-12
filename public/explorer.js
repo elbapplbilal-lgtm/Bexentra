@@ -4,8 +4,10 @@ const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
 let chain=params.get("chain")==="solana"?"solana":"bnb";
 let type=params.get("type")||"auto";
+if(!["auto","block","tx","address"].includes(type))type="auto";
 let query=params.get("q")||"";
 const esc=v=>String(v??"—");
+const tr=k=>window.BexentraPrefs?.t(k)??k;
 function short(v,n=12){v=esc(v);return v.length>n*2?v.slice(0,n)+"…"+v.slice(-n):v}
 function detect(q,t="auto"){if(t!=="auto")return t;if(/^\d+$/.test(q))return"block";if(chain==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return"address";if(chain==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return"address";return"tx"}
 function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/":t==="address"?"address/":"block/")+id;return"https://solscan.io/"+(t==="tx"?"tx/":t==="address"?"account/":"block/")+id}
@@ -15,21 +17,21 @@ async function copyText(value,button){try{await navigator.clipboard.writeText(St
 function showError(msg){$("detailLoading").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailError").hidden=false;$("detailError").textContent=msg}
 function start(title){$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function finish(title,subtitle,fields,primary,externalType){$("detailLoading").hidden=true;$("detailOverview").hidden=false;$("detailTitle").textContent=title;$("detailSubtitle").textContent=subtitle;$("overviewTitle").textContent=title;$("detailFields").replaceChildren(...fields);$("externalLink").href=ext(externalType,primary);$("copyPrimary").onclick=()=>copyText(primary,$("copyPrimary"))}
-async function loadBlock(){start(chain==="bnb"?"تحميل البلوك...":"تحميل Slot...");const b=await request("/block",{chain,height:query});finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),"تفاصيل البلوك داخل فهرس BEXENTRA",[row("Height / Slot",b.height,true),row("Block Hash",b.block_hash,true),row("Transactions",b.transaction_count),row("Block Time",b.block_time),row("Indexed At",b.indexed_at)],b.height,"block")}
-async function loadTx(){start("تحميل المعاملة...");const t=await request("/tx",{chain,hash:query});finish("Transaction",short(t.tx_hash,18),"تفاصيل المعاملة"&&[row("Transaction Hash",t.tx_hash,true),row("Block / Slot",t.block_height,true),row("From",t.sender||"—",!!t.sender),row("To",t.recipient||"—",!!t.recipient),row("Status",t.status==="success"?"مؤكدة":t.status==="failed"?"فاشلة":t.status==="indexed"?"مفهرسة (التأكيد غير متحقق)":(t.status||"غير متوفر")),row("Fee",t.fee_native!=null&&t.fee_native!==""?(chain==="bnb"?(Number(t.fee_native)/1e18).toLocaleString("en-US",{maximumFractionDigits:18})+" BNB":(Number(t.fee_native)/1e9).toLocaleString("en-US",{maximumFractionDigits:9})+" SOL"):"غير متوفرة"),row("Indexed At",t.indexed_at)],t.tx_hash,"tx")}
+async function loadBlock(){start(chain==="bnb"?tr("details.loadBlock"):tr("details.loadSlot"));const b=await request("/block",{chain,height:query});finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),tr("details.subtitle"),[row("Height / Slot",b.height,true),row("Block Hash",b.block_hash,true),row("Transactions",b.transaction_count),row("Block Time",b.block_time),row("Indexed At",b.indexed_at)],b.height,"block")}
+async function loadTx(){start(tr("details.loadTx"));const t=await request("/tx",{chain,hash:query});finish(tr("details.txTitle"),short(t.tx_hash,18),tr("details.subtitle")&&[row("Transaction Hash",t.tx_hash,true),row("Block / Slot",t.block_height,true),row("From",t.sender||"—",!!t.sender),row("To",t.recipient||"—",!!t.recipient),row("Status",t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):(t.status||tr("details.unavailable"))),row("Fee",t.fee_native!=null&&t.fee_native!==""?(chain==="bnb"?(Number(t.fee_native)/1e18).toLocaleString("en-US",{maximumFractionDigits:18})+" BNB":(Number(t.fee_native)/1e9).toLocaleString("en-US",{maximumFractionDigits:9})+" SOL") :tr("details.unavailable")),row("Indexed At",t.indexed_at)],t.tx_hash,"tx")}
 // Read only the BEP-20 transfers indexed so far; amounts are raw base units.
 async function loadTokenTransfers(address){
  if(chain!=="bnb")return;
  const section=$("tokenActivity"),feed=$("tokenFeed"),count=$("tokenCount");
  section.hidden=false;
- feed.textContent="جاري تحميل تحويلات BEP20 المفهرسة...";
+ feed.textContent=tr("details.tokenLoading");
  count.textContent="…";
  try{
   const data=await request("/token-transfers",{chain:"bnb",address,limit:"30"});
   const transfers=Array.isArray(data.transfers)?data.transfers:[];
   count.textContent=transfers.length+" EVENTS";
   feed.replaceChildren();
-  if(!transfers.length){feed.textContent="لا توجد تحويلات BEP20 لهذا العنوان في الجزء المفهرس حالياً.";return}
+  if(!transfers.length){feed.textContent=tr("details.tokenEmpty");return}
   const own=address.toLowerCase();
   transfers.forEach(t=>{
    const from=String(t.sender||""),to=String(t.recipient||"");
@@ -54,7 +56,7 @@ async function loadTokenTransfers(address){
    amount.textContent="Raw amount: "+esc(t.amount_raw);
    const side=document.createElement("span");
    side.className="feed-side";
-   side.textContent=direction+" · تفاصيل";
+   side.textContent=direction+" · "+tr("details.detailsLabel");
    main.append(hash,token,amount);
    summary.append(symbol,main,side);
    const details=document.createElement("div");
@@ -77,25 +79,26 @@ async function loadTokenTransfers(address){
    field("Token contract",t.token_address,true);
    field("From",from,true);
    field("To",to,true);
-   field("Raw amount (base units)",t.amount_raw);
+   field(tr("details.rawAmount")+" (base units)",t.amount_raw);
    const note=document.createElement("p");
    note.className="token-transfer-note";
-   note.textContent="الكمية خام وليست مقسومة على decimals. هادي غير بيانات الجزء المفهرس.";
+   note.textContent=tr("details.tokenNote");
    const verify=document.createElement("a");
    verify.className="token-verify-link";
    verify.href=ext("tx",t.tx_hash);
    verify.target="_blank";
    verify.rel="noopener noreferrer";
-   verify.textContent="تحقق خارجياً على BscScan ↗";
+   verify.textContent=tr("details.tokenVerify");
    details.append(note,verify);
    item.append(summary,details);
    feed.append(item);
   });
- }catch(e){count.textContent="—";feed.textContent="تعذر تحميل تحويلات BEP20 حالياً: "+e.message}
+ }catch(e){count.textContent="—";feed.textContent=tr("details.tokenFailed")+" "+e.message}
 }
-async function loadAddress(){start("تحميل نشاط العنوان...");if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;const data=await request("/address",{chain,address:query,limit:"40"});const txs=data.transactions||[];finish("Address",short(query,18),txs.length+" معاملة مفهرسة",[row("Address",query,true),row("Indexed transactions",txs.length),row("Network",chain==="bnb"?"BNB Smart Chain":"Solana")],query,"address");$("addressActivity").hidden=false;$("addressCount").textContent=txs.length+" TX";const feed=$("addressFeed");feed.replaceChildren();if(chain==="bnb")await loadTokenTransfers(query);if(!txs.length){feed.textContent="لا توجد معاملات لهذا العنوان في الجزء المفهرس حالياً.";return}txs.forEach(t=>{const r=document.createElement("a");r.className="feed-row clickable";r.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);const from=String(t.sender||"");const to=String(t.recipient||"");const own=String(query).toLowerCase();const outgoing=from.toLowerCase()===own;const incoming=to.toLowerCase()===own;const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"غير محدد";const i=document.createElement("span");i.className="feed-icon";i.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";const m=document.createElement("div");m.className="feed-main";const b=document.createElement("b");b.textContent=short(t.tx_hash,12);const info=document.createElement("small");info.textContent=direction+" · "+(outgoing?"إلى: "+short(to||"—",8):incoming?"من: "+short(from||"—",8):"Block "+esc(t.block_height));const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+(t.status==="success"?"مؤكدة":t.status==="failed"?"فاشلة":t.status==="indexed"?"مفهرسة":esc(t.status));m.append(b,info,meta);const side=document.createElement("span");side.className="feed-side";side.textContent=direction;r.append(i,m,side);feed.append(r)})}
-async function load(){if(!query){showError("ما كاين حتى بحث. رجع للرئيسية واكتب عنوان أو معاملة أو بلوك.");return}type=detect(query,type);$("detailKicker").innerHTML="<i></i> "+type.toUpperCase()+" · BEXENTRA";try{if(type==="block")await loadBlock();else if(type==="address")await loadAddress();else await loadTx()}catch(e){showError("ما قدرناش نلقاو هاد البيانات فالفهرس الحالي: "+e.message)}}
+async function loadAddress(){start(tr("details.loadAddress"));if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;const data=await request("/address",{chain,address:query,limit:"40"});const txs=data.transactions||[];finish(tr("details.addressTitle"),short(query,18),txs.length+" "+tr("details.indexedTxSummary"),[row(tr("details.address"),query,true),row(tr("details.indexedTx"),txs.length),row(tr("details.network"),chain==="bnb"?"BNB Smart Chain":"Solana")],query,"address");$("addressActivity").hidden=false;$("addressCount").textContent=txs.length+" TX";const feed=$("addressFeed");feed.replaceChildren();if(chain==="bnb")await loadTokenTransfers(query);if(!txs.length){feed.textContent=tr("details.noActivity");return}txs.forEach(t=>{const r=document.createElement("a");r.className="feed-row clickable";r.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);const from=String(t.sender||"");const to=String(t.recipient||"");const own=String(query).toLowerCase();const outgoing=from.toLowerCase()===own;const incoming=to.toLowerCase()===own;const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"غير محدد";const i=document.createElement("span");i.className="feed-icon";i.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";const m=document.createElement("div");m.className="feed-main";const b=document.createElement("b");b.textContent=short(t.tx_hash,12);const info=document.createElement("small");info.textContent=direction+" · "+(outgoing?"إلى: "+short(to||"—",8):incoming?"من: "+short(from||"—",8):"Block "+esc(t.block_height));const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+(t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):esc(t.status));m.append(b,info,meta);const side=document.createElement("span");side.className="feed-side";side.textContent=direction;r.append(i,m,side);feed.append(r)})}
+async function load(){if(!query){showError(tr("details.noSearch"));return}type=detect(query,type);$("detailKicker").replaceChildren(document.createElement("i"),document.createTextNode(" "+type.toUpperCase()+" · BEXENTRA"));try{if(type==="block")await loadBlock();else if(type==="address")await loadAddress();else await loadTx()}catch(e){showError(tr("details.notFound")+" "+e.message)}}
 $("detailSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("detailInput").value.trim();if(!q)return;const t=detect(q,$("detailType").value);location.href="explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(t)+"&q="+encodeURIComponent(q)});
 $("detailInput").value=query;
 load();
+document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset")load()});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
