@@ -35,23 +35,60 @@ async function loadTokenTransfers(address){
    const from=String(t.sender||""),to=String(t.recipient||"");
    const outgoing=from.toLowerCase()===own,incoming=to.toLowerCase()===own;
    const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"EVENT";
-   const item=document.createElement("a");
-   item.className="feed-row clickable";
-   item.href=ext("tx",t.tx_hash);
-   item.target="_blank";
-   item.rel="noopener noreferrer";
-   item.setAttribute("aria-label","عرض المعاملة على BscScan");
-   const icon=document.createElement("span");
-   icon.className="feed-icon";
-   icon.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";
-   const main=document.createElement("div");main.className="feed-main";
-   const hash=document.createElement("b");hash.textContent=short(t.tx_hash,12);
-   const token=document.createElement("small");token.textContent="Token: "+short(t.token_address,10)+" · Block "+esc(t.block_height);
-   const peers=document.createElement("small");peers.textContent="From: "+short(from,7)+" → To: "+short(to,7);
-   const amount=document.createElement("small");amount.textContent="Raw amount: "+esc(t.amount_raw);
-   const side=document.createElement("span");side.className="feed-side";side.textContent=direction;
-   main.append(hash,token,peers,amount);
-   item.append(icon,main,side);
+   // Native expandable details keep users on BEXENTRA; external verification is optional.
+   const item=document.createElement("details");
+   item.className="token-transfer";
+   const summary=document.createElement("summary");
+   summary.className="feed-row clickable";
+   summary.setAttribute("aria-label","عرض تفاصيل تحويل BEP20 داخل BEXENTRA");
+   const symbol=document.createElement("span");
+   symbol.className="feed-icon";
+   symbol.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";
+   const main=document.createElement("div");
+   main.className="feed-main";
+   const hash=document.createElement("b");
+   hash.textContent=short(t.tx_hash,12);
+   const token=document.createElement("small");
+   token.textContent="Token: "+short(t.token_address,10)+" · Block "+esc(t.block_height);
+   const amount=document.createElement("small");
+   amount.textContent="Raw amount: "+esc(t.amount_raw);
+   const side=document.createElement("span");
+   side.className="feed-side";
+   side.textContent=direction+" · تفاصيل";
+   main.append(hash,token,amount);
+   summary.append(symbol,main,side);
+   const details=document.createElement("div");
+   details.className="token-transfer-details";
+   function field(label,value,isAddress=false){
+    const line=document.createElement("div");line.className="token-detail-field";
+    const name=document.createElement("span");name.textContent=label;
+    const val=document.createElement(isAddress?"a":"span");
+    val.textContent=String(value??"—");
+    if(isAddress){
+     val.href="explorer.html?chain=bnb&type=address&q="+encodeURIComponent(String(value));
+     val.title="عرض العنوان داخل BEXENTRA";
+    }
+    line.append(name,val);
+    details.append(line);
+   }
+   field("Transaction Hash",t.tx_hash);
+   field("Block",t.block_height);
+   field("Log index",t.log_index);
+   field("Token contract",t.token_address,true);
+   field("From",from,true);
+   field("To",to,true);
+   field("Raw amount (base units)",t.amount_raw);
+   const note=document.createElement("p");
+   note.className="token-transfer-note";
+   note.textContent="الكمية خام وليست مقسومة على decimals. هادي غير بيانات الجزء المفهرس.";
+   const verify=document.createElement("a");
+   verify.className="token-verify-link";
+   verify.href=ext("tx",t.tx_hash);
+   verify.target="_blank";
+   verify.rel="noopener noreferrer";
+   verify.textContent="تحقق خارجياً على BscScan ↗";
+   details.append(note,verify);
+   item.append(summary,details);
    feed.append(item);
   });
  }catch(e){count.textContent="—";feed.textContent="تعذر تحميل تحويلات BEP20 حالياً: "+e.message}
