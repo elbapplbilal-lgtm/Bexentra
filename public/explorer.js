@@ -12,8 +12,8 @@ function short(v,n=12){v=esc(v);return v.length>n*2?v.slice(0,n)+"…"+v.slice(-
 function detect(q,t="auto"){if(t!=="auto")return t;if(/^\d+$/.test(q))return"block";if(chain==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return"address";if(chain==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return"address";return"tx"}
 function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/":t==="address"?"address/":"block/")+id;return"https://solscan.io/"+(t==="tx"?"tx/":t==="address"?"account/":"block/")+id}
 async function request(path,p){const u=new URL(API+path);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){let b={};try{b=await r.json()}catch{}throw Error(b.error||("API "+r.status))}return r.json()}
-function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent="نسخ";c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
-async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent="تم ✓";setTimeout(()=>button.textContent="نسخ",1200)}catch{}}
+function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent=tr("details.copy");c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
+async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent=tr("details.copyDone");setTimeout(()=>button.textContent=tr("details.copy"),1200)}catch{}}
 function showError(msg){$("detailLoading").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailError").hidden=false;$("detailError").textContent=msg}
 function start(title){$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function finish(title,subtitle,fields,primary,externalType){$("detailLoading").hidden=true;$("detailOverview").hidden=false;$("detailTitle").textContent=title;$("detailSubtitle").textContent=subtitle;$("overviewTitle").textContent=title;$("detailFields").replaceChildren(...fields);$("externalLink").href=ext(externalType,primary);$("copyPrimary").onclick=()=>copyText(primary,$("copyPrimary"))}
@@ -42,7 +42,7 @@ async function loadTokenTransfers(address){
    item.className="token-transfer";
    const summary=document.createElement("summary");
    summary.className="feed-row clickable";
-   summary.setAttribute("aria-label","عرض تفاصيل تحويل BEP20 داخل BEXENTRA");
+   summary.setAttribute("aria-label",tr("details.viewTransfer"));
    const symbol=document.createElement("span");
    symbol.className="feed-icon";
    symbol.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";
@@ -68,17 +68,17 @@ async function loadTokenTransfers(address){
     val.textContent=String(value??"—");
     if(isAddress){
      val.href="explorer.html?chain=bnb&type=address&q="+encodeURIComponent(String(value));
-     val.title="عرض العنوان داخل BEXENTRA";
+     val.title=tr("details.viewAddress");
     }
     line.append(name,val);
     details.append(line);
    }
-   field("Transaction Hash",t.tx_hash);
+   field(tr("details.txHash"),t.tx_hash);
    field("Block",t.block_height);
-   field("Log index",t.log_index);
-   field("Token contract",t.token_address,true);
-   field("From",from,true);
-   field("To",to,true);
+   field(tr("details.logIndex"),t.log_index);
+   field(tr("details.tokenContract"),t.token_address,true);
+   field(tr("details.from"),from,true);
+   field(tr("details.to"),to,true);
    field(tr("details.rawAmount")+" (base units)",t.amount_raw);
    const note=document.createElement("p");
    note.className="token-transfer-note";
