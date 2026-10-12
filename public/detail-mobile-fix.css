@@ -36,3 +36,16 @@
 .detail-v31 .token-activity .feed-row{
  text-decoration:none!important;min-width:0!important;
 }
+
+/* Expand BEP-20 event details inside BEXENTRA instead of navigating away. */
+.detail-v31 .token-activity details.token-transfer{border-top:1px solid #1a4164;padding:0;margin:0;min-width:0}
+.detail-v31 .token-activity details.token-transfer > summary{list-style:none;cursor:pointer;border-top:0!important}
+.detail-v31 .token-activity details.token-transfer > summary::-webkit-details-marker{display:none}
+.detail-v31 .token-activity details.token-transfer[open] > summary .feed-side{background:#144e83!important;color:#d4e9ff!important}
+.detail-v31 .token-transfer-details{padding:12px 10px 18px;background:#071a2f;border-radius:12px;margin:0 0 10px;min-width:0}
+.detail-v31 .token-detail-field{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;border-bottom:1px solid #164064;padding:9px 0;min-width:0}
+.detail-v31 .token-detail-field > span:first-child{font-size:11px;color:#9ebad9;font-weight:700}
+.detail-v31 .token-detail-field > :last-child{font-size:12px;line-height:1.5;direction:ltr;text-align:left;overflow-wrap:anywhere;word-break:break-word;min-width:0;max-width:100%;color:#e2f0ff}
+.detail-v31 .token-detail-field > a:last-child{color:#79b7ff;text-decoration:underline}
+.detail-v31 .token-transfer-note{font-size:11px;color:#a1b8d3;line-height:1.7;margin:10px 0}
+.detail-v31 .token-verify-link{display:inline-block;padding:9px 12px;border:1px solid #2d70ab;border-radius:10px;background:#0a2948;color:#91c3ff;font-size:12px;text-decoration:none}
