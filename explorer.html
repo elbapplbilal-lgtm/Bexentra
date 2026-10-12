@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050b16">
+<meta name="theme-color" content="#020a1c">
 <meta name="description" content="BEXENTRA indexed blockchain detail view">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
@@ -13,13 +13,17 @@
 <link rel="stylesheet" href="public/explorer-detail.css?v=31">
 <link rel="stylesheet" href="public/detail-mobile-fix.css?v=3">
 <link rel="stylesheet" href="public/visual-v2.css?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public/neon-detail.css?v=1">
 </head>
 <body class="detail-page detail-v31">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
 <header class="detail-header">
-  <a class="detail-back" href="./">← <span data-i18n="details.back">رجوع</span></a>
+  <a class="detail-back" href="./"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#arrow"></use></svg> <span data-i18n="details.back">رجوع</span></a>
   <a class="detail-brand" href="./"><span>BEXENTRA</span><b>B</b></a>
-  <button type="button" class="detail-settings-trigger settings-trigger" data-open-settings data-i18n-aria="menu.settings" aria-label="الإعدادات">⚙</button>
+  <button type="button" class="detail-settings-trigger settings-trigger" data-open-settings data-i18n-aria="menu.settings" aria-label="الإعدادات"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#settings"></use></svg></button>
 </header>
 <main class="detail-shell">
   <section class="detail-hero">
@@ -32,7 +36,7 @@
   </section>
 
   <form id="detailSearch" class="global-search detail-search">
-    <div class="search-icon">⌕</div>
+    <div class="search-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></div>
     <input id="detailInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="search.placeholder" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك">
     <select id="detailType"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
     <button data-i18n="details.searchButton">بحث</button>
@@ -68,10 +72,10 @@
   </section>
 </main>
 <nav class="bottom-nav bottom-v30">
-  <a href="./#transactions"><span>⇄</span><b data-i18n="nav.transactions">المعاملات</b></a>
-  <a href="./#blocks"><span>▦</span><b data-i18n="nav.blocks">البلوكات</b></a>
-  <a class="active" href="#"><span>⌕</span><b data-i18n="nav.explorer">Explorer</b></a>
-  <a href="./"><span>⌂</span><b data-i18n="nav.home">الرئيسية</b></a>
+  <a href="./#transactions"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><b data-i18n="nav.transactions">المعاملات</b></a>
+  <a href="./#blocks"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><b data-i18n="nav.blocks">البلوكات</b></a>
+  <a class="active" href="#"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></span><b data-i18n="nav.explorer">Explorer</b></a>
+  <a href="./"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#home"></use></svg></span><b data-i18n="nav.home">الرئيسية</b></a>
 </nav>
 <footer><div class="brand"><span class="logo"><span>B</span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></div><span>Indexed explorer · 2026</span></footer>
 <div id="settingsOverlay" class="settings-overlay" hidden>
