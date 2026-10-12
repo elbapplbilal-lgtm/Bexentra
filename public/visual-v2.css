@@ -331,3 +331,78 @@ body.light-mode .settings-option select{background:#fff;color:#153d64}
 body.light-mode .settings-option select option{background:white;color:#153d64}
 body.light-mode .settings-reset{background:#e1f0ff;color:#234a78}
 @media(prefers-reduced-motion:reduce){.bex-home *, .settings-panel *{animation:none!important;transition:none!important}}
+
+/* Shared settings control and readable bilingual detail screen. */
+.detail-v31 .detail-settings-trigger{
+ flex:0 0 40px;width:40px;height:40px;
+ display:grid;place-items:center;border:1px solid #3472b7;border-radius:12px;
+ background:linear-gradient(145deg,#123b72,#061e40);
+ color:#c8e4ff;font-size:24px;
+}
+.detail-v31 .detail-brand{margin-inline:auto}
+html[lang="en"] .bex-home .quick-grid{direction:ltr}
+html[lang="en"] .bex-home .quick-grid>a,
+html[lang="en"] .bex-home .quick-grid>button{text-align:left}
+html[lang="en"] .bex-home .quick-grid i{transform:rotate(180deg)}
+html[lang="en"] .bex-home .hero-search input{direction:ltr;text-align:left!important}
+html[lang="en"] .bex-home .stats-grid article{text-align:center}
+html[lang="en"] .mobile-menu{text-align:left}
+.detail-v31.light-mode{
+ color:#153759!important;
+ background:linear-gradient(160deg,#e4f1ff,#f9fcff 50%,#e6f1ff)!important;
+}
+.detail-v31.light-mode .detail-header{
+ background:#eaf5fff5!important;border-color:#9dc9f2!important;
+}
+.detail-v31.light-mode .detail-brand span{color:#184775!important}
+.detail-v31.light-mode .detail-hero,
+.detail-v31.light-mode .detail-main-card,
+.detail-v31.light-mode .detail-side-card,
+.detail-v31.light-mode .address-activity{
+ background:linear-gradient(160deg,#fff,#eaf4ff)!important;
+ border-color:#99c0ea!important;
+ box-shadow:0 8px 24px #1b568b1c!important;
+}
+.detail-v31.light-mode .detail-hero h1,
+.detail-v31.light-mode .detail-main-card h2,
+.detail-v31.light-mode .detail-side-card h3,
+.detail-v31.light-mode .address-activity h2,
+.detail-v31.light-mode .explorer-field b{
+ color:#173c66!important;
+}
+.detail-v31.light-mode .detail-hero p,
+.detail-v31.light-mode .detail-side-card p,
+.detail-v31.light-mode .explorer-field>span,
+.detail-v31.light-mode .address-activity .feed-main small,
+.detail-v31.light-mode .token-activity .token-coverage{
+ color:#536f94!important;
+}
+.detail-v31.light-mode .detail-network-badge,
+.detail-v31.light-mode .detail-actions .ghost,
+.detail-v31.light-mode .detail-back,
+.detail-v31.light-mode .detail-settings-trigger{
+ background:#e2f0ff!important;color:#1f5685!important;border-color:#92beed!important;
+}
+.detail-v31.light-mode .detail-network-badge strong{color:#205386!important}
+.detail-v31.light-mode .eyebrow,.detail-v31.light-mode .kicker{color:#276cb3!important}
+.detail-v31.light-mode .detail-search{background:#fff!important;border-color:#6cabe9!important}
+.detail-v31.light-mode .detail-search input{color:#183c60!important}
+.detail-v31.light-mode .detail-search button{color:white!important}
+.detail-v31.light-mode .address-activity .feed-row{border-color:#bad3ee!important}
+.detail-v31.light-mode .address-activity .feed-main b{color:#1d68b8!important}
+.detail-v31.light-mode .token-transfer-details{background:#eaf3ff!important}
+.detail-v31.light-mode .token-detail-field{border-color:#bad3ee!important}
+.detail-v31.light-mode .token-detail-field>span:first-child,
+.detail-v31.light-mode .token-detail-field>:last-child{color:#1a466f!important}
+.detail-v31.light-mode .token-transfer-note{color:#557197!important}
+.detail-v31.light-mode .bottom-nav{background:#edf6fff7!important;border-color:#a4caf2!important}
+.detail-v31.light-mode .bottom-nav a{color:#2d527b!important}
+.detail-v31.light-mode .bottom-nav a.active{color:#fff!important}
+@media(max-width:390px){
+ .detail-v31 .detail-header{gap:7px!important}
+ .detail-v31 .detail-brand{gap:6px!important}
+ .detail-v31 .detail-brand span{font-size:13px!important;letter-spacing:.7px!important}
+ .detail-v31 .detail-brand b{width:34px!important;height:34px!important;font-size:17px!important}
+ .detail-v31 .detail-back{padding:0 8px!important}
+ .detail-v31 .detail-settings-trigger{flex-basis:35px;width:35px;height:36px;font-size:22px}
+}
