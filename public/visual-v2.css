@@ -406,3 +406,27 @@ html[lang="en"] .mobile-menu{text-align:left}
  .detail-v31 .detail-back{padding:0 8px!important}
  .detail-v31 .detail-settings-trigger{flex-basis:35px;width:35px;height:36px;font-size:22px}
 }
+
+/* State integrity: respect the native hidden attribute even when previous cards use display: grid !important.
+   Prevents the loading, error and overview panels from being displayed at the same time. */
+.detail-v31 [hidden] { display:none!important; }
+.detail-v31 .detail-error:not([hidden]){
+ display:block!important;
+ margin-top:16px!important;
+ padding:18px 15px!important;
+ border:1px solid #a9486c!important;
+ border-radius:17px!important;
+ background:linear-gradient(145deg,#3a1329,#1a1022)!important;
+ color:#ffe0e9!important;
+ font-size:clamp(12px,3.4vw,15px)!important;
+ line-height:1.8!important;
+ overflow-wrap:anywhere!important;
+}
+.detail-v31 .detail-hero h1{overflow-wrap:anywhere!important;white-space:normal!important}
+.detail-v31.light-mode .detail-error:not([hidden]){
+ background:#fff0f5!important;
+ color:#8a2345!important;
+ border-color:#ce7c98!important;
+}
+/* Ensure correct reading direction for transaction hashes, even on Arabic layouts. */
+.detail-v31 .detail-search input{direction:ltr!important;text-align:left!important}
