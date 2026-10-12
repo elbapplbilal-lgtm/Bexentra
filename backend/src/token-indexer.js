@@ -5,6 +5,11 @@ const TRANSFER_TOPIC="0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4d
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const delay=Math.max(500,Number(process.env.TOKEN_INDEXER_POLL_MS||2500));
 let stopped=false;
+let consecutiveFailures=0;
+const MAX_RETRY_DELAY_MS=120000;
+function retryDelayMs(){
+ return Math.min(MAX_RETRY_DELAY_MS,15000*2**Math.min(consecutiveFailures-1,3));
+}
 process.on("SIGTERM",()=>{stopped=true});
 process.on("SIGINT",()=>{stopped=true});
 
@@ -61,6 +66,12 @@ try{
    const last=await getCursor(tip);
    if(last<tip)await processBlock(last+1);
    else await sleep(delay);
-  }catch(e){console.error("token indexer:",e.message);await sleep(Math.max(delay,5000))}
+   consecutiveFailures=0;
+  }catch(e){
+   consecutiveFailures++;
+   const wait=retryDelayMs();
+   console.error("token indexer:",e.message,"— retry in",Math.round(wait/1000),"seconds");
+   await sleep(wait);
+  }
  }
 }finally{await db.end()}
