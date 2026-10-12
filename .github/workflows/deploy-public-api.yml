@@ -1,5 +1,9 @@
 name: Deploy BEXENTRA Public API
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'neon/functions/bexentra-api.ts'
   workflow_dispatch:
 permissions:
   contents: read
