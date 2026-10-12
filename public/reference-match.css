@@ -1,0 +1,383 @@
+/* BEXENTRA Reference Match — phone-first visual reconstruction.
+   Matches the supplied UI composition without manufacturing on-chain values.
+   Keeps real indexer status, language settings, search and navigation. */
+body.bex-home.bex-reference{
+  --reference-surface:linear-gradient(145deg,rgba(7,30,65,.86),rgba(3,15,36,.95));
+  --reference-line:rgba(38,137,249,.51);
+  background:
+    radial-gradient(ellipse 96% 400px at 50% 38px,rgba(5,64,154,.23),transparent 78%),
+    linear-gradient(180deg,#020a1b,#030c20 50%,#02091a 100%);
+  overflow-x:hidden;
+}
+.bex-reference .app-header{
+  height:65px!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  padding:0 15px!important;gap:10px!important;
+  border-bottom:none!important;
+  background:rgba(2,11,27,.68)!important;
+  box-shadow:none!important;
+}
+.bex-reference .header-left{gap:8px!important}
+.bex-reference .menu-button,.bex-reference .network-pill{
+  height:43px!important;
+  border:1px solid rgba(57,138,235,.5)!important;
+  border-radius:13px!important;
+  background:rgba(5,25,55,.82)!important;
+  box-shadow:inset 0 1px rgba(168,221,255,.13),0 2px 13px rgba(0,44,128,.15)!important;
+}
+.bex-reference .menu-button{width:42px!important;flex-basis:42px!important}
+.bex-reference .network-pill{padding:0 11px!important}
+.bex-reference .network-pill select{width:100px!important;max-width:100px!important;font-size:12px!important}
+.bex-reference .network-logo{width:23px!important;height:23px!important;flex-basis:23px!important}
+.bex-reference .brand-name{
+  font-size:clamp(15px,4vw,20px)!important;
+  letter-spacing:.065em!important;
+}
+.bex-reference .brand-logo{
+  width:41px!important;height:41px!important;
+  font-size:21px!important;border-radius:13px!important;
+}
+.bex-reference .settings-trigger{display:none!important}
+.bex-reference .mobile-menu .menu-settings-entry{display:flex!important}
+body.bex-reference .app-shell{
+  width:min(calc(100% - 26px),850px)!important;
+  padding-bottom:24px!important;
+}
+body.bex-reference .hero-card{
+  margin:0!important;
+  padding:10px 4px 1px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+.bex-reference .hero-card:before,
+.bex-reference .hero-card:after{display:none!important}
+.bex-reference .world-glow{display:none!important}
+.bex-reference .reference-globe{
+  position:absolute;z-index:-1;pointer-events:none;
+  width:min(132vw,650px);height:auto;max-width:none!important;
+  top:-62px;left:50%;
+  transform:translateX(-50%);
+  opacity:.98;
+  mask-image:linear-gradient(to bottom,#000 0%,#000 46%,rgba(0,0,0,.9) 66%,transparent 97%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 46%,rgba(0,0,0,.9) 66%,transparent 97%);
+  filter:drop-shadow(0 0 25px rgba(7,120,255,.34));
+}
+.bex-reference .grid-glow{
+  position:absolute;z-index:-2;inset:0!important;opacity:.5!important;
+  background-size:29px 29px!important;
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 25%,#000 74%,transparent 99%);
+}
+.bex-reference .hero-beam{opacity:.7}
+.bex-reference .hero-shine{opacity:.45}
+.bex-reference .hero-copy{z-index:4!important}
+.bex-reference .hero-overline{
+  position:relative!important;z-index:5!important;
+  width:max-content;max-width:95%;
+  margin:18px auto 0!important;
+  padding:6px 13px!important;min-height:28px;
+  border-radius:999px!important;
+  color:#8fcbff!important;
+  background:linear-gradient(180deg,rgba(4,31,68,.93),rgba(3,22,49,.82))!important;
+  border:1px solid rgba(53,173,255,.53)!important;
+  box-shadow:0 0 11px rgba(15,122,252,.29),inset 0 1px rgba(117,223,255,.2)!important;
+  font-size:clamp(9px,2.55vw,11px)!important;
+  letter-spacing:.12em!important;
+}
+.bex-reference .hero-overline .signal-dot{width:8px!important;height:8px!important}
+.bex-reference .hero-copy h1{
+  margin:19px 0 4px!important;
+  font-family:"Cairo",system-ui,sans-serif!important;
+  font-size:clamp(35px,8.75vw,46px)!important;
+  line-height:1.37!important;
+  letter-spacing:-.01em!important;
+  font-weight:900!important;
+  background:linear-gradient(90deg,#63a6ff 0%,#31d8f2 52%,#39edf7 88%)!important;
+  background-clip:text!important;-webkit-background-clip:text!important;
+  color:transparent!important;
+  filter:drop-shadow(0 0 11px rgba(11,111,255,.30))!important;
+}
+.bex-reference .hero-copy p{
+  max-width:620px!important;
+  color:#b1c8e8!important;
+  font-size:clamp(11px,2.85vw,14px)!important;
+  line-height:1.68!important;
+  font-weight:500!important;
+}
+.bex-reference .chain-cube{
+  top:74px!important;width:57px!important;height:67px!important;
+  border-radius:15px!important;
+  background:
+    linear-gradient(126deg,rgba(83,156,253,.48),transparent 25%),
+    linear-gradient(145deg,rgba(16,98,194,.91),rgba(2,24,61,.98) 63%)!important;
+  border:1px solid rgba(78,180,255,.79)!important;
+  box-shadow:0 0 0 2px rgba(12,97,227,.14),0 0 23px rgba(5,115,255,.62),inset 0 0 17px rgba(0,129,255,.15),inset 1px 1px rgba(154,226,255,.33)!important;
+}
+.bex-reference .sol-cube{left:3px!important}
+.bex-reference .bnb-cube{right:3px!important}
+.bex-reference .chain-cube:before{
+  inset:4px!important;border:1px solid rgba(85,175,255,.4)!important;
+  transform:skewY(-6deg)!important;
+}
+.bex-reference .chain-cube:after{
+  width:82px!important;height:12px!important;bottom:-13px!important;
+  background:rgba(0,116,255,.68)!important;
+}
+.bex-reference .chain-cube img{width:35px!important;height:35px!important}
+.bex-reference .trust-pills{
+  margin-top:12px!important;
+  gap:6px!important;justify-content:center!important;flex-wrap:nowrap!important;
+}
+.bex-reference .trust-pills>span{
+  flex:0 1 auto;
+  min-width:0;
+  font-family:"Manrope","Cairo",sans-serif;
+  padding:6px 10px!important;
+  border:1px solid rgba(52,137,241,.51)!important;
+  border-radius:25px!important;
+  background:rgba(3,19,45,.85)!important;
+  box-shadow:0 0 9px rgba(0,111,247,.17),inset 0 1px rgba(143,220,255,.16)!important;
+  color:#b7d2f3!important;
+  font-size:clamp(8px,2.13vw,11px)!important;
+}
+.bex-reference .trust-pills .mini-icon{color:#5dbdff!important}
+body.bex-reference .hero-search{
+  margin:14px auto 0!important;
+  display:grid!important;direction:ltr!important;
+  grid-template-columns:112px minmax(0,1fr) 35px!important;
+  align-items:center!important;gap:4px!important;
+  min-height:55px!important;padding:4px 5px!important;
+  border:1px solid #6eb8ff!important;border-radius:16px!important;
+  background:linear-gradient(135deg,rgba(8,36,78,.95),rgba(3,21,48,.96))!important;
+  box-shadow:0 0 0 2px rgba(26,145,255,.27),0 0 24px rgba(11,104,255,.4),inset 0 1px rgba(156,228,255,.18)!important;
+}
+.bex-reference .hero-search button{
+  grid-column:1!important;grid-row:1!important;
+  width:100%;height:47px!important;min-height:47px!important;
+  border-radius:13px!important;
+  font-family:"Cairo",sans-serif!important;
+  font-size:clamp(12px,3vw,15px)!important;
+  background:linear-gradient(145deg,#3eabff,#0864ef)!important;
+  box-shadow:inset 0 1px rgba(229,252,255,.53),0 0 17px rgba(19,95,247,.43)!important;
+}
+.bex-reference .hero-search input{
+  grid-column:2!important;grid-row:1!important;
+  padding:7px 3px!important;direction:rtl!important;
+  text-align:right!important;font-family:"Cairo","Manrope",sans-serif!important;
+  font-size:clamp(11px,2.85vw,14px)!important;
+}
+html[lang="en"] .bex-reference .hero-search input{direction:ltr!important;text-align:left!important}
+.bex-reference .hero-search .search-mark{
+  grid-column:3!important;grid-row:1!important;
+  width:32px!important;height:35px!important;
+  border:0!important;
+  color:#87c8ff!important;
+}
+.bex-reference .hero-search .search-mark .ui-icon{width:23px!important;height:23px!important}
+/* Compact quick tiles, same 2 × 2 layout as supplied screenshot */
+body.bex-reference .quick-grid{
+  margin-top:11px!important;
+  gap:8px!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  direction:rtl!important;
+}
+.bex-reference .quick-grid>a,.bex-reference .quick-grid>button{
+  min-height:57px!important;
+  display:grid!important;
+  grid-template-columns:40px minmax(0,1fr) 12px!important;
+  padding:7px 9px!important;gap:8px!important;
+  border:1px solid rgba(38,139,250,.58)!important;
+  border-radius:15px!important;
+  background:linear-gradient(155deg,rgba(7,31,66,.94),rgba(3,18,42,.97))!important;
+  box-shadow:inset 0 1px rgba(99,190,255,.16),0 0 9px rgba(18,102,255,.18)!important;
+}
+.bex-reference .quick-grid .quick-icon{
+  width:39px!important;height:39px!important;
+  border-radius:12px!important;
+  background:linear-gradient(145deg,#1053a0,#05244e)!important;
+  border:1px solid rgba(64,159,250,.39)!important;
+  box-shadow:inset 0 1px rgba(177,245,255,.14),0 0 13px rgba(8,119,244,.34)!important;
+}
+.bex-reference .quick-grid .quick-icon .ui-icon{width:23px!important;height:23px!important}
+.bex-reference .quick-grid b{font-size:clamp(11px,3.1vw,14px)!important;font-weight:900!important}
+.bex-reference .quick-grid small{font-size:clamp(8px,2.25vw,10px)!important;margin-top:0!important}
+.bex-reference .quick-grid .quick-arrow{width:13px!important}
+body.bex-reference .stats-card,body.bex-reference .data-card{
+  border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(7,29,61,.89),rgba(3,16,39,.95))!important;
+  border:1px solid rgba(45,142,250,.56)!important;
+  box-shadow:0 0 12px rgba(16,94,232,.18),inset 0 1px rgba(135,218,255,.14)!important;
+  backdrop-filter:blur(15px)!important;
+}
+body.bex-reference .stats-card{margin-top:10px!important;padding:8px 9px!important}
+.bex-reference .section-title{
+  padding:0 1px 7px!important;
+  min-height:29px!important;
+  border-bottom:0!important;
+}
+.bex-reference .section-title b{font-size:clamp(11px,2.8vw,14px)!important}
+.bex-reference .title-icon{width:24px!important;height:24px!important;flex-basis:24px!important;border-radius:8px!important}
+.bex-reference .title-icon .ui-icon{width:15px!important;height:15px!important}
+.bex-reference .live-label{font-size:clamp(9px,2.3vw,12px)!important}
+body.bex-reference .stats-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:4px!important;
+  margin-top:0!important;padding:0!important;
+}
+.bex-reference .stats-grid article{
+  min-width:0!important;min-height:88px!important;
+  padding:7px 3px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(51,137,235,.34)!important;
+  background:linear-gradient(157deg,rgba(9,42,87,.89),rgba(4,22,49,.94))!important;
+  box-shadow:inset 0 1px rgba(100,195,255,.13)!important;
+}
+.bex-reference .stats-grid .stat-icon{
+  width:29px!important;height:29px!important;flex-basis:29px!important;
+  margin:0 0 3px!important;border-radius:50%!important;
+}
+.bex-reference .stats-grid .stat-icon .ui-icon{width:18px!important;height:18px!important}
+.bex-reference .stats-grid small{
+  font-size:clamp(7px,1.9vw,9px)!important;
+  line-height:1.2!important;min-height:18px!important;color:#9bb5d6!important;
+}
+.bex-reference .stats-grid strong{
+  width:100%!important;min-height:0!important;
+  margin:3px 0 2px!important;
+  font-family:"Manrope","Cairo",sans-serif!important;
+  color:#f0f9ff!important;
+  font-size:clamp(10px,2.45vw,13px)!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+  overflow-wrap:anywhere!important;
+}
+.bex-reference .stats-grid #summaryNetwork{font-size:clamp(8px,2.05vw,11px)!important}
+.bex-reference .stats-grid #indexStatus{font-size:clamp(9px,2.3vw,12px)!important}
+.bex-reference .stats-grid em{
+  font-size:clamp(7px,1.75vw,9px)!important;
+  line-height:1.2!important;min-height:0!important;
+  color:#91aad0!important;
+}
+body.bex-reference .data-card{
+  margin-top:8px!important;padding:7px 9px 8px!important;
+}
+.bex-reference .data-head{
+  min-height:28px!important;
+  padding:0 1px 5px!important;
+  border-bottom:1px solid rgba(76,148,226,.24)!important;
+}
+.bex-reference .data-head h2{font-size:clamp(11px,2.95vw,14px)!important}
+.bex-reference .data-icon{
+  width:25px!important;height:25px!important;flex-basis:25px!important;
+  border-radius:8px!important;
+}
+.bex-reference .data-icon .ui-icon{width:16px!important;height:16px!important}
+.bex-reference .data-head button{
+  min-height:25px!important;padding:3px 9px!important;
+  border-radius:12px!important;font-size:9px!important;
+}
+.bex-reference .feed{margin-top:0!important;min-height:33px!important}
+.bex-reference .feed-row{
+  min-height:30px!important;
+  grid-template-columns:28px minmax(0,1fr) auto!important;
+  gap:6px!important;padding:3px 2px!important;
+  border-top:1px solid rgba(65,126,195,.2)!important;
+}
+.bex-reference .feed-icon{
+  width:27px!important;height:27px!important;
+  border-radius:7px!important;
+  background:linear-gradient(150deg,#124d9c,#06254f)!important;
+}
+.bex-reference .feed-icon .ui-icon{width:15px!important;height:15px!important}
+.bex-reference .feed-main a,.bex-reference .feed-main b{
+  font-size:clamp(9px,2.5vw,12px)!important;line-height:1.3!important;
+}
+.bex-reference .feed-main small{
+  font-size:clamp(8px,1.95vw,10px)!important;line-height:1.2!important;
+  margin-top:2px!important;
+}
+.bex-reference .feed-side{
+  padding:4px 6px!important;
+  max-width:96px!important;
+  font-size:clamp(8px,2.1vw,10px)!important;
+  background:rgba(6,48,43,.71)!important;
+}
+body.bex-reference .safety-note{margin-top:9px!important;padding:9px 10px!important}
+.bex-reference .safety-note b{font-size:11px!important}
+.bex-reference .safety-note small{font-size:9px!important}
+body.bex-reference .bottom-nav{
+  height:calc(66px + env(safe-area-inset-bottom))!important;
+  padding:3px 8px env(safe-area-inset-bottom)!important;
+  background:rgba(2,13,33,.95)!important;
+  border-top:1px solid rgba(39,130,250,.5)!important;
+  box-shadow:0 -8px 25px rgba(0,0,0,.5)!important;
+}
+.bex-reference .bottom-nav a{margin:2px!important;border-radius:14px!important}
+.bex-reference .bottom-nav a .ui-icon{width:21px!important;height:21px!important}
+.bex-reference .bottom-nav a b{font-size:10px!important}
+.bex-reference .bottom-nav a.active{
+  background:linear-gradient(145deg,#1d85ff,#0444b7)!important;
+  border-color:#4eabff!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.4),0 0 17px rgba(22,109,250,.43)!important;
+}
+/* Don't compromise settings, light mode, or usability to match a static mockup. */
+.bex-reference.light-mode .hero-overline{background:#e2f3ff!important;color:#285c94!important}
+.bex-reference.light-mode .quick-grid>a,.bex-reference.light-mode .quick-grid>button,
+.bex-reference.light-mode .stats-card,.bex-reference.light-mode .data-card{
+ background:linear-gradient(160deg,#fff,#e4f3ff)!important;
+ border-color:#a3c9f4!important;
+}
+.bex-reference.light-mode .stats-grid article{background:#fff!important;border-color:#b6d9f5!important}
+.bex-reference.light-mode .stats-grid strong{color:#18385e!important}
+.bex-reference.light-mode .hero-search{background:white!important}
+.bex-reference.light-mode .hero-search input{color:#173e67!important}
+.bex-reference.light-mode .hero-copy p{color:#254e71!important}
+.bex-reference.light-mode .hero-overline .signal-dot.is-recent{background:#09b28d!important}
+.bex-reference.light-mode .feed-side{background:#e6f7ee!important;color:#166d59!important}
+@media(max-width:390px){
+ .bex-reference .app-header{padding:0 7px!important;gap:6px!important;height:60px!important}
+ .bex-reference .header-left{gap:4px!important}
+ .bex-reference .menu-button{width:37px!important;flex-basis:37px!important;height:37px!important}
+ .bex-reference .network-pill{height:37px!important;padding:0 7px!important;gap:4px!important}
+ .bex-reference .network-logo{width:19px!important;height:19px!important;flex-basis:19px!important}
+ .bex-reference .network-pill select{width:78px!important;max-width:78px!important;font-size:10px!important}
+ .bex-reference .brand-name{font-size:12px!important;letter-spacing:.02em!important}
+ .bex-reference .brand-logo{width:32px!important;height:32px!important;font-size:17px!important}
+ .bex-reference .reference-globe{width:142vw!important;top:-59px!important}
+ .bex-reference .chain-cube{width:49px!important;height:59px!important;top:75px!important}
+ .bex-reference .chain-cube img{width:29px!important;height:29px!important}
+ .bex-reference .hero-copy h1{font-size:clamp(31px,8.3vw,37px)!important}
+ .bex-reference .trust-pills>span{padding:5px 6px!important;font-size:7.5px!important}
+ .bex-reference .trust-pills .mini-icon{width:11px!important;height:11px!important}
+ .bex-reference .hero-search{grid-template-columns:93px minmax(0,1fr) 27px!important;min-height:52px!important}
+ .bex-reference .hero-search button{height:44px!important;min-height:44px!important}
+ .bex-reference .quick-grid>a,.bex-reference .quick-grid>button{
+  grid-template-columns:33px minmax(0,1fr) 9px!important;gap:5px!important;padding:6px!important;min-height:53px!important;
+ }
+ .bex-reference .quick-grid .quick-icon{width:32px!important;height:32px!important}
+ .bex-reference .quick-grid .quick-icon .ui-icon{width:19px!important;height:19px!important}
+ .bex-reference .quick-grid b{font-size:11px!important}
+ .bex-reference .quick-grid small{font-size:8px!important}
+ .bex-reference .stats-grid article{min-height:85px!important;padding:5px 2px!important}
+ .bex-reference .stats-grid strong{font-size:10px!important}
+ .bex-reference .stats-grid small{font-size:7px!important}
+ .bex-reference .stats-grid em{font-size:7px!important}
+}
+@media(min-width:640px){
+ .bex-reference .settings-trigger{display:grid!important}
+ .bex-reference .app-header{grid-template-columns:minmax(0,1fr) auto 44px!important}
+ body.bex-reference .hero-card{padding-top:15px!important}
+ .bex-reference .reference-globe{width:min(96vw,760px)!important;top:-75px!important}
+ .bex-reference .hero-overline{margin-top:35px!important}
+ .bex-reference .hero-copy h1{margin-top:30px!important;font-size:clamp(48px,6vw,68px)!important}
+ .bex-reference .hero-copy p{font-size:15px!important}
+ .bex-reference .chain-cube{top:100px!important;width:80px!important;height:92px!important}
+ .bex-reference .chain-cube img{width:45px!important;height:45px!important}
+ .bex-reference .quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ .bex-reference .stats-grid article{min-height:110px!important}
+ .bex-reference .stats-grid strong{font-size:17px!important}
+}
+@media(prefers-reduced-motion:reduce){.bex-reference *{animation:none!important;transition:none!important}}
