@@ -17,6 +17,17 @@ export default async function handler(req){
   if(u.pathname.endsWith("/transactions")){const r=await db().query("SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 ORDER BY block_height DESC LIMIT $2",[chain,limit]);return json({chain,transactions:r.rows})}
   if(u.pathname.endsWith("/tx")){const hash=u.searchParams.get("hash")||"";if(!hash||hash.length>128)return json({error:"Invalid hash"},400);const r=await db().query("SELECT * FROM indexed_transactions WHERE chain=$1 AND tx_hash=$2",[chain,hash]);return json(r.rows[0]||{error:"Not indexed"},r.rowCount?200:404)}
   if(u.pathname.endsWith("/block")){const height=u.searchParams.get("height")||"";if(!/^\\d+$/.test(height))return json({error:"Invalid height"},400);const r=await db().query("SELECT * FROM indexed_blocks WHERE chain=$1 AND height=$2",[chain,height]);return json(r.rows[0]||{error:"Not indexed"},r.rowCount?200:404)}
+  // Read-only, indexed BEP-20 Transfer events. This is partial coverage, not full wallet history.
+  if(u.pathname.endsWith("/token-transfers")){
+   if(chain!=="bnb")return json({error:"BEP-20 transfers are available for BNB Chain only"},400);
+   const address=(u.searchParams.get("address")||"").trim();
+   if(!/^0x[a-fA-F0-9]{40}$/.test(address))return json({error:"Invalid BNB address"},400);
+   const r=await db().query(
+    "SELECT chain,tx_hash,log_index,block_height,token_address,sender,recipient,amount_raw::text AS amount_raw,indexed_at FROM indexed_token_transfers WHERE chain='bnb' AND (lower(sender)=lower($1) OR lower(recipient)=lower($1)) ORDER BY block_height DESC,log_index DESC LIMIT $2",
+    [address,limit]
+   );
+   return json({chain,address,transfers:r.rows,coverage:"indexed_only"});
+  }
   if(u.pathname.endsWith("/address")){
    let address=u.searchParams.get("address")||"";
    if(!address||address.length>128)return json({error:"Invalid address"},400);
