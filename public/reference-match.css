@@ -381,3 +381,36 @@ body.bex-reference .bottom-nav{
  .bex-reference .stats-grid strong{font-size:17px!important}
 }
 @media(prefers-reduced-motion:reduce){.bex-reference *{animation:none!important;transition:none!important}}
+
+/* Exact search icon order: action and magnifier at the left, scan corners at right. */
+.bex-reference .hero-search button{
+  display:flex!important;justify-content:center!important;align-items:center!important;
+  gap:9px!important;
+}
+.bex-reference .hero-search button .search-btn-icon{
+  width:19px!important;height:19px!important;color:#fff!important;
+}
+.bex-reference .trust-pills .pill-arrow{
+  display:inline-block!important;margin-left:1px!important;
+  font-family:"Manrope",sans-serif!important;font-size:18px!important;
+  font-weight:700!important;font-style:normal!important;line-height:.5!important;
+  color:#60afff!important;
+}
+@media(max-width:639px){
+ .bex-reference .hero-overline{margin-top:8px!important;min-height:25px!important}
+ .bex-reference .hero-copy h1{
+   margin-top:9px!important;
+   font-size:clamp(32px,7.7vw,39px)!important;
+   line-height:1.27!important;
+ }
+ .bex-reference .hero-copy p{line-height:1.5!important}
+ .bex-reference .trust-pills{margin-top:8px!important}
+ body.bex-reference .hero-search{margin-top:10px!important;min-height:51px!important}
+ .bex-reference .hero-search button{height:45px!important;min-height:45px!important}
+ body.bex-reference .quick-grid{margin-top:9px!important;gap:7px!important}
+ .bex-reference .quick-grid>a,.bex-reference .quick-grid>button{min-height:54px!important}
+ body.bex-reference .stats-card{margin-top:8px!important;padding:7px 8px!important}
+ .bex-reference .stats-grid article{min-height:84px!important}
+ body.bex-reference .data-card{margin-top:7px!important;padding:6px 8px!important}
+ .bex-reference .feed-row{min-height:27px!important;padding:2px 2px!important}
+}
