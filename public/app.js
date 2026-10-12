@@ -93,9 +93,34 @@ async function loadDashboard(){
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";setIndexStatus(bs[0]?.indexed_at);
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
-  bs.slice(0,3).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.append(makeIcon("blocks"));const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" "+tr("api.transactionsUnit");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.block_time||b.indexed_at);r.append(i,m,side);rowNavigation(r,a.href);rb.append(r)});
-  const rt=$("recentTransactions");rt.replaceChildren();if(!ts.length)rt.textContent=tr("api.emptyTx");
-  ts.slice(0,3).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.append(makeIcon("transactions"));const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent=t.sender||t.recipient?(short(t.sender||"—",6)+" → "+short(t.recipient||"—",6)):"Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status==="failed"?tr("api.failed"):t.status==="success"?tr("api.confirmed"):tr("api.indexed");r.append(i,m,side);rowNavigation(r,a.href);rt.append(r)});
+  bs.slice(0,3).forEach(block=>{
+   const url=internalExplorer(chain,"block",block.height);
+   const r=document.createElement("div");r.className="feed-row reference-row";
+   const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("blocks"));
+   const main=document.createElement("div");main.className="feed-main";
+   const link=document.createElement("a");link.href=url;link.textContent=Number(block.height).toLocaleString("en-US");
+   const age=document.createElement("small");age.textContent=ago(block.block_time||block.indexed_at);
+   main.append(link,age);
+   const count=document.createElement("span");count.className="feed-side";
+   count.textContent=String(block.transaction_count??0)+" "+tr("api.transactionsUnit");
+   const more=document.createElement("span");more.className="feed-chevron";more.append(makeIcon("chevron"));
+   r.append(symbol,main,count,more);rowNavigation(r,url);rb.append(r);
+  });
+  const rt=$("recentTransactions");rt.replaceChildren();
+  if(!ts.length)rt.textContent=tr("api.emptyTx");
+  ts.slice(0,3).forEach(tx=>{
+   const url=internalExplorer(chain,"tx",tx.tx_hash);
+   const r=document.createElement("div");r.className="feed-row reference-row";
+   const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("transactions"));
+   const main=document.createElement("div");main.className="feed-main";
+   const link=document.createElement("a");link.href=url;link.textContent=short(tx.tx_hash,10);
+   const detail=document.createElement("small");detail.textContent=tx.block_height!=null?"Block "+Number(tx.block_height).toLocaleString("en-US"):short(tx.sender||tx.recipient||"—",10);
+   main.append(link,detail);
+   const status=document.createElement("span");status.className="feed-side";status.textContent=tx.status==="failed"?tr("api.failed"):tx.status==="success"?tr("api.confirmed"):tr("api.indexed");
+   if(tx.status==="failed")status.classList.add("feed-failed");else if(tx.status==="indexed")status.classList.add("feed-unconfirmed");
+   const more=document.createElement("span");more.className="feed-chevron";more.append(makeIcon("chevron"));
+   r.append(symbol,main,status,more);rowNavigation(r,url);rt.append(r);
+  });
  }catch(e){const msg=tr("api.error")+" "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
 async function findTx(hash,target){
