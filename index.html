@@ -16,8 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="public/neon-premium.css?v=1">
+<link rel="stylesheet" href="public/reference-match.css?v=1">
 </head>
-<body class="bex-home">
+<body class="bex-home bex-reference">
 
 <header class="app-header">
   <div class="header-left">
@@ -44,7 +45,7 @@
 
 <main id="dashboard" class="app-shell">
   <section class="hero-card">
-    <div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
+    <img class="reference-globe" src="public/orbit-globe.svg" alt="" aria-hidden="true" width="760" height="470"><div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
     <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
 
@@ -74,10 +75,10 @@
   <section id="stats" class="stats-card">
     <div class="section-title"><div><span class="title-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><small data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
-      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
-      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
       <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
+      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
+      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><small data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
     </div>
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
@@ -117,6 +118,6 @@
 </div>
 <script src="public/preferences.js?v=2" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=35" defer></script>
+<script src="public/app.js?v=36" defer></script>
 </body>
 </html>
