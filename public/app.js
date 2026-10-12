@@ -6,16 +6,23 @@ const heroNetwork=$("heroNetwork");
 const networkIcon=$("networkIcon"),summaryChainLabel=$("summaryChainLabel");
 const indexStatus=$("indexStatus"),indexStatusNote=$("indexStatusNote");
 const esc=s=>String(s??"");
+const tr=k=>window.BexentraPrefs?.t(k)??k;
 function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-n):s}
-function ago(v){if(!v)return"—";const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);if(d<60)return"منذ "+Math.floor(d)+" ثانية";if(d<3600)return"منذ "+Math.floor(d/60)+" دقيقة";if(d<86400)return"منذ "+Math.floor(d/3600)+" ساعة";return"منذ "+Math.floor(d/86400)+" يوم"}
+function ago(v){
+ if(!v)return"—";
+ const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);
+ const unit=d<60?"time.seconds":d<3600?"time.minutes":d<86400?"time.hours":"time.days";
+ const value=d<60?Math.floor(d):d<3600?Math.floor(d/60):d<86400?Math.floor(d/3600):Math.floor(d/86400);
+ return window.BexentraPrefs?.get("language")==="en"?value+" "+tr(unit)+" "+tr("time.ago"):tr("time.ago")+" "+value+" "+tr(unit);
+}
 function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
 function setIndexStatus(v){
  if(!indexStatus||!indexStatusNote)return;
- if(!v || !Number.isFinite(new Date(v).getTime()) || new Date(v).getTime()>Date.now()+60000){indexStatus.textContent="● لا بيانات";indexStatus.className="status-stale";indexStatusNote.textContent="No indexed timestamp";const live=$("statsLive");if(live)live.textContent="غير متصل";return}
+ if(!v || !Number.isFinite(new Date(v).getTime()) || new Date(v).getTime()>Date.now()+60000){indexStatus.textContent="● "+tr("stats.noData");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.noTimestamp");const live=$("statsLive");if(live)live.textContent=tr("stats.offline");return}
  const mins=Math.max(0,(Date.now()-new Date(v).getTime())/60000);const live=$("statsLive");
- if(mins<10){indexStatus.textContent="● محدث";indexStatus.className="status-good";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> مباشر"}
- else if(mins<45){indexStatus.textContent="● قريب";indexStatus.className="status-wait";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> قريب من المباشر"}
- else{indexStatus.textContent="● قديم";indexStatus.className="status-stale";indexStatusNote.textContent="Updated "+ago(v);if(live)live.innerHTML="<i></i> يحتاج تحديث"}
+ if(mins<10){indexStatus.textContent="● "+tr("stats.updated");indexStatus.className="status-good";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.live")}
+ else if(mins<45){indexStatus.textContent="● "+tr("stats.recent");indexStatus.className="status-wait";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.nearLive")}
+ else{indexStatus.textContent="● "+tr("stats.stale");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.needsUpdate")}
 }
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
@@ -25,7 +32,7 @@ async function request(path,params){
  for(const [key,value] of Object.entries(params))url.searchParams.set(key,String(value));
  let response;
  try{response=await fetch(url,{method:"GET",mode:"cors",credentials:"omit",headers:{Accept:"application/json"}})}
- catch(e){throw Error("تعذر الاتصال بالخادم: "+e.message)}
+ catch(e){throw Error(tr("api.error")+" "+e.message)}
  if(!response.ok){let body={};try{body=await response.json()}catch{}throw Error("API "+response.status+": "+(body.error||response.statusText))}
  return response.json();
 }
@@ -57,21 +64,21 @@ function detectType(q,forced="auto"){
  return "tx";
 }
 async function loadDashboard(){
- const chain=network.value;syncNetworkUI(); $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent="جاري التحميل...";$("recentTransactions").textContent="جاري التحميل...";
+ const chain=network.value;syncNetworkUI(); $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent=tr("api.loading");$("recentTransactions").textContent=tr("api.loading");
  try{
   const [bs,ts]=await Promise.all([blocks(chain),txs(chain)]);
   if(network.value!==chain)return;
-  $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?ts.length+"+":"—";
+  $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";setIndexStatus(bs[0]?.indexed_at);
-  const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent="لا توجد بلوكات مفهرسة لهذه الشبكة بعد.";
-  bs.slice(0,3).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="◇";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" معاملة";m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.block_time||b.indexed_at);r.append(i,m,side);rb.append(r)});
-  const rt=$("recentTransactions");rt.replaceChildren();if(!ts.length)rt.textContent="لا توجد معاملات مفهرسة لهذه الشبكة بعد.";
-  ts.slice(0,3).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="⇄";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent=t.sender||t.recipient?(short(t.sender||"—",6)+" → "+short(t.recipient||"—",6)):"Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status==="failed"?"فشل":t.status==="success"?"مؤكد":"مفهرس";r.append(i,m,side);rt.append(r)});
- }catch(e){const msg="خطأ الاتصال: "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
+  const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
+  bs.slice(0,3).forEach(b=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="◇";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"block",b.height);a.textContent=Number(b.height).toLocaleString("en-US");const s=document.createElement("small");s.textContent=(b.transaction_count??0)+" "+tr("api.transactionsUnit");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=ago(b.block_time||b.indexed_at);r.append(i,m,side);rb.append(r)});
+  const rt=$("recentTransactions");rt.replaceChildren();if(!ts.length)rt.textContent=tr("api.emptyTx");
+  ts.slice(0,3).forEach(t=>{const r=document.createElement("div");r.className="feed-row";const i=document.createElement("span");i.className="feed-icon";i.textContent="⇄";const m=document.createElement("div");m.className="feed-main";const a=document.createElement("a");a.href=internalExplorer(chain,"tx",t.tx_hash);a.textContent=short(t.tx_hash,10);const s=document.createElement("small");s.textContent=t.sender||t.recipient?(short(t.sender||"—",6)+" → "+short(t.recipient||"—",6)):"Block "+Number(t.block_height).toLocaleString("en-US");m.append(a,s);const side=document.createElement("span");side.className="feed-side";side.textContent=t.status==="failed"?tr("api.failed"):t.status==="success"?tr("api.confirmed"):tr("api.indexed");r.append(i,m,side);rt.append(r)});
+ }catch(e){const msg=tr("api.error")+" "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
 async function findTx(hash,target){
- const chain=network.value;target.textContent="جاري البحث في فهرس BEXENTRA...";
- try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,"المعاملة غير موجودة في الجزء المفهرس حالياً.");return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,"تعذر البحث حالياً.")}
+ const chain=network.value;target.textContent=tr("api.finding");
+ try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,tr("api.txMissing"));return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,tr("api.txError"))}
 }
 const txForm=$("txForm");if(txForm)txForm.addEventListener("submit",e=>{e.preventDefault();const q=$("txInput").value.trim();if(q)location.href=internalExplorer(network.value,"tx",q)});
 $("globalSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("globalInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q,$("searchType").value),q)});
@@ -79,7 +86,7 @@ $("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEve
 network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-network",network.value)}catch{}syncNetworkUI();const gr=$("globalResult");if(gr)gr.replaceChildren();const tr=$("txResult");if(tr)tr.replaceChildren();loadDashboard()});
 try{const savedNetwork=localStorage.getItem("bexentra-network");if(savedNetwork==="bnb"||savedNetwork==="solana")network.value=savedNetwork}catch{}
 syncNetworkUI();
-const theme=$("themeToggle");let light=false;try{light=localStorage.getItem("bexentra-theme")==="light"}catch{}function paint(){document.body.classList.toggle("light-mode",light);theme.textContent=light?"☀":"☾"}paint();theme.addEventListener("click",()=>{light=!light;paint();try{localStorage.setItem("bexentra-theme",light?"light":"dark")}catch{}});
+// Theme and language are managed centrally by public/preferences.js.
 loadDashboard();
 const mobileSearch=$("mobileSearch");
 if(mobileSearch)mobileSearch.addEventListener("submit",e=>{e.preventDefault();const q=$("mobileInput").value.trim();if(!q)return;location.href=internalExplorer(network.value,detectType(q),q)});
@@ -92,6 +99,7 @@ if(menuClose)menuClose.addEventListener("click",()=>setMenu(false));
 if(backdrop)backdrop.addEventListener("click",()=>setMenu(false));
 if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
 
-let refreshTimer=setInterval(()=>{if(!document.hidden)loadDashboard()},15000);
+let refreshTimer=setInterval(()=>{if(!document.hidden && window.BexentraPrefs?.get("refresh")!=="off")loadDashboard()},15000);
+document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset")loadDashboard()});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadDashboard()});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));

@@ -10,6 +10,7 @@
 <title>BEXENTRA | Blockchain Explorer</title>
 <link rel="stylesheet" href="public/home.css?v=32">
 <link rel="stylesheet" href="public/stage1.css?v=1">
+<link rel="stylesheet" href="public/visual-v2.css?v=1">
 </head>
 <body class="bex-home">
 
@@ -26,13 +27,13 @@
     <span class="brand-name">BEXENTRA</span>
     <span class="brand-logo">B</span>
   </a>
-  <button id="themeToggle" class="theme-toggle" type="button" aria-label="المظهر">☾</button>
+  <button id="settingsToggle" data-open-settings class="settings-trigger" type="button" data-i18n-aria="menu.settings" aria-label="الإعدادات" title="Settings">⚙</button>
 </header>
 
 <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
-  <div class="mobile-menu-head"><b>BEXENTRA</b><button id="menuClose" type="button">×</button></div>
-  <a href="#dashboard">الرئيسية</a><a href="#blocks">البلوكات</a><a href="#transactions">المعاملات</a><a href="explorer.html">Explorer</a>
-  <p>مستكشف عام للقراءة فقط. لا ندخل إلى محفظتك ولا نطلب Seed Phrase.</p>
+  <div class="mobile-menu-head"><b>BEXENTRA</b><button id="menuClose" type="button" aria-label="Close">×</button></div>
+  <a href="#dashboard" data-i18n="menu.home">الرئيسية</a><a href="#blocks" data-i18n="menu.blocks">البلوكات</a><a href="#transactions" data-i18n="menu.transactions">المعاملات</a><a href="explorer.html" data-i18n="menu.explorer">Explorer</a><button class="menu-settings-entry" data-open-settings type="button">⚙ <span data-i18n="menu.settings">الإعدادات</span></button>
+  <p data-i18n="menu.safety">مستكشف عام للقراءة فقط. لا ندخل إلى محفظتك ولا نطلب Seed Phrase.</p>
 </aside>
 <div id="menuBackdrop" class="menu-backdrop"></div>
 
@@ -43,58 +44,73 @@
     <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
 
     <div class="hero-copy">
-      <h1>أوضح. أسرع. أذكى.</h1>
-      <p>ابحث في البيانات المفهرسة لـ BEXENTRA على Solana وBNB Chain من واجهة واحدة مصممة للهاتف أولاً.</p>
-      <div class="trust-pills"><span>▤ Indexed data</span><span>⌁ Multi-chain</span><span>▣ Read-only</span></div>
+      <div class="hero-overline"><span class="hero-overline-symbol">▤</span><span data-i18n="hero.overline">BEXENTRA INDEX · MAINNET</span><i></i></div>
+      <h1 data-i18n="hero.title">أوضح. أسرع. أذكى.</h1>
+      <p data-i18n="hero.description">استكشف البيانات الحقيقية المفهرسة على BNB Chain وSolana، من واجهة واحدة مصممة للهاتف.</p>
+      <div class="trust-pills"><span><b>▤</b> <span data-i18n="hero.indexed">بيانات مفهرسة</span></span><span><b>⌁</b> <span data-i18n="hero.multichain">متعدد الشبكات</span></span><span><b>▣</b> <span data-i18n="hero.readonly">قراءة فقط</span></span></div>
     </div>
 
     <form id="globalSearch" class="hero-search">
       <div class="search-mark">⌕</div>
-      <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="ابحث بعنوان، Tx Hash أو رقم بلوك">
+      <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك" data-i18n-placeholder="search.placeholder" aria-label="Blockchain search">
       <select id="searchType" aria-label="نوع البحث"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
-      <button type="submit">استكشف</button>
+      <button type="submit" data-i18n="search.button">استكشف</button>
     </form>
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="#blocks"><span class="quick-icon">▦</span><div><b>البلوكات</b><small>تصفح أحدث البيانات</small></div><i>‹</i></a>
-      <a href="#transactions"><span class="quick-icon">⇄</span><div><b>المعاملات</b><small>تصفح أحدث النشاط</small></div><i>‹</i></a>
-      <button id="quickRefresh" type="button"><span class="quick-icon">↻</span><div><b>تحديث</b><small>إعادة جلب البيانات</small></div><i>‹</i></button>
-      <a href="#stats"><span class="quick-icon">◎</span><div><b>الشبكات</b><small>BNB + Solana</small></div><i>‹</i></a>
+      <a href="#blocks"><span class="quick-icon">▦</span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><i>‹</i></a>
+      <a href="#transactions"><span class="quick-icon">⇄</span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><i>‹</i></a>
+      <button id="quickRefresh" type="button"><span class="quick-icon">↻</span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><i>‹</i></button>
+      <a href="#stats"><span class="quick-icon">◎</span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><i>‹</i></a>
     </div>
   </section>
 
   <section id="stats" class="stats-card">
-    <div class="section-title"><div><span class="title-icon">▥</span><b>إحصائيات المستكشف</b></div><span id="statsLive" class="live-label">جاري التحقق</span></div>
+    <div class="section-title"><div><span class="title-icon">▥</span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon purple">◇</span><small>آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
-      <article><span class="stat-icon blue">⌁</span><small>الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
-      <article><span class="stat-icon green">ϟ</span><small>حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
-      <article><span class="stat-icon blue">▤</span><small>المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em>أحدث عينة</em></article>
+      <article><span class="stat-icon purple">◇</span><small data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
+      <article><span class="stat-icon blue">⌁</span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
+      <article><span class="stat-icon green">ϟ</span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
+      <article><span class="stat-icon blue">▤</span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
     </div>
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
   <section id="blocks" class="data-card">
-    <div class="data-head"><div><span class="data-icon">◇</span><h2>أحدث البلوكات</h2></div><button id="refreshBlocks" type="button">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon">◇</span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
     <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
   </section>
 
   <section id="transactions" class="data-card data-v29">
-    <div class="data-head"><div><span class="data-icon">⇄</span><h2>أحدث المعاملات</h2></div><button id="refreshTx" type="button">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon">⇄</span><h2 data-i18n="data.transactions">أحدث المعاملات</h2></div><button id="refreshTx" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
     <div id="recentTransactions" class="feed">جاري تحميل المعاملات...</div>
   </section>
 
-  <section class="safety-note"><span>✓</span><div><b>قراءة عامة فقط</b><small>BEXENTRA لا يطلب ربط محفظتك أو كلمات الاسترداد أو المفتاح الخاص.</small></div></section>
+  <section class="safety-note"><span>✓</span><div><b data-i18n="safety.title">بيانات عامة للقراءة فقط</b><small data-i18n="safety.description">BEXENTRA ما كيطلبش كلمة السر أو المفتاح الخاص أو كلمات استرداد المحفظة.</small></div></section>
 </main>
 
 <nav class="bottom-nav" aria-label="التنقل">
-  <a href="#transactions"><span>⇄</span><b>المعاملات</b></a>
-  <a href="#blocks"><span>▦</span><b>البلوكات</b></a>
-  <a href="explorer.html"><span>⌕</span><b>Explorer</b></a>
-  <a class="active" href="#dashboard"><span>⌂</span><b>الرئيسية</b></a>
+  <a href="#transactions"><span>⇄</span><b data-i18n="nav.transactions">المعاملات</b></a>
+  <a href="#blocks"><span>▦</span><b data-i18n="nav.blocks">البلوكات</b></a>
+  <a href="explorer.html"><span>⌕</span><b data-i18n="nav.explorer">Explorer</b></a>
+  <a class="active" href="#dashboard"><span>⌂</span><b data-i18n="nav.home">الرئيسية</b></a>
 </nav>
 
-<script src="public/app.js?v=32" defer></script>
+<div id="settingsOverlay" class="settings-overlay" hidden>
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
+    <header class="settings-head"><div><span class="settings-eyebrow">BEXENTRA · PREFERENCES</span><h2 id="settingsHeading" data-i18n="settings.title">الإعدادات</h2><p data-i18n="settings.subtitle">خصّص تجربة BEXENTRA على هاد الجهاز</p></div><button class="settings-close" type="button" data-close-settings aria-label="Close">×</button></header>
+    <div class="settings-scroll">
+      <div class="settings-option"><label data-i18n="settings.language">اللغة</label><div class="setting-segments" role="group" aria-label="Language"><button data-pref-language="ar" type="button" data-i18n="settings.arabic">العربية</button><button data-pref-language="en" type="button" data-i18n="settings.english">English</button></div></div>
+      <div class="settings-option"><label data-i18n="settings.appearance">المظهر</label><div class="setting-segments" role="group" aria-label="Theme"><button data-pref-theme="dark" type="button">☾ <span data-i18n="settings.dark">داكن</span></button><button data-pref-theme="light" type="button">☀ <span data-i18n="settings.light">فاتح</span></button></div></div>
+      <div class="settings-option"><label for="prefNetwork" data-i18n="settings.network">الشبكة الافتراضية</label><select id="prefNetwork"><option value="bnb">BNB Smart Chain</option><option value="solana">Solana Mainnet</option></select></div>
+      <div class="settings-option"><label for="prefRefresh" data-i18n="settings.refresh">التحديث التلقائي</label><select id="prefRefresh"><option value="on" data-i18n="settings.refreshOn">مفعّل (كل 15 ثانية)</option><option value="off" data-i18n="settings.refreshOff">متوقف</option></select></div>
+      <div class="settings-privacy"><b data-i18n="settings.privacyTitle">الخصوصية والأمان</b><p data-i18n="settings.privacyText">الإعدادات محفوظة فهاد المتصفح فقط. الموقع كيقرأ بيانات بلوكتشين عمومية، وما كيطلبش أي مفتاح خاص.</p></div>
+      <button id="prefReset" class="settings-reset" type="button" data-i18n="settings.reset">إرجاع الإعدادات الأصلية</button>
+    </div>
+  </section>
+</div>
+<script src="public/preferences.js?v=1" defer></script>
+<script src="public/app.js?v=33" defer></script>
 </body>
 </html>
