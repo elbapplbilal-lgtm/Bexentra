@@ -1,0 +1,333 @@
+/* BEXENTRA · mobile dashboard and settings v2
+   Inspired by the user's reference, implemented with actual read-only data.
+   All dimensions are responsive; no simulated chain figures. */
+:root{color-scheme:dark}
+body.bex-home{
+ --ui-text:#eef7ff;--ui-muted:#95aac6;--ui-panel:#061931;--ui-edge:#255c9a;
+ color:var(--ui-text);
+ background:radial-gradient(ellipse 110% 35% at 50% -12%,#0b4e9e 0%,#031a38 44%,transparent 87%),#020a1a;
+}
+.bex-home .app-header{
+ height:72px;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;
+ padding-inline:clamp(12px,3vw,22px);border-bottom:1px solid #2475c063;
+ background:#031024e8;box-shadow:0 10px 28px #001b3c7a;
+}
+.bex-home .menu-button,.bex-home .network-pill,.bex-home .settings-trigger{
+ box-shadow:inset 0 1px #a4ddff24,0 4px 14px #0005;
+ border:1px solid #2b70b9;background:linear-gradient(145deg,#0a2b56,#04162f);
+}
+.bex-home .menu-button{width:44px;height:44px;flex-basis:44px;border-radius:13px}
+.bex-home .menu-button span{background:#bedaf6}
+.bex-home .network-pill{height:44px;border-radius:13px;padding-inline:9px;gap:7px}
+.bex-home .network-pill select{width:93px;max-width:93px;font-size:11px;font-weight:800}
+.bex-home .network-logo{width:21px;height:21px;flex-basis:21px}
+.bex-home .network-live{box-shadow:0 0 13px #15ffc5;background:#20efbd}
+.bex-home .brand-name{font-size:clamp(13px,3.7vw,20px);letter-spacing:.7px;color:#f3f8ff}
+.bex-home .brand-logo{width:42px;height:42px;box-shadow:0 0 26px #168dff6b}
+.bex-home .settings-trigger{
+ width:40px;height:40px;display:grid;place-items:center;justify-self:end;
+ border-radius:13px;color:#c9e4ff;font-size:25px;line-height:1;
+}
+.bex-home .mobile-menu{width:min(84vw,345px);padding:22px;background:linear-gradient(160deg,#071c39,#021024);border-left:1px solid #2d74bb;box-shadow:-18px 0 45px #0009}
+.bex-home .mobile-menu-head{padding-bottom:10px;border-bottom:1px solid #255e9b;margin-bottom:12px}
+.bex-home .mobile-menu-head b{letter-spacing:1.5px;font-size:19px}
+.bex-home .mobile-menu a,.bex-home .mobile-menu .menu-settings-entry{
+ min-height:56px;display:flex;align-items:center;gap:10px;
+ width:100%;border:1px solid #265e9b;border-radius:14px;
+ background:linear-gradient(145deg,#0b2a54,#071b37);color:#dceaff;
+ font-size:15px;font-weight:750;padding:12px 15px;text-align:start;
+}
+.bex-home .mobile-menu a:active,.bex-home .mobile-menu .menu-settings-entry:active{background:#1555a6}
+.bex-home .mobile-menu p{font-size:12px;color:#90a7c6}
+.bex-home .app-shell{width:min(100% - 22px,980px);padding-bottom:40px}
+.bex-home .hero-card{
+ isolation:isolate;margin-top:12px;padding:18px 12px 13px;
+ border:1px solid #2c8ee8;border-radius:27px;
+ background:radial-gradient(ellipse 98% 62% at 50% 8%,#13447f8c,transparent 75%),
+ linear-gradient(175deg,#071d40,#03112a 72%,#031022);
+ box-shadow:inset 0 1px #60b9ff2f,inset 0 0 70px #0976d51a,0 12px 42px #0009,0 0 32px #0784d735;
+}
+.bex-home .grid-glow{
+ z-index:-1;inset:0;background-size:25px 25px;
+ opacity:.55;mask-image:linear-gradient(#000,#0009 35%,transparent 90%);
+}
+.bex-home .hero-card:before{
+ content:"";pointer-events:none;position:absolute;inset:0;z-index:0;
+ background:radial-gradient(circle at 50% 9%,#29b0ff2d,transparent 44%),radial-gradient(circle at 15% 35%,#168df020,transparent 25%);
+}
+.bex-home .world-glow{
+ z-index:0;top:-107px;width:min(95vw,465px);height:300px;
+ border:1px solid #2aabff77;border-radius:50%;
+ background:
+ radial-gradient(ellipse at 50% 48%,#1660b356 0%,#0b376d6e 43%,#05193440 70%,transparent 76%),
+ repeating-radial-gradient(ellipse at 50% 53%,#6fcdff20 0px 1px,transparent 2px 27px);
+ box-shadow:inset 0 0 42px #36aaff2b,0 0 65px #168cff6b;
+ filter:none;transform:translateX(-50%) rotate(-6deg);
+}
+.bex-home .world-glow:before{
+ content:"";position:absolute;inset:5%;border-radius:50%;opacity:.95;
+ background:
+ repeating-linear-gradient(0deg,transparent 0 15px,#86cfff27 16px,#081b3700 17px 23px),
+ repeating-linear-gradient(90deg,transparent 0 23px,#65c5ff2c 24px,transparent 26px 35px);
+ mask-image:radial-gradient(ellipse,#0008 48%,transparent 74%);
+}
+.bex-home .world-glow:after{
+ content:"";position:absolute;inset:16% 28%;border-left:1px solid #60c3ff5e;border-right:1px solid #60c3ff5e;
+ border-radius:50%;box-shadow:0 0 26px #0098ff5e;
+}
+.bex-home .chain-cube{
+ z-index:2;top:110px;width:60px;height:73px;border-radius:16px;
+ border:1px solid #359ef5;background:linear-gradient(150deg,#104b97,#062345 68%,#021329);
+ box-shadow:0 0 0 4px #0851971d,inset 0 1px #bce5ff4d,0 0 34px #147cfb88,0 20px 24px #0009;
+}
+.bex-home .chain-cube img{width:34px;height:34px;filter:drop-shadow(0 0 10px #1de0ff80)}
+.bex-home .sol-cube{left:13px}.bex-home .bnb-cube{right:13px}
+.bex-home .hero-copy{max-width:790px;margin:0 auto}
+.bex-home .hero-overline{
+ position:relative;z-index:4;width:max-content;max-width:90%;margin:12px auto 0;
+ display:flex;align-items:center;gap:9px;padding:8px 14px;
+ border:1px solid #3678b5;border-radius:24px;background:#04234aeb;
+ box-shadow:inset 0 1px #a1d9ff24,0 0 25px #0a9dff3a;
+ color:#80bbff;font-size:clamp(9px,2.8vw,12px);font-weight:900;letter-spacing:2px;direction:ltr;
+}
+.bex-home .hero-overline-symbol{font-size:16px}
+.bex-home .hero-overline i{
+ width:8px;height:8px;border-radius:50%;background:#29edb6;box-shadow:0 0 14px #22ebb4;
+}
+.bex-home .hero-copy h1{
+ margin:100px 0 8px;font-weight:950;letter-spacing:-.4px;
+ font-size:clamp(31px,9vw,66px);line-height:1.15;
+ background:linear-gradient(90deg,#80b0ff,#2de8e5 55%,#75b3ff);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 3px 19px #077cdb48);
+}
+.bex-home .hero-copy p{
+ max-width:560px;margin-inline:auto;color:#b3c6e1;font-size:clamp(11px,3.1vw,15px);
+ line-height:1.8;font-weight:500;
+}
+.bex-home .trust-pills{
+ margin-top:14px;gap:6px;flex-wrap:wrap;justify-content:center;
+}
+.bex-home .trust-pills > span{
+ display:flex;align-items:center;gap:6px;min-width:0;
+ border:1px solid #2d6caf;border-radius:19px;
+ background:#061c3b;color:#aecdff;padding:7px 10px;
+ font-size:clamp(8px,2.5vw,11px);white-space:nowrap;
+}
+.bex-home .trust-pills > span b{font-size:14px;color:#65adff}
+.bex-home .hero-search{
+ direction:ltr;min-height:66px;max-width:790px;
+ grid-template-columns:35px minmax(0,1fr) 105px;
+ margin-top:20px;border:1px solid #6abaff;
+ border-radius:18px;background:linear-gradient(160deg,#0c3060,#071d3d);
+ box-shadow:0 0 0 2px #0b78ed44,0 0 26px #098af686,0 14px 23px #0008;
+}
+.bex-home .hero-search .search-mark{font-size:29px;color:#74bdff}
+.bex-home .hero-search input{
+ direction:auto;text-align:start!important;color:#f6fbff;
+ font-size:clamp(11px,3vw,15px);font-weight:600;
+}
+.bex-home .hero-search input::placeholder{color:#adc8e8}
+.bex-home .hero-search button{
+ color:white;font-size:clamp(11px,3.3vw,15px);font-weight:900;
+ border-radius:13px;background:linear-gradient(135deg,#329eff,#0859ee);
+ box-shadow:inset 0 1px #b9e7ff75,0 0 22px #117eff6e;
+}
+.bex-home .quick-grid{margin-top:17px;gap:10px;direction:rtl}
+.bex-home .quick-grid>a,.bex-home .quick-grid>button{
+ min-width:0;min-height:76px;padding:10px;border:1px solid #3078c4;border-radius:16px;
+ gap:9px;grid-template-columns:40px minmax(0,1fr) 12px;
+ background:linear-gradient(145deg,#0a2c57,#06172f);
+ box-shadow:inset 0 1px #8accff33,0 6px 19px #00112f;
+ color:#f1f8ff;
+}
+.bex-home .quick-icon{
+ height:40px;width:40px;border-radius:12px;
+ display:grid;place-items:center;color:#73bbff;font-size:23px;
+ background:linear-gradient(145deg,#1558a1,#0a2d60);
+ border:1px solid #245eaa;box-shadow:inset 0 1px #bde7ff2b,0 0 19px #258cff42;
+}
+.bex-home .quick-grid b{font-size:clamp(12px,3.2vw,16px);font-weight:850}
+.bex-home .quick-grid small{font-size:clamp(9px,2.4vw,12px);color:#93aac9}
+.bex-home .quick-grid i{font-size:23px;color:#69b8ff}
+.bex-home .stats-card,.bex-home .data-card{
+ margin-top:14px;border-radius:20px;border:1px solid #286fb4;
+ padding:12px 11px;
+ background:linear-gradient(145deg,#071e3c,#041327);
+ box-shadow:inset 0 1px #7ac3ff27,0 10px 32px #0008;
+}
+.bex-home .section-title,.bex-home .data-head{
+ min-height:37px;padding-bottom:10px;border-bottom:1px solid #235180a6;
+}
+.bex-home .section-title b,.bex-home .data-head h2{
+ color:#f4f9ff;font-size:clamp(12px,3.25vw,17px);
+ font-weight:900;
+}
+.bex-home .title-icon,.bex-home .data-icon{
+ width:31px;height:31px;flex:0 0 31px;border:1px solid #285fa8;
+ border-radius:10px;background:#0b396e;color:#7abfff;font-size:18px;
+}
+.bex-home .live-label{color:#39e5b3;font-weight:850;font-size:11px}
+.bex-home .stats-grid{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:5px;margin-top:10px;padding-top:0;border:0;
+}
+.bex-home .stats-grid article{
+ position:relative;min-width:0;min-height:120px;padding:11px 4px;
+ display:flex;flex-direction:column;justify-content:center;align-items:center;
+ border:1px solid #275c99;border-radius:13px;
+ background:radial-gradient(ellipse at 50% 2%,#19549a57,transparent 65%),linear-gradient(155deg,#092852,#061b36);
+ box-shadow:inset 0 1px #91c7ff1e;
+}
+.bex-home .stat-icon{width:32px;height:32px;flex-basis:32px;border-radius:11px;font-size:18px}
+.bex-home .stats-grid small{font-size:clamp(7px,1.95vw,10px);color:#9cb0d0;min-height:25px;line-height:1.4;margin-top:3px}
+.bex-home .stats-grid strong{
+ font-size:clamp(10px,2.5vw,15px);
+ line-height:1.25;font-weight:900;word-break:normal;
+ white-space:normal;overflow-wrap:anywhere;max-width:100%;
+ min-height:15px;color:#f5fbff;
+}
+.bex-home .stats-grid em{
+ font-size:clamp(7px,1.7vw,10px);line-height:1.3;
+ min-height:12px;color:#93a7c6;white-space:normal;overflow-wrap:anywhere;
+}
+.bex-home .stats-grid .status-good{color:#47ffc4!important;text-shadow:0 0 13px #14ffad72}
+.bex-home .stats-grid .status-stale{color:#ffad7d!important}
+.bex-home .data-head button{
+ font-size:11px;border-radius:17px;border-color:#2e75c4;
+ background:#0b294d;color:#a6d1ff;font-weight:800;
+ padding:8px 12px;
+}
+.bex-home .feed-row{min-height:59px;gap:10px}
+.bex-home .feed-icon{
+ height:36px;width:36px;border-radius:11px;
+ border:1px solid #2766b0;
+ background:linear-gradient(145deg,#174f9f,#0a2d62);
+ color:#83c8ff;font-size:15px;
+}
+.bex-home .feed-main a,.bex-home .feed-main b{font-size:clamp(10px,2.9vw,14px);color:#76baff}
+.bex-home .feed-main small{font-size:clamp(9px,2.45vw,12px);color:#9bafd0}
+.bex-home .feed-side{max-width:118px;font-size:clamp(9px,2.45vw,11px);background:#0a3a35;color:#5affc3}
+.bex-home .safety-note{border-radius:15px;border-color:#23695d;background:#062522}
+.bex-home .bottom-nav{
+ height:76px;padding:0 4px;border-top:1px solid #2676c5;
+ background:linear-gradient(180deg,#071e3cfa,#020d20fc);
+ box-shadow:0 -8px 25px #0008;
+}
+.bex-home .bottom-nav a{min-width:0;border-radius:15px;margin:4px 1px;padding:6px 0}
+.bex-home .bottom-nav a span{font-size:24px}
+.bex-home .bottom-nav a b{font-size:10px}
+.bex-home .bottom-nav a.active{
+ border:1px solid #267bed;background:linear-gradient(145deg,#1657b3,#07316d);
+ box-shadow:inset 0 1px #a5d8ff55,0 0 22px #147dff5c;
+}
+.bex-home .bottom-nav a.active:after{display:none}
+/* Settings overlay — shared across home and explorer. */
+.settings-overlay{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:14px;background:#010a1bdc;backdrop-filter:blur(13px)}
+.settings-overlay[hidden]{display:none!important}
+.settings-panel{
+ direction:inherit;width:min(100%,480px);max-height:min(92dvh,820px);display:flex;flex-direction:column;
+ border:1px solid #4186d6;border-radius:25px;overflow:hidden;
+ background:linear-gradient(150deg,#0b2c58,#04162f 38%,#041124);
+ box-shadow:inset 0 1px #96d3ff40,0 18px 70px #000c,0 0 50px #107ff555;color:#ecf6ff;
+}
+.settings-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:22px 22px 16px;border-bottom:1px solid #2869b084}
+.settings-eyebrow{font-size:10px;letter-spacing:2px;color:#68b3fb;font-weight:800;direction:ltr;display:inline-block}
+.settings-head h2{margin:6px 0 3px;font-size:26px;line-height:1.2;font-weight:900}
+.settings-head p{margin:0;color:#a3bad8;font-size:12px}
+.settings-close{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border:1px solid #3e76b6;border-radius:12px;background:#123d74;color:#fff;font-size:25px}
+.settings-scroll{overflow-y:auto;padding:15px 19px 20px;overscroll-behavior:contain}
+.settings-option{border:1px solid #265d98;border-radius:16px;padding:13px;margin-bottom:11px;background:#071f40}
+.settings-option>label{display:block;margin-bottom:10px;color:#d4e9ff;font-weight:850;font-size:14px}
+.setting-segments{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.setting-segments button{min-height:43px;border:1px solid #2e6aaa;border-radius:11px;background:#0c2c54;color:#afc6e3;font-size:14px;font-weight:800}
+.setting-segments button.selected{border-color:#70bfff;color:#fff;background:linear-gradient(145deg,#278fe8,#1458be);box-shadow:0 0 16px #188aff50}
+.settings-option select{display:block;width:100%;padding:11px 14px;border:1px solid #3674bd;border-radius:11px;background:#082b58;color:#ebf7ff;font-size:14px}
+.settings-option select option{background:#092446;color:#fff}
+.settings-privacy{padding:13px;margin:13px 0;border:1px solid #227364;border-radius:13px;background:#07382c}
+.settings-privacy b{display:block;color:#65ecc2;font-size:13px}
+.settings-privacy p{margin:5px 0 0;font-size:12px;line-height:1.7;color:#a0caba}
+.settings-reset{width:100%;padding:13px 10px;border:1px solid #3b6eaa;border-radius:12px;background:#0c2a4b;color:#c8dfff;font-size:14px;font-weight:700}
+body.settings-open{overflow:hidden}
+/* Accessible pointer and keyboard affordances. */
+.settings-trigger:focus-visible,.settings-panel button:focus-visible,.settings-panel select:focus-visible,.menu-settings-entry:focus-visible{outline:2px solid #80f2ff;outline-offset:2px}
+@media(max-width:390px){
+ .bex-home .app-header{padding-inline:9px;gap:6px}
+ .bex-home .header-left{gap:5px}
+ .bex-home .brand-name{font-size:12px}
+ .bex-home .brand-logo{width:35px;height:35px;font-size:17px}
+ .bex-home .menu-button{width:40px;height:40px;flex-basis:40px}
+ .bex-home .network-pill{height:40px;padding-inline:6px}
+ .bex-home .network-pill select{max-width:81px;width:81px;font-size:10px}
+ .bex-home .settings-trigger{width:34px;height:38px;font-size:22px}
+ .bex-home .world-glow{top:-88px;height:260px}
+ .bex-home .hero-overline{padding:6px 10px;font-size:8px;letter-spacing:1px}
+ .bex-home .hero-copy h1{margin-top:86px;font-size:clamp(30px,9vw,36px)}
+ .bex-home .chain-cube{top:100px;width:51px;height:63px}
+ .bex-home .chain-cube img{width:29px;height:29px}
+ .bex-home .hero-search{grid-template-columns:29px minmax(0,1fr) 90px;min-height:59px}
+ .bex-home .trust-pills > span{padding:5px 6px;font-size:8px}
+ .bex-home .trust-pills > span b{font-size:11px}
+ .bex-home .quick-grid>a,.bex-home .quick-grid>button{grid-template-columns:35px minmax(0,1fr) 8px;gap:6px;padding:8px;min-height:72px}
+ .bex-home .quick-icon{width:34px;height:34px;font-size:20px}
+ .bex-home .stats-grid{gap:4px}
+ .bex-home .stats-grid article{min-height:112px;padding:8px 2px}
+ .bex-home .stats-grid strong{font-size:9px}
+ .bex-home .stats-grid small{font-size:7px}
+ .bex-home .stats-grid em{font-size:7px}
+}
+@media(min-width:700px){
+ .bex-home .hero-card{padding:28px 25px 22px}
+ .bex-home .hero-overline{margin-top:8px}
+ .bex-home .hero-copy h1{margin-top:112px}
+ .bex-home .chain-cube{top:140px;width:80px;height:100px}
+ .bex-home .chain-cube img{width:46px;height:46px}
+ .bex-home .quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .bex-home .stats-grid{gap:10px}
+ .bex-home .stats-grid article{min-height:139px}
+ .bex-home .stats-grid strong{font-size:16px}
+ .bex-home .stats-grid small{font-size:11px}
+ .bex-home .stats-grid em{font-size:10px}
+}
+@media(min-width:821px){
+ .bex-home .app-header{grid-template-columns:minmax(0,1fr) auto auto}
+ .bex-home .bottom-nav{display:none}
+ .bex-home .settings-trigger{display:grid}
+ .bex-home .brand-name{font-size:20px}
+}
+/* Usable light mode: preserve high contrast and readable numbers. */
+body.bex-home.light-mode{
+ --ui-text:#112844;--ui-muted:#4e6685;--ui-panel:#fff;--ui-edge:#b8d3f5;
+ color:#12294a;
+ background:linear-gradient(160deg,#e1efff,#f9fcff 60%);
+}
+.bex-home.light-mode .app-header,.bex-home.light-mode .bottom-nav{background:#edf6ffed;border-color:#b0d0f4}
+.bex-home.light-mode .brand-name,.bex-home.light-mode .bottom-nav a{color:#173861}
+.bex-home.light-mode .hero-card{background:linear-gradient(160deg,#e0f0ff,#c9e1fa);border-color:#66a4e5}
+.bex-home.light-mode .hero-copy p{color:#295276}
+.bex-home.light-mode .quick-grid>a,.bex-home.light-mode .quick-grid>button,
+.bex-home.light-mode .stats-card,.bex-home.light-mode .data-card{
+ background:linear-gradient(145deg,#f7fbff,#e4f1ff);border-color:#94bcec;color:#143559;
+}
+.bex-home.light-mode .quick-grid b,.bex-home.light-mode .section-title b,.bex-home.light-mode .data-head h2{color:#12385c}
+.bex-home.light-mode .quick-grid small,.bex-home.light-mode .stats-grid small,.bex-home.light-mode .stats-grid em{color:#426386}
+.bex-home.light-mode .stats-grid article{background:#fff;border-color:#a8c8ed}
+.bex-home.light-mode .stats-grid strong{color:#143153}
+.bex-home.light-mode .data-card .feed-main small{color:#456889}
+.bex-home.light-mode .safety-note{background:#e3fff6}
+.bex-home.light-mode .safety-note b{color:#1d5e4e}
+.bex-home.light-mode .mobile-menu{background:#e9f4ff}
+.bex-home.light-mode .mobile-menu a,.bex-home.light-mode .mobile-menu .menu-settings-entry{color:#17406b;background:#fff}
+.bex-home.light-mode .mobile-menu p{color:#385a7b}
+.bex-home.light-mode .bottom-nav a.active{color:#fff;background:linear-gradient(145deg,#186bdd,#1258b7)}
+body.light-mode .settings-panel{background:linear-gradient(150deg,#f2f9ff,#dcecff);color:#19385e}
+body.light-mode .settings-head{border-color:#accded}
+body.light-mode .settings-head h2,body.light-mode .settings-option>label{color:#163b63}
+body.light-mode .settings-head p{color:#526f90}
+body.light-mode .settings-option{background:#f8fcff;border-color:#bad5f0}
+body.light-mode .setting-segments button{background:#e1efff;color:#244b78}
+body.light-mode .setting-segments button.selected{color:#fff;background:#176cd2}
+body.light-mode .settings-option select{background:#fff;color:#153d64}
+body.light-mode .settings-option select option{background:white;color:#153d64}
+body.light-mode .settings-reset{background:#e1f0ff;color:#234a78}
+@media(prefers-reduced-motion:reduce){.bex-home *, .settings-panel *{animation:none!important;transition:none!important}}
