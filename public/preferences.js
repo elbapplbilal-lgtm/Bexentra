@@ -52,7 +52,7 @@
    "details.network":"الشبكة","details.block":"بلوك","details.address":"عنوان","details.indexedTx":"المعاملات المفهرسة",
    "details.notFound":"ما قدرناش نلقاو هاد البيانات فالجزء المفهرس:",
    "details.noSearch":"كتب عنوان محفظة أو رقم بلوك أو Tx Hash باش تبحث.",
-   "details.loadBlock":"جاري تحميل البلوك...","details.loadSlot":"جاري تحميل Slot...","details.loadTx":"جاري تحميل المعاملة...","details.loadAddress":"جاري تحميل نشاط العنوان...","details.txTitle":"معاملة","details.addressTitle":"عنوان المحفظة","details.indexedTxSummary":"معاملة مفهرسة","details.confirmed":"مؤكدة","details.failed":"فاشلة","details.indexed":"مفهرسة","details.unavailable":"غير متوفرة","details.detailsLabel":"تفاصيل"
+   "details.loadBlock":"جاري تحميل البلوك...","details.loadSlot":"جاري تحميل Slot...","details.loadTx":"جاري تحميل المعاملة...","details.loadAddress":"جاري تحميل نشاط العنوان...","details.txTitle":"معاملة","details.addressTitle":"عنوان المحفظة","details.indexedTxSummary":"معاملة مفهرسة","details.confirmed":"مؤكدة","details.failed":"فاشلة","details.indexed":"مفهرسة","details.unavailable":"غير متوفرة","details.detailsLabel":"تفاصيل","details.copyDone":"تم ✓","details.viewTransfer":"عرض تفاصيل تحويل BEP20 داخل BEXENTRA","details.viewAddress":"عرض العنوان داخل BEXENTRA","details.tokenContract":"عقد التوكن","details.from":"من","details.to":"إلى","details.logIndex":"رقم السجل","details.txHash":"معرّف المعاملة","api.finding":"جاري البحث في فهرس BEXENTRA...","api.txMissing":"المعاملة ما كايناش فالجزء المفهرس حالياً.","api.txError":"تعذّر البحث حالياً."
   },
   en:{
    "menu.home":"Home","menu.blocks":"Blocks","menu.transactions":"Transactions","menu.explorer":"Explorer","menu.settings":"Settings",
@@ -98,7 +98,7 @@
    "details.network":"Network","details.block":"Block","details.address":"Address","details.indexedTx":"Indexed transactions",
    "details.notFound":"Not available in the current indexed range:",
    "details.noSearch":"Enter an address, block number or transaction hash to search.",
-   "details.loadBlock":"Loading block...","details.loadSlot":"Loading slot...","details.loadTx":"Loading transaction...","details.loadAddress":"Loading address activity...","details.txTitle":"Transaction","details.addressTitle":"Wallet address","details.indexedTxSummary":"indexed transactions","details.confirmed":"Confirmed","details.failed":"Failed","details.indexed":"Indexed","details.unavailable":"Unavailable","details.detailsLabel":"Details"
+   "details.loadBlock":"Loading block...","details.loadSlot":"Loading slot...","details.loadTx":"Loading transaction...","details.loadAddress":"Loading address activity...","details.txTitle":"Transaction","details.addressTitle":"Wallet address","details.indexedTxSummary":"indexed transactions","details.confirmed":"Confirmed","details.failed":"Failed","details.indexed":"Indexed","details.unavailable":"Unavailable","details.detailsLabel":"Details","details.copyDone":"Copied ✓","details.viewTransfer":"Show BEP20 transfer details in BEXENTRA","details.viewAddress":"View address inside BEXENTRA","details.tokenContract":"Token contract","details.from":"From","details.to":"To","details.logIndex":"Log index","details.txHash":"Transaction hash","api.finding":"Searching the BEXENTRA index...","api.txMissing":"Transaction not found in the indexed range.","api.txError":"Unable to search right now."
   }
  };
  const t=k=>dict[get("language")][k]||dict.ar[k]||k;
