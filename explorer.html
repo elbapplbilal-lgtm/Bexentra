@@ -12,28 +12,30 @@
 <link rel="stylesheet" href="public/nav.css?v=30">
 <link rel="stylesheet" href="public/explorer-detail.css?v=31">
 <link rel="stylesheet" href="public/detail-mobile-fix.css?v=3">
+<link rel="stylesheet" href="public/visual-v2.css?v=1">
 </head>
 <body class="detail-page detail-v31">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
 <header class="detail-header">
-  <a class="detail-back" href="./">← رجوع</a>
+  <a class="detail-back" href="./">← <span data-i18n="details.back">رجوع</span></a>
   <a class="detail-brand" href="./"><span>BEXENTRA</span><b>B</b></a>
+  <button type="button" class="detail-settings-trigger settings-trigger" data-open-settings data-i18n-aria="menu.settings" aria-label="الإعدادات">⚙</button>
 </header>
 <main class="detail-shell">
   <section class="detail-hero">
     <div>
       <span id="detailKicker" class="eyebrow"><i></i> BEXENTRA DETAIL</span>
       <h1 id="detailTitle">جاري تحميل البيانات...</h1>
-      <p id="detailSubtitle">يتم جلب البيانات من فهرس BEXENTRA العام.</p>
+      <p id="detailSubtitle" data-i18n="details.subtitle">يتم جلب البيانات من فهرس BEXENTRA العام.</p>
     </div>
     <div class="detail-network-badge"><small>NETWORK</small><strong id="detailNetwork">—</strong></div>
   </section>
 
   <form id="detailSearch" class="global-search detail-search">
     <div class="search-icon">⌕</div>
-    <input id="detailInput" autocomplete="off" spellcheck="false" placeholder="ابحث بعنوان، Tx Hash أو رقم بلوك">
+    <input id="detailInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="search.placeholder" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك">
     <select id="detailType"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
-    <button>بحث</button>
+    <button data-i18n="details.searchButton">بحث</button>
   </form>
 
   <section id="detailLoading" class="detail-loading">
@@ -44,34 +46,48 @@
 
   <section id="detailOverview" class="detail-overview" hidden>
     <div class="detail-main-card">
-      <div class="card-head"><div><span class="kicker">OVERVIEW</span><h2 id="overviewTitle">التفاصيل</h2></div><div class="detail-actions"><button id="copyPrimary" class="ghost" type="button">نسخ</button><a id="externalLink" class="ghost" target="_blank" rel="noopener">مرجع خارجي ↗</a></div></div>
+      <div class="card-head"><div><span class="kicker">OVERVIEW</span><h2 id="overviewTitle" data-i18n="details.overview">التفاصيل</h2></div><div class="detail-actions"><button id="copyPrimary" class="ghost" type="button" data-i18n="details.copy">نسخ</button><a id="externalLink" class="ghost" target="_blank" rel="noopener" data-i18n="details.verify">تحقق خارجي ↗</a></div></div>
       <div id="detailFields" class="detail-fields"></div>
     </div>
     <aside class="detail-side-card">
       <span class="kicker">BEXENTRA INDEX</span>
-      <h3>بيانات مفهرسة</h3>
-      <p>هذه الصفحة تعرض فقط البيانات التي وصلت إلى فهرس BEXENTRA الحالي، وليست نسخة كاملة من تاريخ الشبكة.</p>
+      <h3 data-i18n="details.sideTitle">بيانات مفهرسة</h3>
+      <p data-i18n="details.sideText">هذه الصفحة تعرض فقط البيانات التي وصلت إلى فهرس BEXENTRA الحالي، وليست نسخة كاملة من تاريخ الشبكة.</p>
       <div class="read-only-pill">✓ READ ONLY</div>
     </aside>
   </section>
 
   <section id="addressActivity" class="card address-activity" hidden>
-    <div class="card-head"><div><span class="kicker">INDEXED ACTIVITY</span><h2>نشاط العنوان</h2></div><span id="addressCount" class="card-pill">0 TX</span></div>
+    <div class="card-head"><div><span class="kicker">INDEXED ACTIVITY</span><h2 data-i18n="details.addressActivity">نشاط العنوان</h2></div><span id="addressCount" class="card-pill">0 TX</span></div>
     <div id="addressFeed" class="feed"></div>
   </section>
   <section id="tokenActivity" class="card address-activity token-activity" hidden>
-    <div class="card-head"><div><span class="kicker">INDEXED BEP-20 TRANSFERS</span><h2>تحويلات التوكنات (BEP20)</h2></div><span id="tokenCount" class="card-pill">0 EVENTS</span></div>
-    <p class="token-coverage">نعرض فقط تحويلات الجزء المفهرس، وليس التاريخ الكامل للمحفظة. الكميات المعروضة خام، قبل حساب خانات decimals لكل توكن.</p>
+    <div class="card-head"><div><span class="kicker">INDEXED BEP-20 TRANSFERS</span><h2 data-i18n="details.tokenActivity">تحويلات التوكنات (BEP20)</h2></div><span id="tokenCount" class="card-pill">0 EVENTS</span></div>
+    <p class="token-coverage" data-i18n="details.tokenCoverage">نعرض فقط تحويلات الجزء المفهرس، وليس التاريخ الكامل للمحفظة. الكميات المعروضة خام، قبل حساب خانات decimals لكل توكن.</p>
     <div id="tokenFeed" class="feed" aria-live="polite"></div>
   </section>
 </main>
 <nav class="bottom-nav bottom-v30">
-  <a href="./#transactions"><span>⇄</span><b>المعاملات</b></a>
-  <a href="./#blocks"><span>▦</span><b>البلوكات</b></a>
-  <a class="active" href="#"><span>⌕</span><b>Explorer</b></a>
-  <a href="./"><span>⌂</span><b>الرئيسية</b></a>
+  <a href="./#transactions"><span>⇄</span><b data-i18n="nav.transactions">المعاملات</b></a>
+  <a href="./#blocks"><span>▦</span><b data-i18n="nav.blocks">البلوكات</b></a>
+  <a class="active" href="#"><span>⌕</span><b data-i18n="nav.explorer">Explorer</b></a>
+  <a href="./"><span>⌂</span><b data-i18n="nav.home">الرئيسية</b></a>
 </nav>
 <footer><div class="brand"><span class="logo"><span>B</span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></div><span>Indexed explorer · 2026</span></footer>
-<script src="public/explorer.js?v=33" defer></script>
+<div id="settingsOverlay" class="settings-overlay" hidden>
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
+    <header class="settings-head"><div><span class="settings-eyebrow">BEXENTRA · PREFERENCES</span><h2 id="settingsHeading" data-i18n="settings.title">الإعدادات</h2><p data-i18n="settings.subtitle">خصّص تجربة BEXENTRA على هاد الجهاز</p></div><button class="settings-close" type="button" data-close-settings aria-label="Close">×</button></header>
+    <div class="settings-scroll">
+      <div class="settings-option"><label data-i18n="settings.language">اللغة</label><div class="setting-segments" role="group" aria-label="Language"><button data-pref-language="ar" type="button" data-i18n="settings.arabic">العربية</button><button data-pref-language="en" type="button" data-i18n="settings.english">English</button></div></div>
+      <div class="settings-option"><label data-i18n="settings.appearance">المظهر</label><div class="setting-segments" role="group" aria-label="Theme"><button data-pref-theme="dark" type="button">☾ <span data-i18n="settings.dark">داكن</span></button><button data-pref-theme="light" type="button">☀ <span data-i18n="settings.light">فاتح</span></button></div></div>
+      <div class="settings-option"><label for="prefNetwork" data-i18n="settings.network">الشبكة الافتراضية</label><select id="prefNetwork"><option value="bnb">BNB Smart Chain</option><option value="solana">Solana Mainnet</option></select></div>
+      <div class="settings-option"><label for="prefRefresh" data-i18n="settings.refresh">التحديث التلقائي</label><select id="prefRefresh"><option value="on" data-i18n="settings.refreshOn">مفعّل (كل 15 ثانية)</option><option value="off" data-i18n="settings.refreshOff">متوقف</option></select></div>
+      <div class="settings-privacy"><b data-i18n="settings.privacyTitle">الخصوصية والأمان</b><p data-i18n="settings.privacyText">الإعدادات محفوظة فهاد المتصفح فقط. الموقع كيقرأ بيانات بلوكتشين عمومية، وما كيطلبش أي مفتاح خاص.</p></div>
+      <button id="prefReset" class="settings-reset" type="button" data-i18n="settings.reset">إرجاع الإعدادات الأصلية</button>
+    </div>
+  </section>
+</div>
+<script src="public/preferences.js?v=1" defer></script>
+<script src="public/explorer.js?v=34" defer></script>
 </body>
 </html>
