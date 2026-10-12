@@ -12,12 +12,51 @@ function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/"
 async function request(path,p){const u=new URL(API+path);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){let b={};try{b=await r.json()}catch{}throw Error(b.error||("API "+r.status))}return r.json()}
 function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent="نسخ";c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
 async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent="تم ✓";setTimeout(()=>button.textContent="نسخ",1200)}catch{}}
-function showError(msg){$("detailLoading").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("detailError").hidden=false;$("detailError").textContent=msg}
-function start(title){$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function showError(msg){$("detailLoading").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailError").hidden=false;$("detailError").textContent=msg}
+function start(title){$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function finish(title,subtitle,fields,primary,externalType){$("detailLoading").hidden=true;$("detailOverview").hidden=false;$("detailTitle").textContent=title;$("detailSubtitle").textContent=subtitle;$("overviewTitle").textContent=title;$("detailFields").replaceChildren(...fields);$("externalLink").href=ext(externalType,primary);$("copyPrimary").onclick=()=>copyText(primary,$("copyPrimary"))}
 async function loadBlock(){start(chain==="bnb"?"تحميل البلوك...":"تحميل Slot...");const b=await request("/block",{chain,height:query});finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),"تفاصيل البلوك داخل فهرس BEXENTRA",[row("Height / Slot",b.height,true),row("Block Hash",b.block_hash,true),row("Transactions",b.transaction_count),row("Block Time",b.block_time),row("Indexed At",b.indexed_at)],b.height,"block")}
 async function loadTx(){start("تحميل المعاملة...");const t=await request("/tx",{chain,hash:query});finish("Transaction",short(t.tx_hash,18),"تفاصيل المعاملة"&&[row("Transaction Hash",t.tx_hash,true),row("Block / Slot",t.block_height,true),row("From",t.sender||"—",!!t.sender),row("To",t.recipient||"—",!!t.recipient),row("Status",t.status==="success"?"مؤكدة":t.status==="failed"?"فاشلة":t.status==="indexed"?"مفهرسة (التأكيد غير متحقق)":(t.status||"غير متوفر")),row("Fee",t.fee_native!=null&&t.fee_native!==""?(chain==="bnb"?(Number(t.fee_native)/1e18).toLocaleString("en-US",{maximumFractionDigits:18})+" BNB":(Number(t.fee_native)/1e9).toLocaleString("en-US",{maximumFractionDigits:9})+" SOL"):"غير متوفرة"),row("Indexed At",t.indexed_at)],t.tx_hash,"tx")}
-async function loadAddress(){start("تحميل نشاط العنوان...");if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;const data=await request("/address",{chain,address:query,limit:"40"});const txs=data.transactions||[];finish("Address",short(query,18),txs.length+" معاملة مفهرسة",[row("Address",query,true),row("Indexed transactions",txs.length),row("Network",chain==="bnb"?"BNB Smart Chain":"Solana")],query,"address");$("addressActivity").hidden=false;$("addressCount").textContent=txs.length+" TX";const feed=$("addressFeed");feed.replaceChildren();if(!txs.length){feed.textContent="لا توجد معاملات لهذا العنوان في الجزء المفهرس حالياً.";return}txs.forEach(t=>{const r=document.createElement("a");r.className="feed-row clickable";r.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);const from=String(t.sender||"");const to=String(t.recipient||"");const own=String(query).toLowerCase();const outgoing=from.toLowerCase()===own;const incoming=to.toLowerCase()===own;const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"غير محدد";const i=document.createElement("span");i.className="feed-icon";i.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";const m=document.createElement("div");m.className="feed-main";const b=document.createElement("b");b.textContent=short(t.tx_hash,12);const info=document.createElement("small");info.textContent=direction+" · "+(outgoing?"إلى: "+short(to||"—",8):incoming?"من: "+short(from||"—",8):"Block "+esc(t.block_height));const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+(t.status==="success"?"مؤكدة":t.status==="failed"?"فاشلة":t.status==="indexed"?"مفهرسة":esc(t.status));m.append(b,info,meta);const side=document.createElement("span");side.className="feed-side";side.textContent=direction;r.append(i,m,side);feed.append(r)})}
+// Read only the BEP-20 transfers indexed so far; amounts are raw base units.
+async function loadTokenTransfers(address){
+ if(chain!=="bnb")return;
+ const section=$("tokenActivity"),feed=$("tokenFeed"),count=$("tokenCount");
+ section.hidden=false;
+ feed.textContent="جاري تحميل تحويلات BEP20 المفهرسة...";
+ count.textContent="…";
+ try{
+  const data=await request("/token-transfers",{chain:"bnb",address,limit:"30"});
+  const transfers=Array.isArray(data.transfers)?data.transfers:[];
+  count.textContent=transfers.length+" EVENTS";
+  feed.replaceChildren();
+  if(!transfers.length){feed.textContent="لا توجد تحويلات BEP20 لهذا العنوان في الجزء المفهرس حالياً.";return}
+  const own=address.toLowerCase();
+  transfers.forEach(t=>{
+   const from=String(t.sender||""),to=String(t.recipient||"");
+   const outgoing=from.toLowerCase()===own,incoming=to.toLowerCase()===own;
+   const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"EVENT";
+   const item=document.createElement("a");
+   item.className="feed-row clickable";
+   item.href=ext("tx",t.tx_hash);
+   item.target="_blank";
+   item.rel="noopener noreferrer";
+   item.setAttribute("aria-label","عرض المعاملة على BscScan");
+   const icon=document.createElement("span");
+   icon.className="feed-icon";
+   icon.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";
+   const main=document.createElement("div");main.className="feed-main";
+   const hash=document.createElement("b");hash.textContent=short(t.tx_hash,12);
+   const token=document.createElement("small");token.textContent="Token: "+short(t.token_address,10)+" · Block "+esc(t.block_height);
+   const peers=document.createElement("small");peers.textContent="From: "+short(from,7)+" → To: "+short(to,7);
+   const amount=document.createElement("small");amount.textContent="Raw amount: "+esc(t.amount_raw);
+   const side=document.createElement("span");side.className="feed-side";side.textContent=direction;
+   main.append(hash,token,peers,amount);
+   item.append(icon,main,side);
+   feed.append(item);
+  });
+ }catch(e){count.textContent="—";feed.textContent="تعذر تحميل تحويلات BEP20 حالياً: "+e.message}
+}
+async function loadAddress(){start("تحميل نشاط العنوان...");if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;const data=await request("/address",{chain,address:query,limit:"40"});const txs=data.transactions||[];finish("Address",short(query,18),txs.length+" معاملة مفهرسة",[row("Address",query,true),row("Indexed transactions",txs.length),row("Network",chain==="bnb"?"BNB Smart Chain":"Solana")],query,"address");$("addressActivity").hidden=false;$("addressCount").textContent=txs.length+" TX";const feed=$("addressFeed");feed.replaceChildren();if(chain==="bnb")await loadTokenTransfers(query);if(!txs.length){feed.textContent="لا توجد معاملات لهذا العنوان في الجزء المفهرس حالياً.";return}txs.forEach(t=>{const r=document.createElement("a");r.className="feed-row clickable";r.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);const from=String(t.sender||"");const to=String(t.recipient||"");const own=String(query).toLowerCase();const outgoing=from.toLowerCase()===own;const incoming=to.toLowerCase()===own;const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"غير محدد";const i=document.createElement("span");i.className="feed-icon";i.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";const m=document.createElement("div");m.className="feed-main";const b=document.createElement("b");b.textContent=short(t.tx_hash,12);const info=document.createElement("small");info.textContent=direction+" · "+(outgoing?"إلى: "+short(to||"—",8):incoming?"من: "+short(from||"—",8):"Block "+esc(t.block_height));const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+(t.status==="success"?"مؤكدة":t.status==="failed"?"فاشلة":t.status==="indexed"?"مفهرسة":esc(t.status));m.append(b,info,meta);const side=document.createElement("span");side.className="feed-side";side.textContent=direction;r.append(i,m,side);feed.append(r)})}
 async function load(){if(!query){showError("ما كاين حتى بحث. رجع للرئيسية واكتب عنوان أو معاملة أو بلوك.");return}type=detect(query,type);$("detailKicker").innerHTML="<i></i> "+type.toUpperCase()+" · BEXENTRA";try{if(type==="block")await loadBlock();else if(type==="address")await loadAddress();else await loadTx()}catch(e){showError("ما قدرناش نلقاو هاد البيانات فالفهرس الحالي: "+e.message)}}
 $("detailSearch").addEventListener("submit",e=>{e.preventDefault();const q=$("detailInput").value.trim();if(!q)return;const t=detect(q,$("detailType").value);location.href="explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(t)+"&q="+encodeURIComponent(q)});
 $("detailInput").value=query;
