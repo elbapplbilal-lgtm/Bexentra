@@ -1,0 +1,42 @@
+name: BEXENTRA BEP20 Transfer Indexer
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '2,12,22,32,42,52 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bexentra-bep20-indexer
+  cancel-in-progress: false
+
+jobs:
+  index-token-transfers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
+      TOKEN_INDEXER_POLL_MS: '2500'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify database secret exists
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::Missing DATABASE_URL secret"
+            exit 1
+          fi
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Index BEP20 Transfer events
+        run: timeout --signal=TERM --kill-after=10s 245s node src/token-indexer.js || test "$?" -eq 124
