@@ -414,3 +414,47 @@ body.bex-reference .bottom-nav{
  body.bex-reference .data-card{margin-top:7px!important;padding:6px 8px!important}
  .bex-reference .feed-row{min-height:27px!important;padding:2px 2px!important}
 }
+
+/* Four-part indexed rows mirror the reference layout. Data is still API-backed. */
+.bex-reference .feed-row.reference-row{
+ direction:ltr!important;
+ grid-template-columns:27px minmax(0,1fr) auto 17px!important;
+ column-gap:6px!important;align-items:center!important;
+}
+.bex-reference .reference-row .feed-main a,
+.bex-reference .reference-row .feed-main small{
+ direction:ltr!important;text-align:left!important;
+}
+.bex-reference .reference-row .feed-side{
+ direction:rtl!important;text-align:center!important;
+ max-width:110px!important;
+ overflow:hidden!important;text-overflow:ellipsis!important;
+ background:rgba(4,40,82,.75)!important;
+ border:1px solid rgba(55,134,227,.27)!important;
+ color:#a9c9f2!important;
+}
+.bex-reference .reference-row .feed-side.feed-failed{
+ background:rgba(83,25,46,.7)!important;color:#ffc1d4!important;
+ border-color:rgba(230,83,129,.3)!important;
+}
+.bex-reference .reference-row .feed-side.feed-unconfirmed{
+ background:rgba(78,61,14,.58)!important;color:#f6d28a!important;
+}
+.bex-reference #recentTransactions .reference-row .feed-side:not(.feed-failed):not(.feed-unconfirmed){
+ color:#3cf0be!important;
+ background:rgba(5,66,48,.54)!important;
+ border-color:rgba(31,206,143,.27)!important;
+}
+.bex-reference .feed-chevron{
+ display:grid!important;place-items:center!important;
+ width:17px!important;height:23px!important;
+ color:#69b4ff!important;
+}
+.bex-reference .feed-chevron .ui-icon{
+ width:15px!important;height:15px!important;
+ filter:drop-shadow(0 0 5px rgba(39,119,250,.5));
+}
+.bex-reference .feed-row-link{cursor:pointer}
+.bex-reference .feed-row-link:hover{background:rgba(17,77,147,.16)!important}
+.bex-reference .feed-row-link:focus-visible{outline:2px solid #48dfff!important;outline-offset:1px}
+.bex-reference.light-mode .reference-row .feed-side{background:#e2f0ff!important;color:#235c8f!important}
