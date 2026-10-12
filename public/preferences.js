@@ -51,7 +51,8 @@
    "details.noActivity":"ما كايناش معاملات لهاد العنوان فالجزء المفهرس.",
    "details.network":"الشبكة","details.block":"بلوك","details.address":"عنوان","details.indexedTx":"المعاملات المفهرسة",
    "details.notFound":"ما قدرناش نلقاو هاد البيانات فالجزء المفهرس:",
-   "details.noSearch":"كتب عنوان محفظة أو رقم بلوك أو Tx Hash باش تبحث."
+   "details.noSearch":"كتب عنوان محفظة أو رقم بلوك أو Tx Hash باش تبحث.",
+   "details.loadBlock":"جاري تحميل البلوك...","details.loadSlot":"جاري تحميل Slot...","details.loadTx":"جاري تحميل المعاملة...","details.loadAddress":"جاري تحميل نشاط العنوان...","details.txTitle":"معاملة","details.addressTitle":"عنوان المحفظة","details.indexedTxSummary":"معاملة مفهرسة","details.confirmed":"مؤكدة","details.failed":"فاشلة","details.indexed":"مفهرسة","details.unavailable":"غير متوفرة","details.detailsLabel":"تفاصيل"
   },
   en:{
    "menu.home":"Home","menu.blocks":"Blocks","menu.transactions":"Transactions","menu.explorer":"Explorer","menu.settings":"Settings",
@@ -96,7 +97,8 @@
    "details.noActivity":"No transactions for this address in the indexed range.",
    "details.network":"Network","details.block":"Block","details.address":"Address","details.indexedTx":"Indexed transactions",
    "details.notFound":"Not available in the current indexed range:",
-   "details.noSearch":"Enter an address, block number or transaction hash to search."
+   "details.noSearch":"Enter an address, block number or transaction hash to search.",
+   "details.loadBlock":"Loading block...","details.loadSlot":"Loading slot...","details.loadTx":"Loading transaction...","details.loadAddress":"Loading address activity...","details.txTitle":"Transaction","details.addressTitle":"Wallet address","details.indexedTxSummary":"indexed transactions","details.confirmed":"Confirmed","details.failed":"Failed","details.indexed":"Indexed","details.unavailable":"Unavailable","details.detailsLabel":"Details"
   }
  };
  const t=k=>dict[get("language")][k]||dict.ar[k]||k;
