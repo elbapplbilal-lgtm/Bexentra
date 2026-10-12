@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="public/style.css?v=24">
 <link rel="stylesheet" href="public/nav.css?v=30">
 <link rel="stylesheet" href="public/explorer-detail.css?v=31">
-<link rel="stylesheet" href="public/detail-mobile-fix.css?v=1">
+<link rel="stylesheet" href="public/detail-mobile-fix.css?v=2">
 </head>
 <body class="detail-page detail-v31">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -59,6 +59,11 @@
     <div class="card-head"><div><span class="kicker">INDEXED ACTIVITY</span><h2>نشاط العنوان</h2></div><span id="addressCount" class="card-pill">0 TX</span></div>
     <div id="addressFeed" class="feed"></div>
   </section>
+  <section id="tokenActivity" class="card address-activity token-activity" hidden>
+    <div class="card-head"><div><span class="kicker">INDEXED BEP-20 TRANSFERS</span><h2>تحويلات التوكنات (BEP20)</h2></div><span id="tokenCount" class="card-pill">0 EVENTS</span></div>
+    <p class="token-coverage">نعرض فقط تحويلات الجزء المفهرس، وليس التاريخ الكامل للمحفظة. الكميات المعروضة خام، قبل حساب خانات decimals لكل توكن.</p>
+    <div id="tokenFeed" class="feed" aria-live="polite"></div>
+  </section>
 </main>
 <nav class="bottom-nav bottom-v30">
   <a href="./#transactions"><span>⇄</span><b>المعاملات</b></a>
@@ -67,6 +72,6 @@
   <a href="./"><span>⌂</span><b>الرئيسية</b></a>
 </nav>
 <footer><div class="brand"><span class="logo"><span>B</span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></div><span>Indexed explorer · 2026</span></footer>
-<script src="public/explorer.js?v=31" defer></script>
+<script src="public/explorer.js?v=32" defer></script>
 </body>
 </html>
