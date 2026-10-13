@@ -1,1 +1,17 @@
-{"name":"bexentra-solana-explorer","version":"0.1.0","private":true,"type":"module","scripts":{"start":"node server.js"},"engines":{"node":">=18"}}
+{
+  "name": "bexentra-solana-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "cloudflare:check": "node --check cloudflare/src/worker.js",
+    "cloudflare:dry-run": "wrangler deploy --dry-run --outdir /tmp/bexentra-worker-build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
