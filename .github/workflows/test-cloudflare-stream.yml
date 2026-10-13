@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'cloudflare/**'
+      - 'public/explorer.js'
+      - 'explorer.html'
+      - 'sw.js'
+      - 'scripts/test-explorer-fallback.mjs'
       - '.github/workflows/test-cloudflare-stream.yml'
   workflow_dispatch:
 permissions:
@@ -21,3 +25,5 @@ jobs:
       - name: Test SSE streaming, RPC notifications, error and memory limits
         working-directory: cloudflare
         run: node --test test/*.test.mjs
+      - name: Verify latest transaction hashes open through real RPC fallback
+        run: node scripts/test-explorer-fallback.mjs

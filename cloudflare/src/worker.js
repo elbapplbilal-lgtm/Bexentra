@@ -1,3 +1,4 @@
+import {transactionRoute} from './tx-lookup.js';
 // BEXENTRA's optional, read-only, per-viewer blockchain live stream.
 // Each open browser subscribes to upstream notifications; it does not index every
 // transaction, keep working after the page closes, or guarantee an outage-free feed.
@@ -272,6 +273,11 @@ export default {
         service:'cloudflare-worker', up:true,
         data:'Upstream subscriptions connect only while a viewer is watching',
         coverage:'NOT_COMPLETE_HISTORY'});
+    }
+    if (u.pathname === '/tx') {
+      const origin = request.headers.get('Origin');
+      if (origin && origin !== SITE_ORIGIN) return json({error:'Origin not allowed'}, 403);
+      return transactionRoute(request, env);
     }
     if (u.pathname !== '/stream') return json({error:'Not found'}, 404);
     const chain = u.searchParams.get('chain');
