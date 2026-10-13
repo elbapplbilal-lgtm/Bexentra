@@ -1,0 +1,7 @@
+name = "bexentra-live-stream"
+main = "src/worker.js"
+compatibility_date = "2026-10-13"
+workers_dev = true
+
+[observability.logs]
+enabled = false
