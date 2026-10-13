@@ -323,3 +323,95 @@ html[lang="en"] .detail-v31 .detail-search{direction:ltr!important}
  .detail-v31 .bottom-v30{display:none!important}
 }
 @media(prefers-reduced-motion:reduce){.detail-v31 *{animation:none!important;transition:none!important}}
+
+
+/* Transaction detail row stability (mobile and desktop).
+   Old @media rules set flex-direction:column while <b> had flex-basis:170px:
+   each one-line address therefore occupied ~170px vertically, leaving giant gaps.
+   Explicitly constrain row and child intrinsic heights without truncating hashes. */
+.detail-v31 .detail-fields{
+ display:block!important;width:100%!important;min-width:0!important;
+ height:auto!important;min-height:0!important;
+}
+.detail-v31 .explorer-field{
+ display:grid!important;
+ grid-template-columns:minmax(108px,30%) minmax(0,1fr)!important;
+ grid-template-rows:auto!important;
+ grid-auto-rows:max-content!important;
+ align-content:start!important;align-items:start!important;
+ justify-content:stretch!important;
+ width:100%!important;min-width:0!important;
+ height:auto!important;min-height:0!important;
+ margin:0!important;
+ padding:12px 0!important;
+ gap:8px!important;
+}
+.detail-v31 .explorer-field>span{
+ display:block!important;min-width:0!important;
+ height:auto!important;min-height:0!important;
+ font-size:12px!important;line-height:1.6!important;
+}
+.detail-v31 .explorer-field>div{
+ display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;
+ justify-content:flex-start!important;align-items:center!important;
+ align-content:flex-start!important;gap:7px 10px!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+ height:auto!important;min-height:0!important;
+}
+.detail-v31 .explorer-field b{
+ display:block!important;
+ flex:0 1 auto!important;
+ align-self:center!important;
+ width:auto!important;min-width:0!important;max-width:100%!important;
+ height:auto!important;min-height:0!important;
+ margin:0!important;padding:0!important;
+ font-family:"Manrope","Cairo",sans-serif!important;
+ font-size:12px!important;line-height:1.65!important;
+ direction:ltr!important;text-align:left!important;
+ white-space:normal!important;overflow-wrap:anywhere!important;
+ word-break:break-word!important;
+}
+.detail-v31 .explorer-field .mini-copy{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ flex:0 0 auto!important;align-self:center!important;
+ width:auto!important;min-width:44px!important;
+ height:34px!important;min-height:34px!important;
+ margin:0!important;padding:5px 10px!important;
+ font-size:12px!important;line-height:1.4!important;
+}
+.detail-v31 .detail-main-card .card-head{
+ display:flex!important;justify-content:space-between!important;
+ align-items:center!important;gap:10px!important;
+}
+.detail-v31 .detail-main-card .detail-actions{
+ display:flex!important;flex-direction:row!important;
+ flex-wrap:wrap!important;gap:8px!important;
+ align-items:center!important;justify-content:flex-start!important;
+}
+.detail-v31 .detail-shell{
+ padding-bottom:calc(122px + env(safe-area-inset-bottom))!important;
+}
+@media(max-width:599px){
+ .detail-v31 .explorer-field{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  gap:5px!important;
+  padding:11px 0!important;
+ }
+ .detail-v31 .explorer-field>div{
+  flex-direction:row!important;flex-wrap:wrap!important;
+  align-content:flex-start!important;justify-content:flex-start!important;
+  height:auto!important;min-height:0!important;
+ }
+ .detail-v31 .explorer-field b{
+  flex:0 1 auto!important;max-width:100%!important;
+  font-size:12px!important;
+ }
+ .detail-v31 .detail-main-card .card-head{
+  align-items:flex-start!important;
+  gap:9px!important;
+ }
+ .detail-v31 .detail-actions .ghost{
+  min-height:36px!important;
+ }
+}
