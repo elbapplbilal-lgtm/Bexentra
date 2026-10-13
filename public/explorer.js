@@ -32,6 +32,42 @@ function short(v,n=12){v=esc(v);return v.length>n*2?v.slice(0,n)+"…"+v.slice(-
 function detect(q,t="auto"){if(t!=="auto")return t;if(/^\d+$/.test(q))return"block";if(chain==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return"address";if(chain==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return"address";return"tx"}
 function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/":t==="address"?"address/":"block/")+id;return"https://solscan.io/"+(t==="tx"?"tx/":t==="address"?"account/":"block/")+id}
 async function request(path,p){const u=new URL(API+path);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){let b={};try{b=await r.json()}catch{}const error=new Error(b.error||("API "+r.status));error.status=r.status;error.reason=b.reason||null;throw error}return r.json()}
+// A fresh hash from the SSE feed may not be indexed in Neon yet.
+// Retry only read-only /tx against the verified Cloudflare RPC Worker; never
+// present a guessed success, fee or other unauthenticated transaction.
+async function verifiedTransaction(chain,hash,observedHeight){
+ const params={chain,hash,...(chain==="bnb"&&observedHeight?{height:observedHeight}:{})};
+ let original;
+ try{return await request("/tx",params)}
+ catch(error){
+  original=error;
+  if(error.status&&error.status!==404&&error.status!==503)throw error;
+ }
+ const endpoint=String(window.BEXENTRA_STREAM_BASE||"").replace(/\/+$/,"");
+ if(!/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(endpoint))throw original;
+ const url=new URL(endpoint+"/tx");
+ Object.entries(params).forEach(([key,value])=>url.searchParams.set(key,String(value)));
+ let response;
+ try{response=await fetch(url,{mode:"cors",credentials:"omit",headers:{Accept:"application/json"}})}
+ catch{throw original}
+ if(!response.ok){
+  if(response.status===503){
+   const unavailable=new Error("Both RPC sources are temporarily unavailable");
+   unavailable.status=503;
+   throw unavailable;
+  }
+  if(response.status===404&&original?.status===404)throw original;
+  throw original;
+ }
+ let tx;
+ try{tx=await response.json()}catch{throw original}
+ const verified=tx&&tx.chain===chain&&tx.tx_hash===hash&&
+  ["rpc_live","rpc_block_verified"].includes(tx.source)&&
+  Number.isSafeInteger(Number(tx.block_height))&&Number(tx.block_height)>=0&&
+  (!observedHeight||Number(tx.block_height)===Number(observedHeight));
+ if(!verified)throw original;
+ return tx;
+}
 function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent=tr("details.copy");c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
 async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent=tr("details.copyDone");setTimeout(()=>button.textContent=tr("details.copy"),1200)}catch{}}
 function showError(msg,title){
@@ -75,7 +111,7 @@ async function loadBlock(){
 }
 async function loadTx(){
  start(tr("details.loadTx"));
- const t=await request("/tx",{chain,hash:query,...(chain==="bnb"&&observedHeight?{height:observedHeight}:{})});
+ const t=await verifiedTransaction(chain,query,observedHeight);
  if(t.source==="token_transfers_only"){
   const transfers=Array.isArray(t.token_transfers)?t.token_transfers:[];
   finish(tr("details.txTitle"),tr("details.tokenOnlySubtitle"),[
