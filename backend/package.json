@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "index": "node src/indexer.js",
-    "index:tokens": "node src/token-indexer.js"
+    "index:tokens": "node src/token-indexer.js",
+    "index:details": "node src/receipt-enricher.js",
+    "test": "node --test test/*.test.js"
   },
   "engines": {
     "node": ">=20"
