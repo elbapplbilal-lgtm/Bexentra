@@ -82,7 +82,7 @@ await scenario("Provider outage explicitly yields indexed-only snapshot",async()
  assert.equal(res.data.source,"indexed_snapshot");
  assert.equal(res.data.reason,"rpc_unavailable");
  assert.equal(res.data.blocks[0].height,127281003);
- assert.equal(h.rpcCalls.length,2,"public BNB RPC providers should both be attempted");
+ assert.equal(h.rpcCalls.length,3,"all available public BNB RPC providers should be attempted");
 });
 
 await scenario("On-demand BNB tx includes receipt-verified status and exact wei fee",async()=>{
@@ -94,6 +94,61 @@ await scenario("On-demand BNB tx includes receipt-verified status and exact wei 
  assert.equal(res.data.fee_native,"21000000000000");
  assert.equal(res.data.sender,addressFrom);
  assert.equal(res.data.block_height,Number(BigInt(block.number)));
+});
+
+await scenario("A real BNB hash seen in a live block opens even when all by-hash RPCs return null",async()=>{
+ const h=makeHandler({rpc:{
+  eth_getTransactionByHash:null,
+  eth_getBlockByNumber:block,
+  eth_getTransactionReceipt:null
+ }});
+ const height=Number(BigInt(block.number));
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash+"&height="+height);
+ assert.equal(res.status,200);
+ assert.equal(res.data.source,"rpc_block_verified");
+ assert.equal(res.data.coverage,"on_demand_block");
+ assert.equal(res.data.tx_hash,receiptHash);
+ assert.equal(res.data.block_height,height);
+ assert.equal(res.data.sender,addressFrom);
+ assert.equal(res.data.recipient,addressTo);
+ assert.equal(res.data.status,null,"Unverified receipt must not imply success");
+ assert.equal(res.data.fee_native,null,"Never invent a fee");
+ assert.equal(h.rpcCalls.filter(x=>x.method==="eth_getTransactionByHash").length,3);
+ assert.equal(h.rpcCalls.filter(x=>x.method==="eth_getBlockByNumber").length,1);
+});
+await scenario("Wrong hash cannot be passed off as a real transaction from a supplied height",async()=>{
+ const fakeHash="0x"+"7".repeat(64);
+ const h=makeHandler({rpc:{eth_getTransactionByHash:null,eth_getBlockByNumber:block}});
+ const res=await h.request("/tx?chain=bnb&hash="+fakeHash+"&height="+Number(BigInt(block.number)));
+ assert.equal(res.status,404);
+ assert.equal(res.data.reason,"not_verified");
+});
+await scenario("A missing by-hash lookup without a height is honestly unverified",async()=>{
+ const h=makeHandler({rpc:{eth_getTransactionByHash:null}});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash);
+ assert.equal(res.status,404);
+ assert.equal(res.data.reason,"not_verified");
+});
+await scenario("RPC outages are not mistaken for a hash not existing on chain",async()=>{
+ const h=makeHandler({rpc:{fail:true}});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash+"&height="+Number(BigInt(block.number)));
+ assert.equal(res.status,503);
+ assert.equal(res.data.reason,"rpc_unavailable");
+});
+await scenario("Malformed observed block hint is rejected",async()=>{
+ const h=makeHandler({rpc:{}});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash+"&height=bad");
+ assert.equal(res.status,400);
+ assert.equal(h.rpcCalls.length,0);
+});
+await scenario("A matching receipt on the canonical observed block verifies status and exact fee",async()=>{
+ const h=makeHandler({rpc:{
+  eth_getTransactionByHash:null,eth_getBlockByNumber:block,eth_getTransactionReceipt:receipt
+ }});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash+"&height="+Number(BigInt(block.number)));
+ assert.equal(res.status,200);
+ assert.equal(res.data.status,"success");
+ assert.equal(res.data.fee_native,"21000000000000");
 });
 
 await scenario("Invalid hash is rejected before any upstream call",async()=>{
