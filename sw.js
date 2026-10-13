@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v56-neon-fidelity-feeds";
+const CACHE="bexentra-shell-v57-3d-brand-design";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -7,10 +7,10 @@ const SHELL=[
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2",
  "./public/preferences.js?v=6","./public/search-input.js?v=1",
- "./public/app.js?v=39","./public/explorer.js?v=37",
- "./public/neon-reference-v5.css?v=1",
+ "./public/app.js?v=40","./public/explorer.js?v=37",
+ "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=1",
- "./public/bnb-mark.svg","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"
+ "./public/bnb-mark.svg?v=2","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"
 ];
 self.addEventListener("install",event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).catch(()=>{}))});
 self.addEventListener("activate",event=>{event.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))]))});

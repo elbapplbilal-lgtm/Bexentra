@@ -9,7 +9,7 @@ import {chromium} from "playwright";
 import * as csstree from "css-tree";
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
-const css=await readFile(path.join(root,"public/neon-reference-v5.css"),"utf8");
+const css=await readFile(path.join(root,"public/neon-reference-v5.css"),"utf8")+"\n"+await readFile(path.join(root,"public/neon-reference-v6.css"),"utf8");
 const parseErrors=[];
 csstree.parse(css,{onParseError:e=>parseErrors.push(String(e.message||e))});
 assert.deepEqual(parseErrors,[],"Style parser should not report invalid CSS");
@@ -19,6 +19,12 @@ assert(index.indexOf('public/neon-reference-v5.css?v=1')>index.indexOf('public/m
  "Neon overrides must load after previous mobile layout patches");
 const sw=await readFile(path.join(root,"sw.js"),"utf8");
 assert(sw.includes('public/neon-reference-v5.css?v=1'),"PWA must precache the style");
+assert(sw.includes('public/neon-reference-v6.css?v=1'),"PWA must precache the premium stylesheet");
+assert(sw.includes('public/feature-icons-3d.svg'),"PWA must precache the 3D vector icons");
+const bnbLogo=await readFile(path.join(root,"public/bnb-mark.svg"),"utf8");
+assert(bnbLogo.includes('#F0B90B')&&bnbLogo.includes('69.3063 34.6397'),"BNB glyph must use original geometry and brand yellow");
+assert(index.includes('feature-icons-3d.svg#blocks')&&index.includes('feature-icons-3d.svg#transactions'),"Dashboard quick tiles use dimensional feature icons");
+assert(index.indexOf('public/neon-reference-v6.css?v=1')>index.indexOf('public/neon-reference-v5.css?v=1'),"New overrides must load after compact CSS");
 
 const mime={".html":"text/html",".css":"text/css",".js":"text/javascript",".svg":"image/svg+xml",
  ".png":"image/png",".json":"application/json",".webmanifest":"application/manifest+json"};
@@ -40,7 +46,7 @@ let browser,failures=[];
 try{
  browser=await chromium.launch({channel:"chrome",headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
  await mkdir(path.join(root,"ui-test-shots"),{recursive:true});
- for(const width of [360,390,430,768]){
+ for(const width of [360,390,430,768,980]){
   const context=await browser.newContext({viewport:{width,height:850},deviceScaleFactor:1,
    isMobile:width<=430,hasTouch:width<=430,locale:"ar-MA"});
   const page=await context.newPage();
@@ -87,6 +93,9 @@ try{
       const b=r.getBoundingClientRect();
       return {left:b.left,right:b.right,lineCount:r.getClientRects().length}})(),
     solCube:rect(".sol-cube"),bnbCube:rect(".bnb-cube"),
+    logoIsLoaded:document.getElementById("networkIcon")?.naturalWidth>0,
+    navDisplay:getComputedStyle(document.querySelector(".bottom-nav")).display,
+    settings:rect("#settingsToggle"),
     searchButton:rect("#globalSearch button[type=submit]"),nav:rect(".bottom-nav"),
     quick,stat,card:rect(".stats-card"),statsCount:stat.length,
     source:getComputedStyle(document.querySelector(".hero-card")).backgroundImage,
@@ -102,12 +111,12 @@ try{
   assert(rects.statsCount===4,"Four real-data metric cards at "+width);
   assert(rects.stat[0].y===rects.stat[1].y,"Metric cards align in a row at "+width);
   assert(rects.brand.l>rects.network.r,"No header brand/network overlap at "+width);
-  if(width<=430) {
-   assert.equal(rects.titleRange.lineCount,1,"Arabic headline must stay on one line");
-   assert(rects.titleRange.left>rects.solCube.r-3,"Arabic headline must not cover left Solana cube");
-   assert(rects.titleRange.right<rects.bnbCube.l+3,"Arabic headline must not cover right BNB cube");
-  }
+  assert(rects.titleRange.right<=rects.viewport+2&&rects.titleRange.left>=-2,"The Arabic headline must stay inside the viewport at "+width);
+  assert(rects.titleRange.lineCount<=2,"The Arabic headline should fit in at most two lines at "+width);
   assert(rects.nav&&rects.nav.b<=852&&rects.nav.l>=0,"Bottom nav stays inside the viewport at "+width);
+  assert.equal(rects.navDisplay,"grid","Bottom navigation must stay visible including desktop-site mode at "+width);
+  assert(rects.logoIsLoaded,"Authentic BNB mark should load at "+width);
+  if(width>=640)assert(rects.settings&&rects.settings.y>=0&&rects.settings.b<=rects.header.b+3,"Settings belongs inside the header at "+width);
   assert(rects.card.w>0,"Stats section must be visible at "+width);
   assert.equal(rects.networkName,"BNB Smart Chain");
   assert.deepEqual(pageErrors,[],"No JS crashes at "+width);
@@ -142,4 +151,4 @@ try{
  if(browser)await browser.close();
  await new Promise(resolve=>server.close(resolve));
 }
-console.log("PASS 4 device viewports, working search/network/menu, CSS syntax, no fake production stats");
+console.log("PASS 5 device viewports, real BNB vector, 3D icons, nav in desktop mode, search/network/menu, CSS syntax, no fake production stats");

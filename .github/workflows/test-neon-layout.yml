@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'public/neon-reference-v5.css'
+      - 'public/neon-reference-v6.css'
+      - 'public/bnb-mark.svg'
+      - 'public/feature-icons-3d.svg'
+      - 'public/app.js'
       - 'index.html'
       - 'sw.js'
       - 'scripts/test-neon-layout.mjs'
@@ -23,7 +27,7 @@ jobs:
         run: npm install --no-save --no-audit --no-fund playwright css-tree
       - name: Verify installed system Chrome
         run: google-chrome --version
-      - name: Test real DOM with mocked test-only blockchain data at Android and tablet viewports
+      - name: Test working real DOM with test-only blockchain fixtures at Android, tablet and desktop-site widths
         run: node scripts/test-neon-layout.mjs
       - name: Save browser screenshots for visual review
         if: always()

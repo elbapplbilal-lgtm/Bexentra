@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true">
+<defs>
+  <linearGradient id="ice" x1="5" y1="1" x2="58" y2="62" gradientUnits="userSpaceOnUse"><stop stop-color="#c2f9ff"/><stop offset=".3" stop-color="#57dfff"/><stop offset=".68" stop-color="#197cff"/><stop offset="1" stop-color="#0954ce"/></linearGradient>
+  <linearGradient id="iceTop" x1="13" y1="6" x2="49" y2="29" gradientUnits="userSpaceOnUse"><stop stop-color="#cafaff"/><stop offset="1" stop-color="#238cff"/></linearGradient>
+  <linearGradient id="iceSide" x1="11" y1="25" x2="51" y2="55" gradientUnits="userSpaceOnUse"><stop stop-color="#1cc5ff"/><stop offset="1" stop-color="#0048c9"/></linearGradient>
+  <linearGradient id="mint" x1="10" y1="0" x2="50" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#c2fff0"/><stop offset=".5" stop-color="#27e7cf"/><stop offset="1" stop-color="#00a9b6"/></linearGradient>
+  <linearGradient id="lav" x1="10" y1="0" x2="55" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#d9b9ff"/><stop offset=".5" stop-color="#7c77ff"/><stop offset="1" stop-color="#443bd1"/></linearGradient>
+  <filter id="lit" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5"/></filter>
+</defs>
+<symbol id="blocks" viewBox="0 0 64 64">
+  <path d="M32 4 56 17.5 56 45.5 32 59 8 45.5 8 17.5Z" fill="#0448bc" fill-opacity=".2"/>
+  <path d="M32 6 54 18.3 32 31 10 18.3Z" fill="url(#iceTop)" stroke="#e4fcff" stroke-width="1"/>
+  <path d="M10 18.3 32 31v25L10 43.3Z" fill="url(#iceSide)" stroke="#2bbbff" stroke-width="1.5"/>
+  <path d="M54 18.3 32 31v25l22-12.7Z" fill="#0755db" stroke="#80eaff" stroke-width="1.5"/>
+  <path d="M32 6 54 18.3v25L32 56 10 43.3v-25L32 6ZM10 18.3 32 31l22-12.7M32 31v25" fill="none" stroke="#d1ffff" stroke-width="2.9" stroke-linejoin="round"/>
+</symbol>
+<symbol id="transactions" viewBox="0 0 64 64">
+  <path d="M10 20h43l-12-11M53 20 41 31" fill="none" stroke="url(#ice)" stroke-width="6.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M54 44H11l12-11M11 44l12 11" fill="none" stroke="url(#lav)" stroke-width="6.3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="20" r="3" fill="#d7fdff"/><circle cx="54" cy="44" r="3" fill="#d5d1ff"/>
+</symbol>
+<symbol id="refresh" viewBox="0 0 64 64">
+  <path d="M51.5 25A21 21 0 0 0 15 18.5l-5.5 5.5" fill="none" stroke="url(#ice)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M9 11v15h15" fill="none" stroke="url(#iceTop)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12.5 39A21 21 0 0 0 49 45.5l5.5-5.5" fill="none" stroke="url(#mint)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M55 53V38H40" fill="none" stroke="url(#mint)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="network" viewBox="0 0 64 64">
+  <path d="M32 12 13 48M32 12l19 36M13 48h38" fill="none" stroke="#188bff" stroke-width="5" stroke-linecap="round"/>
+  <path d="M32 12 13 48M32 12l19 36M13 48h38" fill="none" stroke="url(#ice)" stroke-width="2.7" stroke-linecap="round"/>
+  <circle cx="32" cy="12" r="7" fill="#07419c" stroke="#b0f7ff" stroke-width="4"/>
+  <circle cx="13" cy="48" r="7" fill="#07419c" stroke="#7adfff" stroke-width="4"/>
+  <circle cx="51" cy="48" r="7" fill="#07419c" stroke="#b0f7ff" stroke-width="4"/>
+</symbol>
+<symbol id="activity" viewBox="0 0 64 64">
+  <path d="M34 3 12 34h17l-3 27 26-36H35Z" fill="url(#mint)" stroke="#c7ffec" stroke-width="2.1" stroke-linejoin="round"/>
+</symbol>
+<symbol id="document" viewBox="0 0 64 64">
+  <path d="M16 6h23l11 11v39H16Z" fill="#095ac8" stroke="#a7eaff" stroke-width="3"/>
+  <path d="M39 6v13h11" fill="#82e3ff" stroke="#d7ffff" stroke-width="2"/>
+  <path d="M23 29h20M23 38h20M23 47h13" stroke="url(#ice)" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+</svg>

@@ -15,7 +15,7 @@ function ago(v){
  const value=d<60?Math.floor(d):d<3600?Math.floor(d/60):d<86400?Math.floor(d/3600):Math.floor(d/86400);
  return window.BexentraPrefs?.get("language")==="en"?value+" "+tr(unit)+" "+tr("time.ago"):tr("time.ago")+" "+value+" "+tr(unit);
 }
-function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
+function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg?v=2":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
 function paintIndexSignal(mode){
  for(const id of ["heroSignal"]){
   const el=$(id);if(!el)continue;

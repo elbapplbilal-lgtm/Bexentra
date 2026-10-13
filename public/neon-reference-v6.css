@@ -1,0 +1,528 @@
+/* BEXENTRA · Premium Neon v6
+   Mobile-first design matching the approved vivid-blue visual reference.
+   Pure presentation: no mock blockchain balances, totals, statuses or transaction hashes.
+   IMPORTANT: appended after v5 so earlier "compact" rules cannot shrink typography.
+*/
+:root{
+ --bex6-electric:#128aff;
+ --bex6-aqua:#6cf9ff;
+ --bex6-ink:#02091a;
+ --bex6-glass:linear-gradient(147deg,rgba(7,39,92,.98),rgba(1,13,36,.98));
+}
+body.bex-home.neon-fidelity{
+  background:
+    radial-gradient(ellipse 92% 26% at 50% -2%,#06499b7e,transparent 85%),
+    radial-gradient(ellipse 105% 60% at 50% 42%,#061c48b7,transparent 85%),
+    linear-gradient(180deg,#010713,#020b23 50%,#010713)!important;
+  color:#eef9ff!important;
+  padding-bottom:calc(111px + env(safe-area-inset-bottom))!important;
+}
+body.bex-home.neon-fidelity::before{
+  inset:5px 7px!important;
+  border-color:rgba(69,172,255,.97)!important;
+  border-radius:31px!important;
+  box-shadow:0 0 2px #beefff,0 0 22px rgba(9,117,255,.86),
+   0 0 52px rgba(4,87,222,.26),inset 0 0 15px rgba(25,114,255,.20)!important;
+}
+body.bex-home.neon-fidelity .app-header{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  height:75px!important;
+  padding:0 14px!important;
+  background:linear-gradient(180deg,#020d26f7,#03122dde)!important;
+  border-bottom:1px solid rgba(42,127,242,.35)!important;
+  box-shadow:0 7px 26px rgba(0,7,29,.68)!important;
+}
+body.bex-home.neon-fidelity .app-header .header-left{grid-column:1;grid-row:1;align-self:center;gap:9px!important}
+body.bex-home.neon-fidelity .app-header .brand{grid-column:2;grid-row:1;align-self:center}
+body.bex-home.neon-fidelity .app-header .settings-trigger{display:none!important}
+body.bex-home.neon-fidelity .menu-button,
+body.bex-home.neon-fidelity .network-pill{
+  height:48px!important;
+  border-radius:15px!important;
+  border:1px solid #378bffac!important;
+  background:linear-gradient(160deg,#09254fbf,#03122fa8)!important;
+  box-shadow:inset 0 1px #b1ebff37,0 0 15px #146aff3d!important;
+}
+body.bex-home.neon-fidelity .menu-button{width:46px!important;flex-basis:46px!important;padding:9px!important}
+body.bex-home.neon-fidelity .menu-button .ui-icon{width:28px!important;height:28px!important;filter:drop-shadow(0 0 4px #2191ff)}
+body.bex-home.neon-fidelity .network-pill{padding:0 9px!important;gap:7px!important}
+body.bex-home.neon-fidelity .network-logo{width:28px!important;height:28px!important;flex-basis:28px!important;object-fit:contain!important}
+body.bex-home.neon-fidelity .network-pill select{
+  width:107px!important;max-width:107px!important;
+  padding-right:10px!important;color:#f2f9ff!important;
+  font-size:12px!important;font-weight:900!important;
+}
+body.bex-home.neon-fidelity .network-live{
+  width:9px!important;height:9px!important;flex-basis:9px!important;
+  background:#7188a8!important;box-shadow:0 0 5px #6383a6!important;
+}
+body.bex-home.neon-fidelity .network-live.is-recent{
+  background:#15ffd6!important;box-shadow:0 0 10px 3px #15f9cd96!important;
+}
+body.bex-home.neon-fidelity .network-live.is-stale{
+  background:#ffc266!important;box-shadow:0 0 8px #ffc266b0!important;
+}
+body.bex-home.neon-fidelity .brand-name{
+  font-size:clamp(15px,4.15vw,23px)!important;
+  font-weight:900!important;color:#f8fcff!important;
+  letter-spacing:.02em!important;text-shadow:0 0 11px #55a9ff60!important;
+}
+body.bex-home.neon-fidelity .brand-logo{
+  width:46px!important;height:46px!important;flex:0 0 46px!important;
+  border:1px solid #8cdcff!important;border-radius:14px!important;
+  background:linear-gradient(148deg,#8fe1ff 0%,#278dff 43%,#0c4bdd 100%)!important;
+  box-shadow:inset 0 2px #ffffff8f,0 0 18px #0584fff0,0 0 30px #0668ff70!important;
+  font-size:26px!important;text-shadow:0 1px 4px #003379!important;
+}
+body.bex-home.neon-fidelity .app-shell{
+  width:min(calc(100% - 28px),850px)!important;
+  max-width:calc(100% - 28px)!important;
+}
+body.bex-home.neon-fidelity .hero-card{
+  overflow:hidden!important;
+  padding:74px 5px 12px!important;
+  margin:0!important;
+  border:none!important;
+  border-radius:19px 19px 0 0!important;
+  background:
+    radial-gradient(ellipse 80% 57% at 50% 10%,#0956c533,transparent 77%),
+    transparent!important;
+  box-shadow:none!important;
+}
+body.bex-home.neon-fidelity .reference-globe{
+  width:153%!important;max-width:none!important;
+  top:-70px!important;
+  opacity:.93!important;
+  filter:drop-shadow(0 0 18px #0078ffb0) saturate(1.34) contrast(1.08)!important;
+  mask-image:linear-gradient(#000 0%,#000 48%,#000d 67%,transparent 93%)!important;
+  -webkit-mask-image:linear-gradient(#000 0%,#000 48%,#000d 67%,transparent 93%)!important;
+}
+body.bex-home.neon-fidelity .hero-card::after{
+  display:block!important;
+  background:
+   radial-gradient(ellipse at 50% 49%,#02091a21 0%,#0209198a 69%,transparent 100%),
+   linear-gradient(180deg,transparent 2%,#010a1980 88%,#02091be8)!important;
+}
+body.bex-home.neon-fidelity .grid-glow{
+  opacity:.52!important;
+  background-size:24px 24px!important;
+}
+body.bex-home.neon-fidelity .hero-overline{
+  min-height:36px!important;
+  margin:5px auto 0!important;
+  padding:7px 14px!important;
+  font-size:clamp(9px,2.48vw,12px)!important;
+  border:1px solid #43baffab!important;
+  border-radius:999px!important;
+  color:#76c9ff!important;
+  background:linear-gradient(180deg,#051c42ec,#010d27ef)!important;
+  box-shadow:0 0 20px #087eff70,inset 0 1px #78d9ff63!important;
+}
+body.bex-home.neon-fidelity .hero-overline .signal-dot.is-recent{filter:drop-shadow(0 0 5px #10ffb5)}
+body.bex-home.neon-fidelity .hero-copy h1{
+  margin:68px auto 9px!important;
+  padding:0 3px!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  font-size:clamp(34px,8.2vw,44px)!important;
+  line-height:1.38!important;
+  text-align:center!important;
+  letter-spacing:-.025em!important;
+  font-weight:900!important;
+  background:linear-gradient(100deg,#67a7ff,#4dd8ff 49%,#30f9f6 91%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  filter:drop-shadow(0 0 8px #0e83ff8f)!important;
+}
+body.bex-home.neon-fidelity .hero-copy p{
+  max-width:570px!important;
+  margin:4px auto!important;
+  font-size:clamp(12px,3.1vw,17px)!important;
+  line-height:1.7!important;
+  font-weight:600!important;
+  color:#c2d4ed!important;
+  text-shadow:0 1px 7px #010b24!important;
+}
+body.bex-home.neon-fidelity .chain-cube{
+  top:108px!important;
+  width:clamp(58px,15.6vw,91px)!important;
+  height:clamp(70px,18vw,104px)!important;
+  border:1px solid #62ccffdb!important;
+  border-radius:17px!important;
+  background:linear-gradient(137deg,#278dfcbf,#0b397fcf 36%,#03112cfa 85%)!important;
+  box-shadow:0 0 0 2px #106ce34a,0 0 20px #057affc2,0 15px 20px #0008,
+    inset 0 0 19px #1b96ff40,inset 0 1px #c5faff80!important;
+}
+body.bex-home.neon-fidelity .chain-cube img{
+  width:clamp(39px,10vw,59px)!important;
+  height:clamp(39px,10vw,59px)!important;
+  object-fit:contain!important;
+  filter:none!important;
+}
+body.bex-home.neon-fidelity .bnb-cube{right:0!important}
+body.bex-home.neon-fidelity .sol-cube{left:0!important}
+body.bex-home.neon-fidelity .chain-cube::before{border-color:#64d2ff7c!important}
+body.bex-home.neon-fidelity .chain-cube::after{
+  width:110%!important;height:17px!important;bottom:-15px!important;
+  background:radial-gradient(ellipse,#1596ffbe,transparent 76%)!important;
+  filter:blur(5px)!important;
+}
+body.bex-home.neon-fidelity .trust-pills{
+  margin-top:19px!important;
+  gap:7px!important;
+  flex-wrap:nowrap!important;
+}
+body.bex-home.neon-fidelity .trust-pills>span{
+  min-height:37px!important;
+  padding:8px 8px!important;
+  font-size:clamp(8px,2.25vw,13px)!important;
+  line-height:1.25!important;
+  border:1px solid #237efccc!important;
+  border-radius:22px!important;
+  color:#deefff!important;
+  background:linear-gradient(155deg,#051e46f7,#010b23f7)!important;
+  box-shadow:0 0 15px #077bff40,inset 0 1px #b4edff32!important;
+}
+body.bex-home.neon-fidelity .hero-search{
+  min-height:72px!important;margin-top:21px!important;
+  grid-template-columns:43px minmax(0,1fr) minmax(115px,30%)!important;
+  border:1.5px solid #9beaff!important;
+  border-radius:20px!important;
+  padding:6px!important;
+  background:linear-gradient(143deg,#0b3c83f2,#021333fa 76%)!important;
+  box-shadow:0 0 0 2px #156dfd5e,0 0 27px #148effab,
+    inset 0 0 18px #168aff4e,inset 0 1px #dbf9ff83!important;
+}
+body.bex-home.neon-fidelity .hero-search .search-mark{
+  width:41px!important;height:54px!important;
+  background:linear-gradient(155deg,#0a407cf7,#071b3cee)!important;
+  box-shadow:inset 0 1px #b8eeff38,0 0 11px #087bff7d!important;
+}
+body.bex-home.neon-fidelity .hero-search input{
+  font-size:clamp(12px,3.15vw,17px)!important;
+  font-weight:650!important;
+  color:#eef8ff!important;
+}
+body.bex-home.neon-fidelity .hero-search input::placeholder{color:#a9bfe2!important}
+body.bex-home.neon-fidelity .hero-search button{
+  height:56px!important;min-height:56px!important;
+  border:1px solid #b1f8ff!important;
+  border-radius:15px!important;
+  font-size:clamp(14px,3.6vw,19px)!important;
+  background:linear-gradient(150deg,#5bdaff,#198fff 49%,#074ee0)!important;
+  box-shadow:inset 0 1px #f1ffffa8,0 0 20px #068bffe8!important;
+}
+body.bex-home.neon-fidelity .quick-grid{
+  margin-top:19px!important;
+  gap:10px!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+body.bex-home.neon-fidelity .quick-grid>a,
+body.bex-home.neon-fidelity .quick-grid>button{
+  min-height:92px!important;
+  grid-template-columns:54px minmax(0,1fr) 14px!important;
+  padding:12px 10px!important;gap:9px!important;
+  border:1px solid #2797ffdb!important;
+  border-radius:17px!important;
+  background:radial-gradient(ellipse 55% 78% at 20% 17%,#1a83f43b,transparent 90%),
+    linear-gradient(155deg,#092858f8,#03132ffa)!important;
+  box-shadow:inset 0 1px #b9ebff46,0 0 18px #0c80ff45,0 7px 19px #0007!important;
+}
+body.bex-home.neon-fidelity .quick-grid .quick-icon{
+  width:53px!important;height:53px!important;
+  border:1px solid #1484fceb!important;
+  border-radius:14px!important;
+  background:linear-gradient(157deg,#0e5bbc,#05214cf7)!important;
+  box-shadow:inset 0 1px #d4f8ff57,inset 0 0 10px #1eaeff35,
+    0 0 16px #0983ff80!important;
+}
+body.bex-home.neon-fidelity .quick-grid .quick-icon .ui-icon{
+  width:37px!important;height:37px!important;
+  filter:drop-shadow(0 0 4px #35afff82)!important;
+}
+body.bex-home.neon-fidelity .quick-grid b{
+  font-size:clamp(13px,3.55vw,19px)!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+}
+body.bex-home.neon-fidelity .quick-grid small{
+  margin-top:3px!important;
+  font-size:clamp(10px,2.75vw,13px)!important;
+  line-height:1.45!important;color:#a7c1e5!important;
+}
+body.bex-home.neon-fidelity .quick-grid .quick-arrow{
+  width:16px!important;height:16px!important;color:#9cd9ff!important;
+  filter:drop-shadow(0 0 5px #1889ff)!important;
+}
+body.bex-home.neon-fidelity .stats-card,
+body.bex-home.neon-fidelity .data-card{
+  margin-top:13px!important;padding:13px!important;
+  border:1px solid #228af5e0!important;border-radius:19px!important;
+  background:linear-gradient(158deg,#08295be8,#03102cf7)!important;
+  box-shadow:inset 0 1px #a4ddff2c,0 0 20px #0765df54!important;
+}
+body.bex-home.neon-fidelity .section-title b,
+body.bex-home.neon-fidelity .data-head h2{
+  font-size:clamp(14px,3.6vw,20px)!important;
+  font-weight:900!important;
+}
+body.bex-home.neon-fidelity .title-icon,
+body.bex-home.neon-fidelity .data-icon{
+  width:36px!important;height:36px!important;flex-basis:36px!important;
+  border:1px solid #37abffd9!important;
+  border-radius:10px!important;
+  background:linear-gradient(150deg,#165dc1,#06285a)!important;
+  box-shadow:0 0 12px #1589ff65,inset 0 1px #b0efff40!important;
+}
+body.bex-home.neon-fidelity .live-label{
+  font-size:clamp(10px,2.7vw,14px)!important;
+  color:#42ffd2!important;text-shadow:0 0 9px #27ffc05c!important;
+}
+body.bex-home.neon-fidelity .stats-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important;margin-top:8px!important;
+}
+body.bex-home.neon-fidelity .stats-grid article{
+  min-height:148px!important;padding:11px 5px!important;
+  border:1px solid #2389f0ae!important;border-radius:13px!important;
+  background:radial-gradient(ellipse 80% 70% at 50% 3%,#0b5bb766,transparent 80%),
+    linear-gradient(170deg,#0a2d62,#041536)!important;
+  box-shadow:inset 0 1px #c6f2ff24,0 0 13px #096ade28!important;
+}
+body.bex-home.neon-fidelity .stats-grid .stat-icon{
+  width:43px!important;height:43px!important;flex:0 0 43px!important;
+  margin-bottom:8px!important;
+  border:1px solid #148bff55!important;
+  background:linear-gradient(155deg,#1055ac,#051f5b)!important;
+  box-shadow:0 0 13px #1777ff5c,inset 0 1px #aaf2ff33!important;
+}
+body.bex-home.neon-fidelity .stats-grid .stat-icon.green{
+  background:linear-gradient(155deg,#08716e,#023a4b)!important;
+  box-shadow:0 0 13px #0feaca5c!important;
+}
+body.bex-home.neon-fidelity .stats-grid .stat-icon.purple{
+  background:linear-gradient(155deg,#4f3fb1,#141949)!important;
+}
+body.bex-home.neon-fidelity .stats-grid .stat-icon .ui-icon{
+  width:29px!important;height:29px!important;
+}
+body.bex-home.neon-fidelity .stats-grid small{
+  min-height:27px!important;
+  color:#b4ceee!important;
+  font-size:clamp(9px,2.28vw,12px)!important;
+  line-height:1.36!important;
+}
+body.bex-home.neon-fidelity .stats-grid strong{
+  font-size:clamp(12px,3vw,21px)!important;
+  line-height:1.23!important;
+  color:#f8fcff!important;
+  margin:4px 0!important;
+}
+body.bex-home.neon-fidelity .stats-grid #summaryNetwork{
+  font-size:clamp(9px,2.35vw,15px)!important;
+}
+body.bex-home.neon-fidelity .stats-grid #indexStatus{
+  font-size:clamp(10px,2.6vw,15px)!important;
+}
+body.bex-home.neon-fidelity .stats-grid em{
+  font-size:clamp(8px,2.15vw,12px)!important;
+  line-height:1.4!important;color:#aec7ea!important;
+}
+body.bex-home.neon-fidelity .stream-meta{
+  min-height:30px!important;margin:8px auto 11px!important;
+  font-size:clamp(9px,2.25vw,12px)!important;
+  border-color:#13dcb3!important;box-shadow:0 0 12px #0bd4a550!important;
+}
+body.bex-home.neon-fidelity .data-head{min-height:38px!important;padding-bottom:8px!important}
+body.bex-home.neon-fidelity .data-head button{
+  min-height:34px!important;padding:5px 12px!important;
+  font-size:clamp(10px,2.6vw,13px)!important;
+  border:1px solid #168df9ad!important;border-radius:18px!important;
+  color:#a5d5ff!important;
+}
+body.bex-home.neon-fidelity .feed-row.reference-row{
+  min-height:51px!important;
+  grid-template-columns:40px minmax(0,1fr) auto 18px!important;
+  gap:8px!important;
+  padding:6px 3px!important;
+  border-top:1px solid #2463ad72!important;
+}
+body.bex-home.neon-fidelity .feed-row .feed-icon{
+  width:38px!important;height:38px!important;
+  border:1px solid #269efec9!important;border-radius:10px!important;
+  background:linear-gradient(147deg,#1771d3,#062b67)!important;
+  box-shadow:inset 0 1px #d2f7ff44,0 0 12px #0e81ff70!important;
+}
+body.bex-home.neon-fidelity .feed-row .feed-icon .ui-icon{
+  width:23px!important;height:23px!important;
+}
+body.bex-home.neon-fidelity .reference-row .feed-main a{
+  color:#5bd5ff!important;font-size:clamp(11px,2.8vw,16px)!important;
+  font-weight:900!important;text-shadow:0 0 6px #118dff54!important;
+}
+body.bex-home.neon-fidelity .reference-row .feed-main small{
+  font-size:clamp(9px,2.28vw,12px)!important;
+  color:#a9c5eb!important;
+}
+body.bex-home.neon-fidelity .reference-row .feed-side{
+  font-size:clamp(9px,2.45vw,13px)!important;
+  border:1px solid #2485ed6b!important;
+  border-radius:15px!important;
+  background:#0a305cdb!important;
+  padding:6px 9px!important;
+  max-width:132px!important;
+  color:#c1ddff!important;
+}
+body.bex-home.neon-fidelity #recentTransactions .reference-row .feed-side.feed-live{
+  background:#034d42bd!important;color:#56ffd9!important;
+  border-color:#13cba36f!important;box-shadow:0 0 12px #0ed0a137!important;
+}
+body.bex-home.neon-fidelity .bottom-nav{
+  display:grid!important;visibility:visible!important;
+  position:fixed!important;z-index:65!important;
+  left:8px!important;right:8px!important;bottom:6px!important;
+  width:calc(100% - 16px)!important;
+  max-width:min(calc(100vw - 16px),850px)!important;
+  margin-inline:auto!important;
+  height:calc(87px + env(safe-area-inset-bottom))!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  border:1px solid #36aaffdd!important;
+  border-radius:23px!important;
+  padding:5px!important;
+  background:linear-gradient(155deg,#061b3bea,#010c25f7)!important;
+  box-shadow:0 0 22px #086fffab,inset 0 1px #bfeaff45!important;
+}
+body.bex-home.neon-fidelity .bottom-nav>a{
+  display:flex!important;flex-direction:column!important;
+  justify-content:center!important;align-items:center!important;
+  min-width:0!important;margin:1px!important;padding:4px 1px!important;
+  border-radius:16px!important;gap:6px!important;
+  color:#afc7ef!important;
+}
+body.bex-home.neon-fidelity .bottom-nav a .ui-icon{
+  width:29px!important;height:29px!important;
+  color:#83baff!important;filter:drop-shadow(0 0 5px #0f6cee64)!important;
+}
+body.bex-home.neon-fidelity .bottom-nav a b{
+  font-size:clamp(11px,3.05vw,15px)!important;
+  font-weight:900!important;
+}
+body.bex-home.neon-fidelity .bottom-nav a.active{
+  color:white!important;border:1px solid #7fd3ff!important;
+  background:linear-gradient(151deg,#269aff,#0b58e7 64%,#0340b0)!important;
+  box-shadow:0 0 19px #056affd7,inset 0 2px #d5f7ff72!important;
+}
+body.bex-home.neon-fidelity .bottom-nav a.active .ui-icon{color:#fff!important}
+body.bex-home.neon-fidelity .safety-note{margin-top:16px!important}
+/* Progressive fit at true Android CSS viewports. Prior selectors made headings
+   23px and cards 54px; the target is much larger but stays legible. */
+@media(max-width:410px){
+ body.bex-home.neon-fidelity .app-header{height:70px!important;padding-inline:9px!important}
+ body.bex-home.neon-fidelity .menu-button{width:41px!important;flex-basis:41px!important;height:44px!important}
+ body.bex-home.neon-fidelity .network-pill{height:44px!important;padding:0 7px!important;gap:4px!important}
+ body.bex-home.neon-fidelity .network-logo{width:23px!important;height:23px!important;flex-basis:23px!important}
+ body.bex-home.neon-fidelity .network-pill select{width:80px!important;max-width:80px!important;font-size:10.5px!important}
+ body.bex-home.neon-fidelity .brand-name{font-size:clamp(13px,3.7vw,17px)!important}
+ body.bex-home.neon-fidelity .brand-logo{width:39px!important;height:39px!important;flex-basis:39px!important}
+ body.bex-home.neon-fidelity .hero-card{padding-top:65px!important}
+ body.bex-home.neon-fidelity .reference-globe{top:-59px!important}
+ body.bex-home.neon-fidelity .chain-cube{top:105px!important;width:54px!important;height:65px!important}
+ body.bex-home.neon-fidelity .chain-cube img{width:38px!important;height:38px!important}
+ body.bex-home.neon-fidelity .hero-copy h1{
+   margin-top:65px!important;
+   font-size:clamp(30px,8.3vw,35px)!important;
+   line-height:1.36!important;
+   padding:0!important;
+ }
+ body.bex-home.neon-fidelity .hero-copy p{font-size:clamp(11px,2.9vw,13px)!important}
+ body.bex-home.neon-fidelity .trust-pills{gap:4px!important}
+ body.bex-home.neon-fidelity .trust-pills>span{min-height:33px!important;font-size:clamp(7px,2vw,9px)!important;padding:6px 4px!important}
+ body.bex-home.neon-fidelity .hero-search{grid-template-columns:35px minmax(0,1fr) 110px!important;min-height:64px!important}
+ body.bex-home.neon-fidelity .hero-search .search-mark{width:33px!important;height:48px!important}
+ body.bex-home.neon-fidelity .hero-search button{min-height:51px!important;height:51px!important;font-size:13px!important}
+ body.bex-home.neon-fidelity .hero-search button .search-btn-icon{width:20px!important;height:20px!important}
+ body.bex-home.neon-fidelity .quick-grid{gap:8px!important;margin-top:14px!important}
+ body.bex-home.neon-fidelity .quick-grid>a,body.bex-home.neon-fidelity .quick-grid>button{
+  grid-template-columns:43px minmax(0,1fr) 10px!important;min-height:79px!important;padding:8px!important;gap:7px!important}
+ body.bex-home.neon-fidelity .quick-grid .quick-icon{width:42px!important;height:42px!important}
+ body.bex-home.neon-fidelity .quick-grid .quick-icon .ui-icon{width:31px!important;height:31px!important}
+ body.bex-home.neon-fidelity .quick-grid b{font-size:clamp(11px,3vw,14px)!important}
+ body.bex-home.neon-fidelity .quick-grid small{font-size:clamp(8px,2.25vw,10px)!important}
+ body.bex-home.neon-fidelity .stats-card,body.bex-home.neon-fidelity .data-card{padding:9px!important}
+ body.bex-home.neon-fidelity .stats-grid{gap:5px!important}
+ body.bex-home.neon-fidelity .stats-grid article{min-height:126px!important;padding:7px 2px!important}
+ body.bex-home.neon-fidelity .stats-grid .stat-icon{width:33px!important;height:33px!important;flex-basis:33px!important;margin-bottom:5px!important}
+ body.bex-home.neon-fidelity .stats-grid .stat-icon .ui-icon{width:24px!important;height:24px!important}
+ body.bex-home.neon-fidelity .stats-grid small{font-size:clamp(8px,2.1vw,10px)!important}
+ body.bex-home.neon-fidelity .stats-grid strong{font-size:clamp(11px,2.9vw,14px)!important}
+ body.bex-home.neon-fidelity .stats-grid #summaryNetwork{font-size:clamp(8px,2.14vw,11px)!important}
+ body.bex-home.neon-fidelity .stats-grid em{font-size:clamp(7px,1.92vw,10px)!important}
+ body.bex-home.neon-fidelity .feed-row.reference-row{
+   grid-template-columns:33px minmax(0,1fr) auto 15px!important;
+   min-height:46px!important;gap:5px!important}
+ body.bex-home.neon-fidelity .feed-row .feed-icon{width:32px!important;height:32px!important}
+ body.bex-home.neon-fidelity .feed-row .feed-icon .ui-icon{width:20px!important;height:20px!important}
+ body.bex-home.neon-fidelity .reference-row .feed-side{max-width:102px!important;padding:5px 7px!important;font-size:9px!important}
+ body.bex-home.neon-fidelity .bottom-nav{height:calc(79px + env(safe-area-inset-bottom))!important}
+ body.bex-home.neon-fidelity .bottom-nav a .ui-icon{width:25px!important;height:25px!important}
+ body.bex-home.neon-fidelity .bottom-nav a b{font-size:11px!important}
+}
+@media(max-width:340px){
+ body.bex-home.neon-fidelity .network-pill select{width:67px!important;max-width:67px!important;font-size:10px!important}
+ body.bex-home.neon-fidelity .brand-name{font-size:11px!important}
+ body.bex-home.neon-fidelity .hero-copy h1{font-size:29px!important}
+ body.bex-home.neon-fidelity .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body.bex-home.neon-fidelity .stats-grid article{min-height:110px!important}
+}
+/* Desktop-site/tablet browsers previously hid navigation entirely at 821px.
+   Keep mobile app navigation visible in desktop-site mode too. */
+@media(min-width:640px){
+ body.bex-home.neon-fidelity .app-header{
+   grid-template-columns:minmax(0,1fr) auto 48px!important;height:78px!important;padding:0 22px!important;
+ }
+ body.bex-home.neon-fidelity .app-header .settings-trigger{
+   display:grid!important;grid-column:3!important;grid-row:1!important;
+   position:static!important;align-self:center!important;justify-self:end!important;
+   width:46px!important;height:46px!important;margin:0!important;
+   border:1px solid #3b94fdbd!important;border-radius:14px!important;
+   background:#051a3ecf!important;box-shadow:0 0 15px #087bff68!important;
+ }
+ body.bex-home.neon-fidelity .hero-card{padding-top:80px!important}
+ body.bex-home.neon-fidelity .reference-globe{width:115%!important;top:-93px!important}
+ body.bex-home.neon-fidelity .hero-copy h1{font-size:clamp(45px,6.4vw,69px)!important;margin-top:93px!important}
+ body.bex-home.neon-fidelity .chain-cube{top:138px!important;width:82px!important;height:95px!important}
+ body.bex-home.neon-fidelity .chain-cube img{width:54px!important;height:54px!important}
+ body.bex-home.neon-fidelity .trust-pills{margin-top:22px!important;gap:13px!important}
+ body.bex-home.neon-fidelity .trust-pills>span{max-width:none!important;padding:9px 14px!important;font-size:12px!important}
+ body.bex-home.neon-fidelity .hero-search{grid-template-columns:51px minmax(0,1fr) 170px!important;min-height:82px!important}
+ body.bex-home.neon-fidelity .hero-search .search-mark{width:49px!important;height:64px!important}
+ body.bex-home.neon-fidelity .hero-search button{height:65px!important;min-height:65px!important}
+ body.bex-home.neon-fidelity .quick-grid>a,body.bex-home.neon-fidelity .quick-grid>button{min-height:102px!important}
+ body.bex-home.neon-fidelity .stats-grid article{min-height:158px!important}
+ body.bex-home.neon-fidelity .stats-grid strong{font-size:clamp(15px,2.8vw,22px)!important}
+ body.bex-home.neon-fidelity .feed-row.reference-row{min-height:62px!important}
+}
+@media(min-width:1150px){
+  body.bex-home.neon-fidelity .bottom-nav{display:none!important}
+  body.bex-home.neon-fidelity{padding-bottom:35px!important}
+}
+/* Avoid floating shell / button from obscuring overlay controls */
+body.bex-home.neon-fidelity .settings-overlay{z-index:125!important}
+body.bex-home.neon-fidelity .mobile-menu{z-index:90!important}
+body.bex-home.neon-fidelity .menu-backdrop{z-index:80!important}
+body.bex-home.neon-fidelity.light-mode .quick-grid>a,
+body.bex-home.neon-fidelity.light-mode .quick-grid>button,
+body.bex-home.neon-fidelity.light-mode .stats-card,
+body.bex-home.neon-fidelity.light-mode .data-card{
+  background:linear-gradient(150deg,#fff,#e3f1ff)!important;
+}
+body.bex-home.neon-fidelity.light-mode .quick-grid b,
+body.bex-home.neon-fidelity.light-mode .section-title b,
+body.bex-home.neon-fidelity.light-mode .data-head h2,
+body.bex-home.neon-fidelity.light-mode .stats-grid strong{color:#183b6b!important}
+@media(prefers-reduced-motion:reduce){
+ body.bex-home.neon-fidelity *,body.bex-home.neon-fidelity *::before,body.bex-home.neon-fidelity *::after{
+  animation:none!important;transition:none!important;scroll-behavior:auto!important;
+ }
+}

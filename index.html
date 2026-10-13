@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="public/mobile-layout-stability.css?v=1">
 <link rel="stylesheet" href="public/realtime.css?v=1">
 <link rel="stylesheet" href="public/neon-reference-v5.css?v=1">
+<link rel="stylesheet" href="public/neon-reference-v6.css?v=1">
 </head>
 <body class="bex-home bex-reference neon-fidelity">
 
@@ -27,7 +28,7 @@
   <div class="header-left">
     <button id="menuToggle" class="menu-button" type="button" aria-label="فتح القائمة"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#menu"></use></svg></button>
     <div class="network-pill">
-      <img id="networkIcon" class="network-logo" src="public/bnb-mark.svg" alt="BNB Chain">
+      <img id="networkIcon" class="network-logo" src="public/bnb-mark.svg?v=2" alt="BNB Chain">
       <select id="network" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select>
       <i class="network-live"></i>
     </div>
@@ -50,7 +51,7 @@
   <section class="hero-card">
     <img class="reference-globe" src="public/orbit-globe.svg" alt="" aria-hidden="true" width="760" height="470"><div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
-    <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg" alt="BNB Chain"></div>
+    <div class="chain-cube bnb-cube"><img src="public/bnb-mark.svg?v=2" alt="BNB Chain"></div>
 
     <div class="hero-copy">
       <div class="hero-overline"><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg><span data-i18n="hero.overline">BEXENTRA INDEX · MAINNET</span><i id="heroSignal" class="signal-dot awaiting" aria-hidden="true"></i></div>
@@ -68,10 +69,10 @@
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="#blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <a href="#transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <button id="quickRefresh" type="button"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#refresh"></use></svg></span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></button>
-      <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="#blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="#transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <button id="quickRefresh" type="button"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#refresh"></use></svg></span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></button>
+      <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
     </div>
   </section>
 
@@ -79,10 +80,10 @@
     <div class="section-title"><div><span class="title-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
     <div id="streamMeta" class="stream-meta" hidden><span class="stream-pulse" aria-hidden="true"></span><span id="streamRate"></span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
-      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
-      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
-      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><small id="summaryBlockLabel" data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
+      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة الحالية</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
+      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><small id="summaryBlockLabel" data-i18n="stats.lastBlock">آخر بلوك مفهرس</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
     </div>
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
@@ -122,7 +123,7 @@
 </div>
 <script src="public/preferences.js?v=6" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=39" defer></script>
+<script src="public/app.js?v=40" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/realtime-client.js?v=1" defer></script>
 </body>
