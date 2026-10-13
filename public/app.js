@@ -98,21 +98,50 @@ function detectType(q,forced="auto"){
  if(network.value==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return "address";
  return "tx";
 }
+// Keep a short, real observed-block history only while the browser is active.
+// No numbers, confirmations, transfers, or blocks are invented for design purposes.
+const observedBlocks={bnb:[],solana:[]};
+let expandedBlocks=false,expandedTx=false,lastDashboardView=null;
+function displayFeedButtons(){
+ for(const [id,expanded] of [["refreshBlocks",expandedBlocks],["refreshTx",expandedTx]]){
+  const button=$(id);if(!button)continue;
+  button.textContent=tr(expanded?"data.showLess":"data.showAll");
+  button.setAttribute("aria-expanded",String(expanded));
+ }
+}
+function visibleBlocksFor(view,chain){
+ const incoming=Array.isArray(view.blocks)?view.blocks:[];
+ if(view.source!=="rpc_live"&&view.source!=="ws_live")return incoming;
+ const previous=observedBlocks[chain]||[];
+ for(const block of incoming){
+  const height=Number(block?.height);
+  if(!Number.isSafeInteger(height)||height<0)continue;
+  const old=previous.find(v=>Number(v.height)===height);
+  const next={...old,...block,observed_at:old?.observed_at||new Date().toISOString()};
+  const at=previous.findIndex(v=>Number(v.height)===height);
+  if(at>=0)previous[at]=next;else previous.push(next);
+ }
+ previous.sort((a,b)=>Number(b.height)-Number(a.height));
+ previous.splice(12);
+ return previous;
+}
 function renderDashboardView(view,chain){
- const bs=Array.isArray(view.blocks)?view.blocks:[];
+ if(network.value!==chain)return;
+ lastDashboardView={view,chain};
+ const bs=visibleBlocksFor(view,chain);
  const ts=Array.isArray(view.transactions)?view.transactions:[];
  const onchain=view.source==="rpc_live"||view.source==="ws_live";
-  if(network.value!==chain)return;
+ displayFeedButtons();
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time||view.last_event_at:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0],view.source==="ws_live"?view.last_event_at:null);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
-  bs.slice(0,3).forEach(block=>{
+  bs.slice(0,expandedBlocks?12:3).forEach(block=>{
    const url=internalExplorer(chain,"block",block.height);
    const r=document.createElement("div");r.className="feed-row reference-row";
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("blocks"));
    const main=document.createElement("div");main.className="feed-main";
    const link=document.createElement("a");link.href=url;link.textContent=Number(block.height).toLocaleString("en-US");
-   const age=document.createElement("small");age.textContent=ago(block.block_time||block.indexed_at);
+   const age=document.createElement("small");age.textContent=ago(block.block_time||block.indexed_at||block.observed_at);
    main.append(link,age);
    const count=document.createElement("span");count.className="feed-side";
    count.textContent=String(block.transaction_count??"—")+" "+tr("api.transactionsUnit");
@@ -121,7 +150,7 @@ function renderDashboardView(view,chain){
   });
   const rt=$("recentTransactions");rt.replaceChildren();
   if(!ts.length)rt.textContent=tr("api.emptyTx");
-  ts.slice(0,onchain?8:3).forEach(tx=>{
+  ts.slice(0,expandedTx?12:3).forEach(tx=>{
    const url=internalExplorer(chain,"tx",tx.tx_hash);
    const r=document.createElement("div");r.className="feed-row reference-row";
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("transactions"));
@@ -185,8 +214,17 @@ function navigateSearch(raw,forced="auto",resultId="globalResult"){
 $("globalSearch").addEventListener("submit",e=>{
  e.preventDefault();navigateSearch($("globalInput").value,$("searchType").value);
 });
-$("refreshBlocks").addEventListener("click",loadDashboard);$("refreshTx").addEventListener("click",loadDashboard);
-network.addEventListener("change",()=>{try{localStorage.setItem("bexentra-network",network.value)}catch{}syncNetworkUI();const gr=$("globalResult");if(gr)gr.replaceChildren();const tr=$("txResult");if(tr)tr.replaceChildren();loadDashboard()});
+function toggleFeed(which){
+ if(which==="blocks")expandedBlocks=!expandedBlocks;
+ else expandedTx=!expandedTx;
+ displayFeedButtons();
+ if(lastDashboardView?.chain===network.value)
+  renderDashboardView(lastDashboardView.view,network.value);
+ else loadDashboard();
+}
+$("refreshBlocks").addEventListener("click",()=>toggleFeed("blocks"));
+$("refreshTx").addEventListener("click",()=>toggleFeed("transactions"));
+network.addEventListener("change",()=>{expandedBlocks=false;expandedTx=false;displayFeedButtons();try{localStorage.setItem("bexentra-network",network.value)}catch{}syncNetworkUI();const gr=$("globalResult");if(gr)gr.replaceChildren();const tr=$("txResult");if(tr)tr.replaceChildren();loadDashboard()});
 try{const savedNetwork=localStorage.getItem("bexentra-network");if(savedNetwork==="bnb"||savedNetwork==="solana")network.value=savedNetwork}catch{}
 syncNetworkUI();
 // Theme and language are managed centrally by public/preferences.js.
@@ -203,6 +241,6 @@ if(backdrop)backdrop.addEventListener("click",()=>setMenu(false));
 if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
 
 let refreshTimer=setInterval(()=>{if(!document.hidden && window.BexentraPrefs?.get("refresh")!=="off")loadDashboard()},15000);
-document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset")loadDashboard()});
+document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset"){displayFeedButtons();loadDashboard()}});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadDashboard()});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));

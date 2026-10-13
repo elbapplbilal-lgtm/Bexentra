@@ -19,8 +19,9 @@
 <link rel="stylesheet" href="public/reference-match.css?v=1">
 <link rel="stylesheet" href="public/mobile-layout-stability.css?v=1">
 <link rel="stylesheet" href="public/realtime.css?v=1">
+<link rel="stylesheet" href="public/neon-reference-v5.css?v=1">
 </head>
-<body class="bex-home bex-reference">
+<body class="bex-home bex-reference neon-fidelity">
 
 <header class="app-header">
   <div class="header-left">
@@ -87,12 +88,12 @@
   </section>
 
   <section id="blocks" class="data-card">
-    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.showAll" aria-controls="recentBlocks" aria-expanded="false">عرض الكل ›</button></div>
     <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
   </section>
 
   <section id="transactions" class="data-card data-v29">
-    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><h2 data-i18n="data.transactions">أحدث المعاملات</h2></div><button id="refreshTx" type="button" data-i18n="data.refresh">تحديث ↻</button></div>
+    <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><h2 data-i18n="data.transactions">أحدث المعاملات</h2></div><button id="refreshTx" type="button" data-i18n="data.showAll" aria-controls="recentTransactions" aria-expanded="false">عرض الكل ›</button></div>
     <div id="recentTransactions" class="feed">جاري تحميل المعاملات...</div>
   </section>
 
@@ -119,9 +120,9 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=5" defer></script>
+<script src="public/preferences.js?v=6" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=38" defer></script>
+<script src="public/app.js?v=39" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/realtime-client.js?v=1" defer></script>
 </body>
