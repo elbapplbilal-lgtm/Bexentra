@@ -37,7 +37,7 @@ async function indexedCandidates(chain,sort,limit){
  const sql="SELECT t.chain,t.tx_hash,t.block_height FROM indexed_transactions t "+
   "LEFT JOIN indexed_tx_detail_attempts a ON a.chain=t.chain "+
   "AND a.tx_hash=(CASE WHEN t.chain='bnb' THEN lower(t.tx_hash) ELSE t.tx_hash END) "+
-  "WHERE t.chain=$1 AND (t.status IS NULL OR t.fee_native IS NULL) "+
+  "WHERE t.chain=$1 AND (t.status IS NULL OR t.status='indexed' OR t.fee_native IS NULL) "+
   "AND (a.next_retry_at IS NULL OR a.next_retry_at<=NOW()) "+
   "ORDER BY t.block_height "+sort+",t.tx_hash ASC LIMIT $2";
  const r=await db.query(sql,[chain,limit]);
