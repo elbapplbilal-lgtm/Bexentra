@@ -1,0 +1,61 @@
+name: BEXENTRA Verified Transaction Details
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/src/receipt-enricher.js'
+      - 'backend/src/receipt-utils.js'
+      - 'backend/test/receipt-utils.test.js'
+      - 'backend/package.json'
+      - '.github/workflows/enrich-transaction-details.yml'
+  schedule:
+    - cron: '7,17,27,37,47,57 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bexentra-verified-details
+  cancel-in-progress: false
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
+      SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+      DETAIL_BNB_NEWEST: '12'
+      DETAIL_BNB_OLDEST: '6'
+      DETAIL_BNB_TOKEN_ONLY: '12'
+      DETAIL_SOL_NEWEST: '8'
+      DETAIL_SOL_OLDEST: '4'
+      DETAIL_RPC_PAUSE_MS: '400'
+      DETAIL_RUN_BUDGET_MS: '130000'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Ensure DB and primary BNB RPC secrets are configured
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$BNB_RPC_URL" ]; then
+            echo "::error::Add DATABASE_URL and BNB_RPC_URL repository secrets."
+            exit 1
+          fi
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Verify worker syntax
+        run: node --check src/receipt-enricher.js
+      - name: Verify BNB and Solana fee parsing
+        run: npm test
+      - name: Fill real transaction status and native fees (bounded)
+        run: timeout --signal=TERM --kill-after=10s 180s npm run index:details || test "$?" -eq 124
