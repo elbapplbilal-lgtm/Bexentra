@@ -78,16 +78,18 @@ async function saveVerified(chain,hash,details){
    "status=COALESCE($6,status),fee_native=COALESCE($7::numeric,fee_native),"+
    "sender=COALESCE(indexed_transactions.sender,$4),"+
    "recipient=COALESCE(indexed_transactions.recipient,$5) "+
-   "WHERE chain=$1 AND "+lookup,args);
+   "WHERE chain=$1 AND block_height=$3 AND "+lookup,args);
   if(!updated.rowCount){
-   await client.query("INSERT INTO indexed_transactions "+
+   const inserted=await client.query("INSERT INTO indexed_transactions "+
     "(chain,tx_hash,block_height,sender,recipient,status,fee_native) "+
     "VALUES($1,$2,$3,$4,$5,$6,$7::numeric) "+
     "ON CONFLICT(chain,tx_hash) DO UPDATE SET "+
     "status=COALESCE(EXCLUDED.status,indexed_transactions.status),"+
     "fee_native=COALESCE(EXCLUDED.fee_native,indexed_transactions.fee_native),"+
     "sender=COALESCE(indexed_transactions.sender,EXCLUDED.sender),"+
-    "recipient=COALESCE(indexed_transactions.recipient,EXCLUDED.recipient)",args);
+    "recipient=COALESCE(indexed_transactions.recipient,EXCLUDED.recipient) "+
+    "WHERE indexed_transactions.block_height=EXCLUDED.block_height",args);
+   if(!inserted.rowCount)throw Error("Indexed block changed before detail enrichment");
   }
   // Completed rows fall out of the pending query; partial rows retry later.
   await recordAttempt(client,chain,hash,
@@ -121,7 +123,11 @@ async function enrichOne(item){
    await markAttempt(chain,hash,21600);
    return {result:"mismatch",stop:false};
   }
-  await saveVerified(chain,hash,details);
+  try{await saveVerified(chain,hash,details)}
+  catch(dbError){
+   console.error("Verified metadata DB write failed",chain,dbError.message);
+   return {result:"db_error",stop:true};
+  }
   return {result:"saved",stop:false};
  }catch(e){
   const limited=rateLimited(e);
@@ -146,10 +152,15 @@ async function enrichChain(chain){
   if(stopping||Date.now()>=deadline)break;
   const result=await enrichOne(tx);
   counts.attempted++;counts[result.result]++;
-  if(result.stop)break;
+  if(result.stop){
+   if(result.result==="db_error")throw Error("Enrichment aborted after a database write failure");
+   break;
+  }
   if(pauseMs&&Date.now()<deadline)await sleep(pauseMs);
  }
  console.log("BEXENTRA verified details",chain,JSON.stringify(counts));
+ if(counts.attempted>0&&counts.error===counts.attempted)
+  throw Error("All attempted transaction detail fetches failed; check RPC and SQL logs");
 }
 if(!process.env.DATABASE_URL)throw Error("DATABASE_URL required");
 try{
