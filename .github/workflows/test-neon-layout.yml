@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'public/neon-reference-v5.css'
+      - 'public/detail-nav-rescue.css'
+      - 'explorer.html'
       - 'public/neon-reference-v6.css'
       - 'public/bnb-mark.svg'
       - 'public/feature-icons-3d.svg'
