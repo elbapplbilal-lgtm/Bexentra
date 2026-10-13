@@ -1,0 +1,20 @@
+name: Verify Deployed Live Transaction Continuity
+on:
+  pull_request:
+    paths:
+      - 'scripts/verify-live-continuity.mjs'
+      - '.github/workflows/verify-live-continuity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check live BNB/Solana transaction feeds twice, including website
+        run: node scripts/verify-live-continuity.mjs
