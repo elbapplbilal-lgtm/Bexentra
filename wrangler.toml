@@ -1,0 +1,10 @@
+# Cloudflare Dashboard's BEXENTRA project builds from the repository root (/).
+# Point Wrangler to the already tested Worker in cloudflare/src/.
+# Keep this in sync with cloudflare/wrangler.toml; do not add secrets here.
+name = "bexentra"
+main = "cloudflare/src/worker.js"
+compatibility_date = "2026-10-13"
+workers_dev = true
+
+[observability.logs]
+enabled = false
