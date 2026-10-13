@@ -59,6 +59,16 @@ try{
     const height=chain==="bnb"?128000123:457000456;
     const hashes=Array.from({length:8},(_,i)=>chain==="bnb"?
      "0x"+(1001+i).toString(16).padStart(64,"0"):String(i+2).repeat(88));
+    if(u.pathname==="/tx"){
+     const valid=chain==="bnb"&&u.searchParams.get("height")==="128000123"&&
+      hashes.some(x=>x===u.searchParams.get("hash"));
+     const body=valid?{chain,tx_hash:u.searchParams.get("hash"),block_height:height,
+      sender:null,recipient:null,status:null,fee_native:null,
+      source:"rpc_block_verified",coverage:"on_demand_block"}
+      :{error:"Transaction not verified on the selected network",reason:"not_verified"};
+     return route.fulfill({status:valid?200:404,headers:{"content-type":"application/json",
+      "access-control-allow-origin":"*"},body:JSON.stringify(body)});
+    }
     const payload={
      chain,source:"rpc_live",coverage:"latest_block_sample",observed_at:new Date().toISOString(),
      blocks:[{chain,height,block_hash:"0x"+"a".repeat(64),block_time:new Date().toISOString(),
@@ -139,10 +149,25 @@ try{
    assert(await page.locator("#mobileMenu").evaluate(el=>el.classList.contains("open")),"Mobile menu opens");
    await page.locator("#menuClose").click();
    assert(!(await page.locator("#mobileMenu").evaluate(el=>el.classList.contains("open"))),"Mobile menu closes");
+   const liveRow=page.locator("#recentTransactions .reference-row .feed-main a").first();
+   const liveHref=await liveRow.getAttribute("href");
+   assert(liveHref.includes("height=128000123"),"Fresh blockchain transactions carry their observed block height");
    await page.locator("#globalInput").fill("0x"+"a".repeat(64));
    await page.locator("#globalSearch button[type=submit]").click();
    await page.waitForURL(/explorer\.html\?.*type=tx/,{timeout:10000});
    assert(page.url().includes("chain=bnb"),"Search keeps the network");
+   await page.waitForSelector("#detailError:not([hidden])");
+   assert(await page.locator("#detailError .error-actions a").count()===1,
+    "An unverified manual hash offers an external verifier instead of an unqualified index claim");
+   await page.goto("http://127.0.0.1:"+port+"/",{waitUntil:"domcontentloaded"});
+   await page.waitForFunction(()=>document.querySelector("#recentTransactions .reference-row .feed-main a"),{timeout:15000});
+   await page.locator("#recentTransactions .reference-row .feed-main a").first().click();
+   await page.waitForURL(/explorer\.html\?.*height=128000123/,{timeout:10000});
+   await page.waitForSelector("#detailOverview:not([hidden])",{timeout:15000});
+   assert((await page.locator("#detailFields").innerText()).includes("128000123"),
+    "Observed BNB hash opens a verified on-chain-block detail instead of a false 404");
+   assert(!(await page.locator("#detailFields").innerText()).includes("0 BNB"),
+    "Details must not manufacture a zero fee when a matching receipt is absent");
   }
   console.log("PASS viewport",width,"actual data slots, mobile alignment and navigation");
   await context.close();
