@@ -13,7 +13,7 @@
    "menu.safety":"مستكشف للقراءة فقط. ما كنطلبوش ربط المحفظة أو كلمات الاسترداد.",
    "hero.overline":"BEXENTRA INDEX · MAINNET",
    "hero.title":"أوضح. أسرع. أذكى.",
-   "hero.description":"استكشف البيانات الحقيقية المفهرسة على BNB Chain وSolana، من واجهة واحدة مصممة للهاتف.",
+   "hero.description":"استكشف البيانات الحقيقية المفهرسة على \u2066BNB Chain\u2069 و\u2066Solana\u2069، من واجهة واحدة مصممة للهاتف.",
    "hero.indexed":"بيانات مفهرسة","hero.multichain":"متعدد الشبكات","hero.readonly":"قراءة فقط",
    "search.placeholder":"عنوان محفظة، Tx Hash أو رقم بلوك","search.button":"استكشف",
    "quick.blocks":"البلوكات","quick.blocksSub":"أحدث بيانات الشبكة",
