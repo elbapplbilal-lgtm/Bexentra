@@ -19,9 +19,13 @@ jobs:
         run: npm install -g neonctl
       - name: Install function dependency
         run: npm install pg@8.13.1 --no-save
+      - name: Test live RPC API routes offline
+        run: node scripts/test-live-api.mjs
       - name: Deploy public API function
         env:
           NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
         run: |
           test -n "$NEON_API_KEY" || { echo "::error::Add NEON_API_KEY repository secret"; exit 1; }
           neon functions deploy bexentraapi --src neon/functions/bexentra-api.ts --project-id late-sound-85663882 --branch-id br-old-sun-b5txcoym
+      - name: Verify deployed BNB transaction feed is genuinely live
+        run: node scripts/smoke-live-api.mjs

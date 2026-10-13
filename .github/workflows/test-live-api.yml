@@ -1,0 +1,22 @@
+name: Verify BEXENTRA Live RPC API
+on:
+  pull_request:
+    paths:
+      - 'neon/functions/**'
+      - 'scripts/test-live-api.mjs'
+      - 'scripts/smoke-live-api.mjs'
+      - '.github/workflows/test-live-api.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test real-response parsing and fallback safety
+        run: node scripts/test-live-api.mjs

@@ -42,9 +42,26 @@ function showError(msg,title){
  $("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
  $("detailError").textContent=msg;
 }
-function start(title){$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function start(title){showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function showProvenance(source){
+ const live=source==="rpc_live"||source==="indexed_plus_rpc";
+ const title=$("detailSideTitle"),message=$("detailSideText");
+ if(title)title.textContent=tr(live?"details.liveSideTitle":"details.sideTitle");
+ if(message)message.textContent=tr(live?"details.liveSideText":"details.sideText");
+}
 function finish(title,subtitle,fields,primary,externalType){$("detailLoading").hidden=true;$("detailOverview").hidden=false;$("detailTitle").textContent=title;$("detailSubtitle").textContent=subtitle;$("overviewTitle").textContent=title;$("detailFields").replaceChildren(...fields);$("externalLink").href=ext(externalType,primary);$("copyPrimary").onclick=()=>copyText(primary,$("copyPrimary"))}
-async function loadBlock(){start(chain==="bnb"?tr("details.loadBlock"):tr("details.loadSlot"));const b=await request("/block",{chain,height:query});finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),tr("details.subtitle"),[row("Height / Slot",b.height,true),row("Block Hash",b.block_hash,true),row("Transactions",b.transaction_count),row("Block Time",b.block_time),row("Indexed At",b.indexed_at)],b.height,"block")}
+async function loadBlock(){
+ start(chain==="bnb"?tr("details.loadBlock"):tr("details.loadSlot"));
+ const b=await request("/block",{chain,height:query});
+ const fromRpc=b.source==="rpc_live";
+ const fields=[row("Height / Slot",b.height,true),row("Block Hash",b.block_hash,true),
+  row("Transactions",b.transaction_count),row("Block Time",b.block_time)];
+ if(b.indexed_at)fields.push(row("Indexed At",b.indexed_at));
+ fields.push(row(tr("details.source"),tr(fromRpc?"details.sourceLive":"details.sourceIndexed")));
+ finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),
+  tr(fromRpc?"details.liveBlockSource":"details.subtitle"),fields,b.height,"block");
+ showProvenance(b.source);
+}
 async function loadTx(){
  start(tr("details.loadTx"));
  const t=await request("/tx",{chain,hash:query});
@@ -62,15 +79,17 @@ async function loadTx(){
   renderTokenEvents(transfers,"");
   return;
  }
- finish(tr("details.txTitle"),short(t.tx_hash,18),[
+ finish(tr("details.txTitle"),t.source==="rpc_live"?tr("details.liveTxSource"):t.source==="indexed_plus_rpc"?tr("details.augmentedSource"):short(t.tx_hash,18),[
   row(tr("details.txHash"),t.tx_hash,true),
   row("Block / Slot",t.block_height,true),
   row(tr("details.from"),t.sender||"—",!!t.sender),
   row(tr("details.to"),t.recipient||"—",!!t.recipient),
   row("Status",t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):(t.status||tr("details.unavailable"))),
   row("Fee",formatNativeFee(t.fee_native,chain)),
-  row("Indexed At",t.indexed_at)
+  ...(t.indexed_at?[row("Indexed At",t.indexed_at)]:[]),
+  row(tr("details.source"),tr(t.source==="rpc_live"||t.source==="indexed_plus_rpc"?"details.sourceLive":"details.sourceIndexed"))
  ],t.tx_hash,"tx");
+ showProvenance(t.source);
 }
 // Read only the BEP-20 transfers indexed so far; amounts are raw base units.
 function renderTokenEvents(transfers,address){
