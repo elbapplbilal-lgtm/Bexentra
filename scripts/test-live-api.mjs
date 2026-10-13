@@ -42,7 +42,7 @@ function makeHandler({rpc,dbRows={}}){
  }}};
  const factory=new Function("pg","process","Response","URL","fetch","AbortController","setTimeout","clearTimeout","console",
   source+"\nreturn handler;");
- const handler=factory(pg,{env:{}},Response,URL,fetch,AbortController,setTimeout,clearTimeout,{error(){},warn(){}});
+ const handler=factory(pg,{env:{DATABASE_URL:"postgres://mock.invalid/test"}},Response,URL,fetch,AbortController,setTimeout,clearTimeout,{error(){},warn(){}});
  const request=async(path)=>{
   const res=await handler({method:"GET",url:"https://bexentra.test"+path});
   return {status:res.status,data:await res.json()};
