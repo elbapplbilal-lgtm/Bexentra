@@ -8,6 +8,23 @@ if(!["auto","block","tx","address"].includes(type))type="auto";
 let query=params.get("q")||"";
 const esc=v=>String(v??"—");
 const tr=k=>window.BexentraPrefs?.t(k)??k;
+function formatNativeFee(baseUnits,chain){
+ if(baseUnits===null||baseUnits===undefined||baseUnits==="")return tr("details.unavailable");
+ try{
+  // pg NUMERIC serializes as an integer string of wei or lamports.
+  // Keep all base-unit precision instead of using lossy IEEE-754 Number.
+  const original=String(baseUnits);
+  if(!/^\d+$/.test(original))return tr("details.unavailable");
+  const amount=BigInt(original);
+  const decimals=chain==="bnb"?18:9;
+  const unit=chain==="bnb"?"BNB":"SOL";
+  const scale=10n**BigInt(decimals);
+  const whole=(amount/scale).toString();
+  const fraction=(amount%scale).toString().padStart(decimals,"0").replace(/0+$/,"");
+  return whole+(fraction?"."+fraction:"")+" "+unit;
+ }catch{return tr("details.unavailable")}
+}
+
 function short(v,n=12){v=esc(v);return v.length>n*2?v.slice(0,n)+"…"+v.slice(-n):v}
 function detect(q,t="auto"){if(t!=="auto")return t;if(/^\d+$/.test(q))return"block";if(chain==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return"address";if(chain==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return"address";return"tx"}
 function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/":t==="address"?"address/":"block/")+id;return"https://solscan.io/"+(t==="tx"?"tx/":t==="address"?"account/":"block/")+id}
@@ -51,7 +68,7 @@ async function loadTx(){
   row(tr("details.from"),t.sender||"—",!!t.sender),
   row(tr("details.to"),t.recipient||"—",!!t.recipient),
   row("Status",t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):(t.status||tr("details.unavailable"))),
-  row("Fee",t.fee_native!=null&&t.fee_native!==""?(chain==="bnb"?(Number(t.fee_native)/1e18).toLocaleString("en-US",{maximumFractionDigits:18})+" BNB":(Number(t.fee_native)/1e9).toLocaleString("en-US",{maximumFractionDigits:9})+" SOL"):tr("details.unavailable")),
+  row("Fee",formatNativeFee(t.fee_native,chain)),
   row("Indexed At",t.indexed_at)
  ],t.tx_hash,"tx");
 }
