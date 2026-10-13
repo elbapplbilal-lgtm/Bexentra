@@ -31,3 +31,49 @@ if(real.status===200){
   'reason',real.data.reason||real.data.error||'unavailable');
 }
 console.log('PRODUCTION_TX_ENDPOINT_READY');
+
+// Now take an actual fresh on-chain hash from BEXENTRA's own live BNB feed
+// and confirm the /tx route opens exactly that verified transaction.
+const ac=new AbortController(), timeout=setTimeout(()=>ac.abort(),25000);
+let observed=null;
+try{
+ const stream=await fetch(base+'/stream?chain=bnb',{
+  headers:{Accept:'text/event-stream',Origin:'https://elbapplbilal-lgtm.github.io'},
+  signal:ac.signal
+ });
+ if(!stream.ok||!stream.headers.get('content-type')?.includes('text/event-stream'))
+  throw Error('Production SSE stream unavailable');
+ const reader=stream.body.getReader(),decoder=new TextDecoder();
+ let pending='',events=0;
+ while(events<23&&!observed){
+  const chunk=await reader.read();
+  if(chunk.done)break;
+  pending+=decoder.decode(chunk.value,{stream:true});
+  let split;
+  while((split=pending.indexOf('\n\n'))>=0){
+   const data=pending.slice(0,split);
+   pending=pending.slice(split+2);
+   if(!data.startsWith('event: snapshot'))continue;
+   const raw=data.split('\n').find(x=>x.startsWith('data: '));
+   if(!raw)continue;
+   events++;
+   const sample=JSON.parse(raw.slice(6));
+   if(sample.source==='ws_live'&&sample.stream_connected&&sample.transactions?.[0]?.tx_hash
+       &&Number.isSafeInteger(Number(sample.transactions[0]?.block_height))){
+    observed={hash:sample.transactions[0].tx_hash,height:Number(sample.transactions[0].block_height)};
+    break;
+   }
+  }
+ }
+ console.log('FRESH_OBSERVED_SAMPLE',JSON.stringify(observed));
+}catch(e){console.warn('Could not get new transaction from SSE:',String(e?.message||e))}
+finally{clearTimeout(timeout);ac.abort()}
+if(!observed)throw Error('Unable to prove live tx click: no real transaction arrived from SSE');
+const opened=await check('/tx?chain=bnb&hash='+encodeURIComponent(observed.hash)+'&height='+observed.height);
+if(opened.status!==200||opened.data.tx_hash?.toLowerCase()!==observed.hash.toLowerCase()
+  ||Number(opened.data.block_height)!==observed.height
+  ||!['rpc_block_verified','rpc_live'].includes(opened.data.source))
+ throw Error('Fresh live BNB hash cannot open verified detail: HTTP '+opened.status);
+console.log('SUCCESS: a just-observed LIVE BNB TRANSACTION opens verified details!',
+ JSON.stringify({block:opened.data.block_height,hash:opened.data.tx_hash,
+ status:opened.data.status,source:opened.data.source}));
