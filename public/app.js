@@ -90,7 +90,13 @@ async function api(table,query){
  throw Error("Unsupported resource");
 }
 function externalExplorer(chain,type,id){if(chain==="bnb")return "https://bscscan.com/"+(type==="tx"?"tx/":"block/")+id;return "https://solscan.io/"+(type==="tx"?"tx/":"block/")+id}
-function internalExplorer(chain,type,id){return "explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(type)+"&q="+encodeURIComponent(id)}
+function internalExplorer(chain,type,id,height){
+ const link="explorer.html?chain="+encodeURIComponent(chain)+"&type="+encodeURIComponent(type)+"&q="+encodeURIComponent(id);
+ // Pass ONLY the real block height reported by API/SSE, not a claim about status or fees.
+ // The detail API will independently verify the hash inside that chain block.
+ return type==="tx"&&chain==="bnb"&&height!=null&&Number.isSafeInteger(Number(height))&&Number(height)>=0
+  ?link+"&height="+encodeURIComponent(String(height)):link;
+}
 function detectType(q,forced="auto"){
  if(forced!=="auto")return forced;
  if(/^\d+$/.test(q))return "block";
@@ -151,7 +157,7 @@ function renderDashboardView(view,chain){
   const rt=$("recentTransactions");rt.replaceChildren();
   if(!ts.length)rt.textContent=tr("api.emptyTx");
   ts.slice(0,expandedTx?12:3).forEach(tx=>{
-   const url=internalExplorer(chain,"tx",tx.tx_hash);
+   const url=internalExplorer(chain,"tx",tx.tx_hash,tx.block_height);
    const r=document.createElement("div");r.className="feed-row reference-row";
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("transactions"));
    const main=document.createElement("div");main.className="feed-main";
