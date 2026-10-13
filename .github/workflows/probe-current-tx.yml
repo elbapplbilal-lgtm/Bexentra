@@ -1,0 +1,20 @@
+name: Diagnose BEXENTRA Live Transaction Lookup
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe-current-tx.mjs'
+      - '.github/workflows/probe-current-tx.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check displayed BNB transaction in deployed API and public nodes
+        run: node scripts/probe-current-tx.mjs
