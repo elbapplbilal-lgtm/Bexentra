@@ -1,0 +1,20 @@
+name: Probe BEXENTRA Deployed Transaction Detail Fallback
+on:
+  pull_request:
+    paths:
+      - 'scripts/check-cloudflare-tx-production.mjs'
+      - '.github/workflows/check-cloudflare-tx-production.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  production-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify production Cloudflare /tx and on-chain source integrity
+        run: node scripts/check-cloudflare-tx-production.mjs
