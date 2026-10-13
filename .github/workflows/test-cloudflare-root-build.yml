@@ -1,0 +1,26 @@
+name: Check Cloudflare Root Build
+on:
+  pull_request:
+    paths:
+      - 'wrangler.toml'
+      - 'package.json'
+      - 'cloudflare/src/worker.js'
+      - '.github/workflows/test-cloudflare-root-build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies from repository root
+        run: npm install --no-audit --no-fund
+      - name: Validate Cloudflare Worker syntax
+        run: npm run cloudflare:check
+      - name: Bundle root Cloudflare Worker without credentials or deployment
+        run: npm run cloudflare:dry-run
