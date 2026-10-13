@@ -12,7 +12,8 @@ const LIVE_CACHE_MS=8000;
 const liveCache=new Map();
 const bnbPublic=[
  "https://bsc-dataseed.bnbchain.org",
- "https://bsc-dataseed-public.bnbchain.org"
+ "https://bsc-dataseed-public.bnbchain.org",
+ "https://bsc-rpc.publicnode.com"
 ];
 const solPublic=["https://api.mainnet-beta.solana.com"];
 const rpcEndpoints=chain=>{
@@ -35,8 +36,8 @@ const weiAmount=(gas,price)=>{
   return g>=0n&&p>=0n?(g*p).toString():null;
  }catch{return null}
 };
-async function chainRpc(chain,method,params){
- let reason;
+async function chainRpc(chain,method,params,{retryNull=false}={}){
+ let reason,sawNull=false;
  for(const endpoint of rpcEndpoints(chain)){
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),6500);
@@ -49,11 +50,15 @@ async function chainRpc(chain,method,params){
    const data=await response.json();
    if(data.error)throw Error("RPC code "+String(data.error.code||"unknown"));
    if(!Object.prototype.hasOwnProperty.call(data,"result"))throw Error("RPC missing result");
+   // Hash lookups can temporarily return null on a lagging provider.
+   // Try other real RPC nodes instead of treating the first null as definitive.
+   if(data.result===null&&retryNull){sawNull=true;continue}
    return data.result;
   }catch(e){
    reason=e;
   }finally{clearTimeout(timer)}
  }
+ if(sawNull)return null;
  throw Error("Network RPC temporarily unavailable: "+String(reason?.message||"unknown"));
 }
 function liveBlockRecord(chain,result,height){
@@ -134,10 +139,10 @@ async function indexedFallback(chain,limit){
 }
 async function networkTransaction(chain,hash){
  if(chain==="bnb"){
-  const tx=await chainRpc("bnb","eth_getTransactionByHash",[hash]);
+  const tx=await chainRpc("bnb","eth_getTransactionByHash",[hash],{retryNull:true});
   if(!tx||typeof tx.hash!=="string")return null;
   const height=tx.blockNumber===null?null:hexNum(tx.blockNumber);
-  const receipt=await chainRpc("bnb","eth_getTransactionReceipt",[hash]).catch(()=>null);
+  const receipt=await chainRpc("bnb","eth_getTransactionReceipt",[hash],{retryNull:true}).catch(()=>null);
   const verified=receipt&&String(receipt.transactionHash||"").toLowerCase()===hash.toLowerCase()
    &&receipt.blockNumber!==null&&hexNum(receipt.blockNumber)===height;
   const status=verified&&receipt.status!==undefined
@@ -162,6 +167,30 @@ async function networkTransaction(chain,hash){
   fee_native:fee===null?null:String(fee),indexed_at:null,
   source:"rpc_live",coverage:"on_demand"};
 }
+// When a browser opens a hash seen in a live block, it sends the observed height.
+// If by-hash lookup isn't available yet, verify the actual transaction INSIDE that
+// canonical chain block. Never manufacture a successful status, fee or transfer value.
+async function bnbTransactionFromObservedBlock(hash,height){
+ const result=await rpcBlock("bnb",height,true);
+ if(!result||!result.block||result.record.height!==height)return null;
+ const transaction=result.block.transactions.find(item=>
+  item&&typeof item==="object"&&typeof item.hash==="string"&&
+  item.hash.toLowerCase()===hash.toLowerCase());
+ if(!transaction)return null;
+ const receipt=await chainRpc("bnb","eth_getTransactionReceipt",[hash],{retryNull:true}).catch(()=>null);
+ const verified=receipt&&String(receipt.transactionHash||"").toLowerCase()===hash.toLowerCase()&&
+  hexNum(receipt.blockNumber)===height&&
+  (!receipt.blockHash||String(receipt.blockHash).toLowerCase()===String(result.block.hash).toLowerCase());
+ const status=verified?(hexNum(receipt.status)===1?"success":hexNum(receipt.status)===0?"failed":null):null;
+ const fee=verified&&receipt.gasUsed!==undefined&&receipt.effectiveGasPrice!==undefined
+  ?weiAmount(receipt.gasUsed,receipt.effectiveGasPrice):null;
+ return {
+  chain:"bnb",tx_hash:transaction.hash,block_height:height,
+  sender:transaction.from||null,recipient:transaction.to||null,
+  status,fee_native:fee,indexed_at:null,
+  source:"rpc_block_verified",coverage:"on_demand_block"
+ };
+}
 export default async function handler(req){
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
  if(req.method!=="GET")return json({error:"Method not allowed"},405);
@@ -185,6 +214,10 @@ export default async function handler(req){
    if(!hash||hash.length>128)return json({error:"Invalid hash"},400);
    if(chain==="bnb"&&!/^0x[0-9a-fA-F]{64}$/.test(hash))return json({error:"Invalid BNB transaction hash"},400);
    const normalized=chain==="bnb"?hash.toLowerCase():hash;
+   const observedHeightRaw=u.searchParams.get("height");
+   if(observedHeightRaw!==null&&(chain!=="bnb"||!/^\d{1,16}$/.test(observedHeightRaw)||
+      !Number.isSafeInteger(Number(observedHeightRaw))))return json({error:"Invalid observed block height"},400);
+   const observedHeight=observedHeightRaw===null?null:Number(observedHeightRaw);
    const r=await db().query("SELECT * FROM indexed_transactions WHERE chain=$1 AND "+(chain==="bnb"?"lower(tx_hash)=lower($2)":"tx_hash=$2"),[chain,normalized]);
    if(r.rowCount){
     const indexed=r.rows[0];
@@ -204,10 +237,19 @@ export default async function handler(req){
     }catch(e){console.warn("On-demand tx data unavailable",chain);}
     return json(indexed);
    }
+   let lookupUnavailable=false;
    try{
     const live=await networkTransaction(chain,normalized);
     if(live)return json(live);
-   }catch(e){console.warn("On-demand network tx unavailable",chain);}
+   }catch(e){lookupUnavailable=true;console.warn("On-demand network tx unavailable",chain);}
+   if(chain==="bnb"&&observedHeight!==null){
+    try{
+     const inBlock=await bnbTransactionFromObservedBlock(normalized,observedHeight);
+     if(inBlock)return json(inBlock);
+     // The block was available, but this hash was not present in it.
+     lookupUnavailable=false;
+    }catch(e){lookupUnavailable=true;console.warn("On-demand observed block lookup unavailable",chain);}
+   }
 
    // A BEP-20 Transfer event may be indexed even when the native transaction summary is not.
    // Return only observed on-chain logs, never invent native status, fees, or values.
@@ -222,7 +264,8 @@ export default async function handler(req){
       indexed_at:events.rows[0].indexed_at,token_transfers:events.rows});
     }
    }
-   return json({error:"Not indexed in BEXENTRA's current coverage"},404);
+   if(lookupUnavailable)return json({error:"Blockchain RPC temporarily unavailable",reason:"rpc_unavailable"},503);
+   return json({error:"Transaction not verified on the selected network",reason:"not_verified"},404);
   }
   if(u.pathname.endsWith("/block")){
    const height=u.searchParams.get("height")||"";
