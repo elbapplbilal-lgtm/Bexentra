@@ -1,0 +1,102 @@
+/* BEXENTRA transaction/detail mobile rescue.
+ * Browser 'desktop site' or large Android viewport used to hide the bottom nav
+ * at widths >= 821px. The home app keeps navigation visible; detail needs it too.
+ * Loaded LAST so this overrides older nav.css and neon-detail.css @media rules.
+ */
+.detail-v31 {
+  min-height:100dvh;
+  padding-bottom:calc(108px + env(safe-area-inset-bottom))!important;
+  overflow-x:clip!important;
+}
+.detail-v31 .bottom-nav.bottom-v30{
+  display:grid!important;
+  position:fixed!important;
+  z-index:70!important;
+  left:max(8px,env(safe-area-inset-left))!important;
+  right:max(8px,env(safe-area-inset-right))!important;
+  bottom:max(8px,env(safe-area-inset-bottom))!important;
+  width:auto!important;
+  max-width:calc(100vw - 16px)!important;
+  height:clamp(66px,18vw,79px)!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:4px!important;
+  padding:5px!important;
+  border:1px solid rgba(51,159,255,.8)!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  background:linear-gradient(160deg,rgba(5,29,65,.97),rgba(1,11,31,.99))!important;
+  box-shadow:0 0 24px rgba(8,117,255,.35),inset 0 1px rgba(176,231,255,.22)!important;
+  backdrop-filter:blur(20px)!important;
+}
+.detail-v31 .bottom-v30>a{
+  min-width:0!important;
+  margin:0!important;
+  border-radius:15px!important;
+  padding:5px 2px!important;
+  color:#a3bade!important;
+}
+.detail-v31 .bottom-v30>a.active{
+  color:white!important;
+  border-color:#57c7ff!important;
+  background:linear-gradient(150deg,#1679f7,#0647b8)!important;
+  box-shadow:0 0 18px rgba(13,121,255,.67),inset 0 1px #b4e6ff66!important;
+}
+.detail-v31 .bottom-v30 .ui-icon{
+  width:clamp(20px,3vw,27px)!important;
+  height:clamp(20px,3vw,27px)!important;
+}
+.detail-v31 .bottom-v30 a b{
+  font:800 clamp(10px,2.5vw,13px)/1.4 "Cairo",system-ui,sans-serif!important;
+  white-space:nowrap!important;
+}
+/* Never let a 64-character hash or long translation make the search spill out. */
+.detail-v31 .detail-shell,
+.detail-v31 .detail-search,
+.detail-v31 .detail-hero {min-width:0!important;max-width:100%!important}
+.detail-v31 .detail-search input{
+  width:100%!important;min-width:0!important;
+  direction:ltr!important;text-align:left!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;
+  font-size:clamp(10px,2.6vw,14px)!important;
+}
+.detail-v31 .detail-hero h1{overflow-wrap:anywhere!important;line-height:1.5!important}
+.detail-v31 .detail-error:not([hidden]){
+  margin-top:14px!important;
+  padding:clamp(14px,3.1vw,22px)!important;
+  border:1px solid rgba(242,109,145,.66)!important;
+  border-radius:18px!important;
+  background:linear-gradient(155deg,rgba(62,18,42,.92),rgba(24,14,40,.96))!important;
+  color:#ffe5ee!important;
+  box-shadow:0 0 16px rgba(174,35,90,.15),inset 0 1px #ffaac11f!important;
+  line-height:1.85!important;
+}
+.detail-v31 .detail-error .error-actions{margin-top:16px!important;gap:10px!important}
+.detail-v31 .detail-error .error-actions :is(a,button){
+  min-height:45px!important;
+  padding:9px 15px!important;
+  border-radius:13px!important;
+  font-size:clamp(11px,2.6vw,14px)!important;
+  text-decoration:none!important;
+}
+@media(min-width:840px){
+  /* Responsive 'desktop site' width still needs the same mobile navigation.
+     On an actual desktop it is usable but constrained to the page's main width. */
+  .detail-v31 .bottom-nav.bottom-v30{
+    left:50%!important;right:auto!important;
+    width:min(820px,calc(100vw - 24px))!important;
+    max-width:min(820px,calc(100vw - 24px))!important;
+    transform:translateX(-50%)!important;
+  }
+}
+@media(max-width:370px){
+  .detail-v31 .bottom-v30 a b{font-size:10px!important}
+  .detail-v31 .bottom-v30{padding:4px!important}
+}
+.detail-v31 .bottom-v30 a:focus-visible,
+.detail-v31 .detail-error .error-actions :is(a,button):focus-visible {
+  outline:2px solid #4fe9ff!important;
+  outline-offset:2px!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .detail-v31 .bottom-v30 *, .detail-v31 .detail-error *{transition:none!important;animation:none!important}
+}
