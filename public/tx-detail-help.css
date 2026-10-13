@@ -1,0 +1,25 @@
+/* Transaction lookup help shown only when an on-chain hash cannot be verified.
+   Keep the evidence limitation visible and offer transparent retry/external check. */
+.detail-v31 .detail-error .error-actions{
+ display:flex;flex-wrap:wrap;justify-content:flex-start;gap:10px;
+ margin-top:15px;direction:rtl;
+}
+.detail-v31 .detail-error .error-actions button,
+.detail-v31 .detail-error .error-actions a{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:43px;min-width:116px;padding:10px 15px;
+ border:1px solid rgba(68,175,255,.76);border-radius:13px;
+ color:#effaff!important;background:linear-gradient(150deg,#1374d5,#063f92);
+ box-shadow:inset 0 1px rgba(211,245,255,.23),0 0 15px rgba(16,116,251,.23);
+ font:700 12px/1.5 "Cairo",system-ui,sans-serif;cursor:pointer;
+ text-decoration:none!important;
+}
+.detail-v31 .detail-error .error-actions a{
+ background:linear-gradient(150deg,rgba(12,56,98,.91),rgba(5,30,62,.94));
+}
+.detail-v31 .detail-error .error-actions :is(button,a):focus-visible{
+ outline:2px solid #54eaff;outline-offset:3px;
+}
+.detail-v31.light-mode .detail-error .error-actions :is(button,a){
+ color:white!important;
+}
