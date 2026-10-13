@@ -1,3 +1,4 @@
-// Deployed stream URL only. Set after an always-on Render service is deployed.
-// NEVER put BNB_WS_URL, SOLANA_WS_URL or any private API key here.
-window.BEXENTRA_STREAM_BASE = "";
+// BEXENTRA public production stream endpoint (Cloudflare Workers Free).
+// This is a PUBLIC workers.dev hostname; never put API keys or WebSocket secrets in browsers.
+// Per-viewer one-second live samples are optional, with honest Neon /live fallback.
+window.BEXENTRA_STREAM_BASE = "https://bexentra.elbapplbilal.workers.dev";
