@@ -677,3 +677,19 @@ body.neon-fidelity.light-mode .quick-grid small {color:#52749c!important}
    line-height:1.28!important;
  }
 }
+
+
+/* Protect the single-line headline from touching the chain cubes.
+ * Real 360/390/430px screenshots revealed 20–35px of collision. */
+@media(max-width:639px) {
+  body.neon-fidelity .chain-cube {top:24px!important}
+  body.neon-fidelity .hero-copy h1{
+    font-size:clamp(23px,6.5vw,30px)!important;
+    padding-inline:3px!important;
+    letter-spacing:-.035em!important;
+  }
+}
+@media(max-width:335px) {
+  body.neon-fidelity .hero-copy h1 {font-size:22px!important}
+  body.neon-fidelity .chain-cube {top:23px!important;width:39px!important}
+}
