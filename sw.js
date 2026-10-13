@@ -1,13 +1,13 @@
-const CACHE="bexentra-shell-v57-3d-brand-design";
+const CACHE="bexentra-shell-v58-verified-live-tx";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
  "./public/visual-v2.css?v=2","./public/neon-premium.css?v=1",
  "./public/reference-match.css?v=1","./public/mobile-layout-stability.css?v=1","./public/orbit-globe.svg","./public/neon-icons.svg",
  "./public/style.css?v=24","./public/nav.css?v=30",
- "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2",
+ "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2","./public/tx-detail-help.css?v=1",
  "./public/preferences.js?v=6","./public/search-input.js?v=1",
- "./public/app.js?v=40","./public/explorer.js?v=37",
+ "./public/app.js?v=41","./public/explorer.js?v=38",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=1",
  "./public/bnb-mark.svg?v=2","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"
