@@ -1,0 +1,28 @@
+name: Test BEXENTRA On-chain Transaction Lookup
+on:
+  pull_request:
+    paths:
+      - 'neon/functions/bexentra-api.ts'
+      - 'scripts/test-live-api.mjs'
+      - 'public/explorer.js'
+      - 'public/app.js'
+      - '.github/workflows/test-api-transaction-lookup.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-tx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify immutable on-chain hashes, receipts, block membership and RPC errors
+        run: node scripts/test-live-api.mjs
+      - name: Verify browser JS parser accepts transaction-detail changes
+        run: |
+          node --check public/app.js
+          node --check public/explorer.js
+          node --check public/preferences.js
