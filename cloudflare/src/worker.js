@@ -7,7 +7,7 @@ const PUBLIC = Object.freeze({
     ws: 'wss://bsc-rpc.publicnode.com',
     http: 'https://bsc-rpc.publicnode.com',
   },
-  solana: { ws: 'wss://api.mainnet-beta.solana.com' },
+  solana: { ws: 'wss://solana-rpc.publicnode.com' },
 });
 const HASH_BNB = /^0x[a-fA-F0-9]{64}$/;
 const HASH_SOL = /^[1-9A-HJ-NP-Za-km-z]{70,100}$/;
