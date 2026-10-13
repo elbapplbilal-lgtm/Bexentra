@@ -26,3 +26,14 @@ CREATE TABLE IF NOT EXISTS indexer_state (
  last_height BIGINT NOT NULL,
  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Bookkeeping for bounded receipt/fee enrichment. The worker creates this table
+-- automatically on first run (idempotent); existing indexed rows remain untouched.
+CREATE TABLE IF NOT EXISTS indexed_tx_detail_attempts (
+ chain TEXT NOT NULL CHECK(chain IN ('bnb','solana')),
+ tx_hash TEXT NOT NULL,
+ attempt_count INTEGER NOT NULL DEFAULT 0,
+ last_attempt_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+ next_retry_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+ PRIMARY KEY(chain,tx_hash)
+);
