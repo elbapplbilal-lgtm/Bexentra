@@ -47,15 +47,15 @@ function setIndexStatus(v){
  else{paintIndexSignal("stale");indexStatus.textContent="● "+tr("stats.stale");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.needsUpdate")}
 }
 // A green "Live" status is only shown for a recent, actually observed RPC block.
-function setOnchainStatus(block){
- const elapsed=block?.block_time?Date.now()-new Date(block.block_time).getTime():Infinity;
+function setOnchainStatus(block,observedAt){
+ const timestamp=block?.block_time||observedAt;const elapsed=timestamp?Date.now()-new Date(timestamp).getTime():Infinity;
  const recent=Number.isFinite(elapsed)&&elapsed>=-30000&&elapsed<180000;
  paintIndexSignal(recent?"recent":"stale");
  if(indexStatus){
   indexStatus.textContent="● "+tr(recent?"stats.onchain":"stats.onchainSlow");
   indexStatus.className=recent?"status-good":"status-stale";
  }
- if(indexStatusNote)indexStatusNote.textContent=tr("stats.onchainAge")+" "+ago(block?.block_time);
+ if(indexStatusNote)indexStatusNote.textContent=tr("stats.onchainAge")+" "+(timestamp?ago(timestamp):"—");
  const label=$("statsLive");
  if(label)label.textContent="● "+tr(recent?"stats.onchain":"stats.onchainSlow");
 }
@@ -98,23 +98,13 @@ function detectType(q,forced="auto"){
  if(network.value==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return "address";
  return "tx";
 }
-async function loadDashboard(){
- const chain=network.value;syncNetworkUI(); $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent=tr("api.loading");$("recentTransactions").textContent=tr("api.loading");
- try{
-  let view;
-  try{view=await request("/live",{chain,limit:8})}
-  catch(e){
-   // Rollout/supplier downtime: show indexed records, never silently label them live.
-   const [oldBlocks,oldTxs]=await Promise.all([blocks(chain),txs(chain)]);
-   view={source:"indexed_snapshot",blocks:oldBlocks,transactions:oldTxs};
-  }
-  const bs=Array.isArray(view.blocks)?view.blocks:[];
-  const ts=Array.isArray(view.transactions)?view.transactions:[];
-  const onchain=view.source==="rpc_live";
-
+function renderDashboardView(view,chain){
+ const bs=Array.isArray(view.blocks)?view.blocks:[];
+ const ts=Array.isArray(view.transactions)?view.transactions:[];
+ const onchain=view.source==="rpc_live"||view.source==="ws_live";
   if(network.value!==chain)return;
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
-  $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0]);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
+  $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time||view.last_event_at:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0],view.source==="ws_live"?view.last_event_at:null);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
   bs.slice(0,3).forEach(block=>{
    const url=internalExplorer(chain,"block",block.height);
@@ -125,13 +115,13 @@ async function loadDashboard(){
    const age=document.createElement("small");age.textContent=ago(block.block_time||block.indexed_at);
    main.append(link,age);
    const count=document.createElement("span");count.className="feed-side";
-   count.textContent=String(block.transaction_count??0)+" "+tr("api.transactionsUnit");
+   count.textContent=String(block.transaction_count??"—")+" "+tr("api.transactionsUnit");
    const more=document.createElement("span");more.className="feed-chevron";more.append(makeIcon("chevron"));
    r.append(symbol,main,count,more);rowNavigation(r,url);rb.append(r);
   });
   const rt=$("recentTransactions");rt.replaceChildren();
   if(!ts.length)rt.textContent=tr("api.emptyTx");
-  ts.slice(0,3).forEach(tx=>{
+  ts.slice(0,onchain?8:3).forEach(tx=>{
    const url=internalExplorer(chain,"tx",tx.tx_hash);
    const r=document.createElement("div");r.className="feed-row reference-row";
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("transactions"));
@@ -140,7 +130,7 @@ async function loadDashboard(){
    const detail=document.createElement("small");detail.textContent=tx.block_height!=null?"Block "+Number(tx.block_height).toLocaleString("en-US"):short(tx.sender||tx.recipient||"—",10);
    main.append(link,detail);
    const status=document.createElement("span");status.className="feed-side";
-   const isLiveTx=tx.source==="rpc_live"||onchain;
+   const isLiveTx=tx.source==="rpc_live"||tx.source==="ws_live"||onchain;
    status.textContent=tx.status==="failed"?tr("api.failed"):tx.status==="success"?tr("api.confirmed"):isLiveTx?tr("api.onchain"):tr("api.indexed");
    if(tx.status==="failed")status.classList.add("feed-failed");
    else if(isLiveTx)status.classList.add("feed-live");
@@ -148,8 +138,35 @@ async function loadDashboard(){
    const more=document.createElement("span");more.className="feed-chevron";more.append(makeIcon("chevron"));
    r.append(symbol,main,status,more);rowNavigation(r,url);rt.append(r);
   });
+
+}
+async function loadDashboard(){
+ const chain=network.value;
+ if(window.BexentraStreamIsActive?.(chain))return;
+ syncNetworkUI();$("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";
+ if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
+ $("recentBlocks").textContent=tr("api.loading");
+ $("recentTransactions").textContent=tr("api.loading");
+ try{
+  let view;
+  try{view=await request("/live",{chain,limit:8})}
+  catch(e){
+   const [oldBlocks,oldTxs]=await Promise.all([blocks(chain),txs(chain)]);
+   view={source:"indexed_snapshot",blocks:oldBlocks,transactions:oldTxs};
+  }
+  if(window.BexentraStreamIsActive?.(chain))return;
+  renderDashboardView(view,chain);
  }catch(e){const msg=tr("api.error")+" "+(e&&e.message?e.message:"Unknown error");console.error("BEXENTRA API",e);setIndexStatus(null);$("summaryHeight").textContent="—";$("summaryTx").textContent="—";$("metricHeight").textContent="—";$("metricBlocks").textContent="—";$("metricUpdated").textContent="—";fail($("recentBlocks"),msg);fail($("recentTransactions"),msg);}
 }
+window.BexentraLive={
+ render(view,chain){
+  if(!view||view.source!=="ws_live"||!view.stream_connected)return;
+  if(chain!==network.value)return;
+  renderDashboardView(view,chain);
+ },
+ refresh:loadDashboard,
+ chain:()=>network.value
+};
 async function findTx(hash,target){
  const chain=network.value;target.textContent=tr("api.finding");
  try{const rows=await api("indexed_transactions","select=*&chain=eq."+chain+"&tx_hash=eq."+encodeURIComponent(hash)+"&limit=1");target.replaceChildren();if(!rows.length){fail(target,tr("api.txMissing"));return}const t=rows[0];const h=document.createElement("p");h.className="result-title";h.textContent="Transaction";target.append(h,detail("Hash",t.tx_hash),detail("Block",t.block_height),detail("From",t.sender||"—"),detail("To",t.recipient||"—"),detail("Status",t.status||"—"),detail("Fee",t.fee_native||"—"))}catch(e){fail(target,tr("api.txError"))}

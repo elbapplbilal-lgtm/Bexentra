@@ -1,0 +1,22 @@
+/* The streaming metadata appears only after verified WebSocket events.
+   When upstream is unavailable the existing RPC/Neon dashboard stays usable. */
+.bex-home .stream-meta{
+ display:flex;align-items:center;justify-content:center;gap:8px;
+ margin:4px auto 9px;padding:6px 11px;
+ width:max-content;max-width:100%;
+ color:#4bffd0;background:rgba(6,75,64,.5);
+ border:1px solid rgba(36,222,176,.35);
+ border-radius:999px;
+ font-family:"Cairo","Manrope",system-ui,sans-serif;
+ font-size:clamp(10px,2.7vw,12px);font-weight:750;
+}
+.bex-home .stream-meta[hidden]{display:none!important}
+.bex-home .stream-pulse{
+ display:inline-block;flex:none;width:8px;height:8px;border-radius:50%;
+ background:#27fac1;box-shadow:0 0 11px rgba(26,240,184,.8);
+}
+.bex-home.light-mode .stream-meta{color:#145e4e;background:#d9fff2}
+.bex-home .feed-live{
+ color:#28f1be!important;background:rgba(6,66,51,.53)!important;
+ border:1px solid rgba(35,229,168,.22)!important;
+}

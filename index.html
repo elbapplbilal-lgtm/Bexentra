@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="public/neon-premium.css?v=1">
 <link rel="stylesheet" href="public/reference-match.css?v=1">
 <link rel="stylesheet" href="public/mobile-layout-stability.css?v=1">
+<link rel="stylesheet" href="public/realtime.css?v=1">
 </head>
 <body class="bex-home bex-reference">
 
@@ -75,6 +76,7 @@
 
   <section id="stats" class="stats-card">
     <div class="section-title"><div><span class="title-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><b data-i18n="stats.title">إحصائيات المستكشف</b></div><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
+    <div id="streamMeta" class="stream-meta" hidden><span class="stream-pulse" aria-hidden="true"></span><span id="streamRate"></span></div>
     <div class="stats-grid">
       <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات الظاهرة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">عينة من أحدث النتائج</em></article>
       <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الفهرس</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
@@ -117,8 +119,10 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=4" defer></script>
+<script src="public/preferences.js?v=5" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=37" defer></script>
+<script src="public/app.js?v=38" defer></script>
+<script src="public/realtime-config.js?v=1" defer></script>
+<script src="public/realtime-client.js?v=1" defer></script>
 </body>
 </html>
