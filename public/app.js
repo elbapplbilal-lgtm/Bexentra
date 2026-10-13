@@ -46,6 +46,19 @@ function setIndexStatus(v){
  else if(mins<45){paintIndexSignal("stale");indexStatus.textContent="● "+tr("stats.recent");indexStatus.className="status-wait";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.nearLive")}
  else{paintIndexSignal("stale");indexStatus.textContent="● "+tr("stats.stale");indexStatus.className="status-stale";indexStatusNote.textContent=tr("stats.agePrefix")+" "+ago(v);if(live)live.textContent="● "+tr("stats.needsUpdate")}
 }
+// A green "Live" status is only shown for a recent, actually observed RPC block.
+function setOnchainStatus(block){
+ const elapsed=block?.block_time?Date.now()-new Date(block.block_time).getTime():Infinity;
+ const recent=Number.isFinite(elapsed)&&elapsed>=-30000&&elapsed<180000;
+ paintIndexSignal(recent?"recent":"stale");
+ if(indexStatus){
+  indexStatus.textContent="● "+tr(recent?"stats.onchain":"stats.onchainSlow");
+  indexStatus.className=recent?"status-good":"status-stale";
+ }
+ if(indexStatusNote)indexStatusNote.textContent=tr("stats.onchainAge")+" "+ago(block?.block_time);
+ const label=$("statsLive");
+ if(label)label.textContent="● "+tr(recent?"stats.onchain":"stats.onchainSlow");
+}
 function detail(label,value){const d=document.createElement("div");d.className="detail";const s=document.createElement("span");s.textContent=label;const b=document.createElement("b");b.textContent=esc(value);d.append(s,b);return d}
 function fail(target,msg){target.replaceChildren();const p=document.createElement("p");p.className="error";p.textContent=msg;target.append(p)}
 // Public read-only API. Never send a database password or JWT to the browser.
@@ -88,10 +101,20 @@ function detectType(q,forced="auto"){
 async function loadDashboard(){
  const chain=network.value;syncNetworkUI(); $("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";$("recentBlocks").textContent=tr("api.loading");$("recentTransactions").textContent=tr("api.loading");
  try{
-  const [bs,ts]=await Promise.all([blocks(chain),txs(chain)]);
+  let view;
+  try{view=await request("/live",{chain,limit:8})}
+  catch(e){
+   // Rollout/supplier downtime: show indexed records, never silently label them live.
+   const [oldBlocks,oldTxs]=await Promise.all([blocks(chain),txs(chain)]);
+   view={source:"indexed_snapshot",blocks:oldBlocks,transactions:oldTxs};
+  }
+  const bs=Array.isArray(view.blocks)?view.blocks:[];
+  const ts=Array.isArray(view.transactions)?view.transactions:[];
+  const onchain=view.source==="rpc_live";
+
   if(network.value!==chain)return;
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
-  $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(bs[0].indexed_at):"—";setIndexStatus(bs[0]?.indexed_at);
+  $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0]);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
   bs.slice(0,3).forEach(block=>{
    const url=internalExplorer(chain,"block",block.height);
@@ -116,8 +139,12 @@ async function loadDashboard(){
    const link=document.createElement("a");link.href=url;link.textContent=short(tx.tx_hash,10);
    const detail=document.createElement("small");detail.textContent=tx.block_height!=null?"Block "+Number(tx.block_height).toLocaleString("en-US"):short(tx.sender||tx.recipient||"—",10);
    main.append(link,detail);
-   const status=document.createElement("span");status.className="feed-side";status.textContent=tx.status==="failed"?tr("api.failed"):tx.status==="success"?tr("api.confirmed"):tr("api.indexed");
-   if(tx.status==="failed")status.classList.add("feed-failed");else if(tx.status==="indexed")status.classList.add("feed-unconfirmed");
+   const status=document.createElement("span");status.className="feed-side";
+   const isLiveTx=tx.source==="rpc_live"||onchain;
+   status.textContent=tx.status==="failed"?tr("api.failed"):tx.status==="success"?tr("api.confirmed"):isLiveTx?tr("api.onchain"):tr("api.indexed");
+   if(tx.status==="failed")status.classList.add("feed-failed");
+   else if(isLiveTx)status.classList.add("feed-live");
+   else status.classList.add("feed-unconfirmed");
    const more=document.createElement("span");more.className="feed-chevron";more.append(makeIcon("chevron"));
    r.append(symbol,main,status,more);rowNavigation(r,url);rt.append(r);
   });
