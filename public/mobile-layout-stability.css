@@ -186,6 +186,34 @@ body.bex-reference .bottom-nav{
  .bex-reference .trust-pills>span{max-width:none!important}
  body.bex-reference .hero-search{grid-template-columns:140px minmax(0,1fr) 39px!important}
 }
+
+/* The prior base stylesheet styled EVERY descendant span in each trust pill,
+ * accidentally producing the double-border pills visible in the screenshot. */
+.bex-reference .trust-pills>span>span[data-i18n]{
+ display:inline!important;
+ flex:0 1 auto!important;
+ padding:0!important;margin:0!important;
+ border:0!important;border-radius:0!important;
+ background:none!important;
+ box-shadow:none!important;
+ color:inherit!important;
+ font:inherit!important;
+ line-height:inherit!important;
+ letter-spacing:inherit!important;
+ white-space:nowrap!important;
+}
+.bex-reference .trust-pills>span>.pill-arrow{
+ margin:0!important;
+ padding:0!important;
+ border:0!important;
+ background:none!important;
+ box-shadow:none!important;
+}
+/* Keep the entire RTL dashboard on the expected physical viewport. */
+.bex-reference .app-shell,.bex-reference .app-header,.bex-reference .bottom-nav{
+ contain:layout style;
+}
+
 @media(prefers-reduced-motion:reduce){
  .bex-reference *{scroll-behavior:auto!important}
 }
