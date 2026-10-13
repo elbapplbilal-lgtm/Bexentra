@@ -53,6 +53,8 @@ jobs:
           fi
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Verify worker syntax
+        run: node --check src/receipt-enricher.js
       - name: Verify BNB and Solana fee parsing
         run: npm test
       - name: Fill real transaction status and native fees (bounded)
