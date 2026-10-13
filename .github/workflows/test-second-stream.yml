@@ -1,0 +1,56 @@
+name: Test BEXENTRA Second Stream
+on:
+  pull_request:
+    paths:
+      - 'realtime/**'
+      - 'public/realtime-*.js'
+      - 'public/realtime.css'
+      - 'public/app.js'
+      - '.github/workflows/test-second-stream.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Confirm JavaScript syntax
+        run: |
+          node --check realtime/src/hub.js
+          node --check realtime/src/streamer.js
+          node --check realtime/src/server.js
+          node --check public/app.js
+          node --check public/realtime-client.js
+          node --check public/realtime-config.js
+      - name: Test actual WebSocket event parsing and bounded samples
+        working-directory: realtime
+        run: npm test
+      - name: Confirm one-second SSE server heartbeat without upstream secrets
+        run: |
+          PORT=19082 node realtime/src/server.js > /tmp/bexentra-stream.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:19082/health >/tmp/health.json; then break; fi
+            sleep 0.25
+          done
+          node --input-type=module -e '
+            const h=await (await fetch("http://127.0.0.1:19082/health")).json();
+            if(h.chains.bnb.upstream_connected||h.chains.solana.upstream_connected)throw Error("Claimed an unconfigured provider is live");
+            const abort=new AbortController();setTimeout(()=>abort.abort(),3300);
+            const r=await fetch("http://127.0.0.1:19082/stream?chain=bnb",{signal:abort.signal});
+            if(r.status!==200||!r.headers.get("content-type").includes("text/event-stream"))throw Error("Missing SSE headers");
+            const reader=r.body.getReader();let frames=0,text="";
+            try{while(frames<3){const {value,done}=await reader.read();if(done)break;
+              text+=new TextDecoder().decode(value);
+              frames=(text.match(/event: snapshot/g)||[]).length;
+            }}catch(e){if(e.name!=="AbortError")throw e}
+            if(frames<3)throw Error("Expected 1-second snapshots, got "+frames);
+            if(!text.includes("stream_offline"))throw Error("Server lied about unconfigured upstream");
+            console.log("PASS SSE: 3 real-time frames received and offline status honestly reported");
+          '
