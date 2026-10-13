@@ -6,6 +6,9 @@ let chain=params.get("chain")==="solana"?"solana":"bnb";
 let type=params.get("type")||"auto";
 if(!["auto","block","tx","address"].includes(type))type="auto";
 let query=params.get("q")||"";
+// The optional height is only a HINT from a real BNB live block; the API verifies
+// transaction membership on the blockchain independently before showing data.
+const observedHeight=/^\d{1,16}$/.test(params.get("height")||"")?params.get("height"):null;
 const esc=v=>String(v??"—");
 const tr=k=>window.BexentraPrefs?.t(k)??k;
 function formatNativeFee(baseUnits,chain){
@@ -28,7 +31,7 @@ function formatNativeFee(baseUnits,chain){
 function short(v,n=12){v=esc(v);return v.length>n*2?v.slice(0,n)+"…"+v.slice(-n):v}
 function detect(q,t="auto"){if(t!=="auto")return t;if(/^\d+$/.test(q))return"block";if(chain==="bnb"&&/^(?:0x)?[a-fA-F0-9]{40}$/.test(q))return"address";if(chain==="solana"&&/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(q))return"address";return"tx"}
 function ext(t,id){if(chain==="bnb")return"https://bscscan.com/"+(t==="tx"?"tx/":t==="address"?"address/":"block/")+id;return"https://solscan.io/"+(t==="tx"?"tx/":t==="address"?"account/":"block/")+id}
-async function request(path,p){const u=new URL(API+path);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){let b={};try{b=await r.json()}catch{}throw Error(b.error||("API "+r.status))}return r.json()}
+async function request(path,p){const u=new URL(API+path);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{credentials:"omit",headers:{Accept:"application/json"}});if(!r.ok){let b={};try{b=await r.json()}catch{}const error=new Error(b.error||("API "+r.status));error.status=r.status;error.reason=b.reason||null;throw error}return r.json()}
 function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent=tr("details.copy");c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
 async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent=tr("details.copyDone");setTimeout(()=>button.textContent=tr("details.copy"),1200)}catch{}}
 function showError(msg,title){
@@ -41,10 +44,18 @@ function showError(msg,title){
  $("detailSubtitle").textContent=tr("details.subtitle");
  $("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
  $("detailError").textContent=msg;
+ if(type==="tx"&&query&&
+  (chain==="bnb"?/^0x[0-9a-fA-F]{64}$/.test(query):/^[1-9A-HJ-NP-Za-km-z]{70,100}$/.test(query))){
+  const actions=document.createElement("div");actions.className="error-actions";
+  const retry=document.createElement("button");retry.type="button";retry.textContent=tr("details.retry");retry.onclick=()=>load();
+  const verify=document.createElement("a");verify.href=ext("tx",query);verify.target="_blank";
+  verify.rel="noopener noreferrer";verify.textContent=tr("details.verify");
+  actions.append(retry,verify);$("detailError").append(actions);
+ }
 }
 function start(title){showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function showProvenance(source){
- const live=source==="rpc_live"||source==="indexed_plus_rpc";
+ const live=source==="rpc_live"||source==="indexed_plus_rpc"||source==="rpc_block_verified";
  const title=$("detailSideTitle"),message=$("detailSideText");
  if(title)title.textContent=tr(live?"details.liveSideTitle":"details.sideTitle");
  if(message)message.textContent=tr(live?"details.liveSideText":"details.sideText");
@@ -64,7 +75,7 @@ async function loadBlock(){
 }
 async function loadTx(){
  start(tr("details.loadTx"));
- const t=await request("/tx",{chain,hash:query});
+ const t=await request("/tx",{chain,hash:query,...(chain==="bnb"&&observedHeight?{height:observedHeight}:{})});
  if(t.source==="token_transfers_only"){
   const transfers=Array.isArray(t.token_transfers)?t.token_transfers:[];
   finish(tr("details.txTitle"),tr("details.tokenOnlySubtitle"),[
@@ -79,7 +90,7 @@ async function loadTx(){
   renderTokenEvents(transfers,"");
   return;
  }
- finish(tr("details.txTitle"),t.source==="rpc_live"?tr("details.liveTxSource"):t.source==="indexed_plus_rpc"?tr("details.augmentedSource"):short(t.tx_hash,18),[
+ finish(tr("details.txTitle"),t.source==="rpc_block_verified"?tr("details.blockVerifiedSource"):t.source==="rpc_live"?tr("details.liveTxSource"):t.source==="indexed_plus_rpc"?tr("details.augmentedSource"):short(t.tx_hash,18),[
   row(tr("details.txHash"),t.tx_hash,true),
   row("Block / Slot",t.block_height,true),
   row(tr("details.from"),t.sender||"—",!!t.sender),
@@ -87,7 +98,7 @@ async function loadTx(){
   row("Status",t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):(t.status||tr("details.unavailable"))),
   row("Fee",formatNativeFee(t.fee_native,chain)),
   ...(t.indexed_at?[row("Indexed At",t.indexed_at)]:[]),
-  row(tr("details.source"),tr(t.source==="rpc_live"||t.source==="indexed_plus_rpc"?"details.sourceLive":"details.sourceIndexed"))
+  row(tr("details.source"),tr(t.source==="rpc_live"||t.source==="indexed_plus_rpc"||t.source==="rpc_block_verified"?"details.sourceLive":"details.sourceIndexed"))
  ],t.tx_hash,"tx");
  showProvenance(t.source);
 }
@@ -190,9 +201,13 @@ async function load(){
   else await loadTx();
  }catch(e){
   const msg=String(e?.message||"Unknown error");
-  const absent=msg.includes("Not indexed")||msg.includes("404");
-  if(absent)showError(tr("details.notIndexedText"),tr("details.notIndexedTitle"));
-  else showError(tr("details.notFound")+" "+msg,tr("details.lookupErrorTitle"));
+  if(e?.status===404){
+   showError(tr("details.unverifiedText"),tr("details.unverifiedTitle"));
+  }else if(e?.status===503){
+   showError(tr("details.networkUnavailableText"),tr("details.networkUnavailableTitle"));
+  }else{
+   showError(tr("details.notFound")+" "+msg,tr("details.lookupErrorTitle"));
+  }
  }
 }
 $("detailSearch").addEventListener("submit",e=>{
