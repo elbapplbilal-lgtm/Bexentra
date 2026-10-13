@@ -30,7 +30,7 @@ const server=createServer(async(req,res)=>{
  if(full!==root && !full.startsWith(root+path.sep)){res.writeHead(403).end();return}
  try{
   const bytes=await readFile(reqPath==="/" ? path.join(root,"index.html") : full);
-  res.writeHead(200,{"content-type":mime[path.extname(full)]||"application/octet-stream"});
+  res.writeHead(200,{"content-type":reqPath==="/"?"text/html; charset=utf-8":mime[path.extname(full)]||"application/octet-stream"});
   res.end(bytes);
  }catch{res.writeHead(404).end("not found")}
 });
