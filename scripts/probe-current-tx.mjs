@@ -40,4 +40,24 @@ await Promise.all(providers.map(async endpoint=>{
   rpc(endpoint,"eth_getBlockByNumber",[tx.blockNumber,false])
  ]);
 }));
+
+try {
+ const liveUrl=api+"/live?chain=bnb&limit=8";
+ const liveResp=await fetch(liveUrl,{signal:AbortSignal.timeout(14000)});
+ const liveData=await liveResp.json();
+ console.log("RECENT_LIVE_SAMPLE",{
+  source:liveData.source,height:liveData.blocks?.[0]?.height,
+  sample:liveData.transactions?.[0]?.tx_hash});
+ if(liveData.source==="rpc_live"&&liveData.transactions?.length&&liveData.blocks?.[0]?.height){
+  const tx=liveData.transactions[0];
+  const detailURL=new URL(api+"/tx");
+  detailURL.searchParams.set("chain","bnb");detailURL.searchParams.set("hash",tx.tx_hash);
+  const detail=await fetch(detailURL,{signal:AbortSignal.timeout(15000)});
+  console.log("RECENT_SAMPLE_DETAIL",detail.status,(await detail.text()).slice(0,600));
+  const blockHeight="0x"+Number(tx.block_height).toString(16);
+  const sourceBlock=await rpc("https://bsc-rpc.publicnode.com","eth_getBlockByNumber",[blockHeight,false]);
+  console.log("RECENT_SAMPLE_IN_CANONICAL_BLOCK",Array.isArray(sourceBlock?.transactions)&&sourceBlock.transactions.some(t=>typeof t==="string"&&t.toLowerCase()===tx.tx_hash.toLowerCase()));
+ }
+}catch(e){console.log("RECENT_SAMPLE_PROBE_ERROR",String(e?.message||e));}
+
 console.log("READ_ONLY_PROBE_COMPLETE");
