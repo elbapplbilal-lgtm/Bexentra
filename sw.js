@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v50-compact-details";
+const CACHE="bexentra-shell-v51-verified-fees";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -7,7 +7,7 @@ const SHELL=[
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2",
  "./public/preferences.js?v=3","./public/search-input.js?v=1",
- "./public/app.js?v=36","./public/explorer.js?v=35",
+ "./public/app.js?v=36","./public/explorer.js?v=36",
  "./public/bnb-mark.svg","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"
 ];
 self.addEventListener("install",event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).catch(()=>{}))});
