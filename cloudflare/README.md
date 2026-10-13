@@ -1,6 +1,6 @@
 # BEXENTRA — Cloudflare Workers free-tier live stream
 
-**Status:** Code ready. The service does not run until a Worker is deployed in your Cloudflare account **and its public workers.dev URL is connected to public/realtime-config.js**.
+**Status:** The user's live Production Worker is running at `https://bexentra.elbapplbilal.workers.dev/health` (independently verified from GitHub Actions). The browser configuration now points at that public endpoint. BNB streaming was verified using a real mainnet transaction; Solana streaming is being tested against an alternate public RPC provider, and the browser must fall back to Neon if unavailable.
 
 This is a **per-viewer** SSE live sample, not an always-running indexer. It uses public unauthenticated mainnet RPC by default and avoids Render. Availability depends on public providers and Workers Free limits.
 
