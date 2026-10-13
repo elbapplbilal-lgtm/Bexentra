@@ -113,6 +113,15 @@ try{
   assert.deepEqual(pageErrors,[],"No JS crashes at "+width);
   await page.screenshot({path:path.join(root,"ui-test-shots","bexentra-"+width+".png"),fullPage:true});
   if(width===390){
+   assert.equal(await page.locator("#recentTransactions .reference-row").count(),3,
+    "Approved design starts with three visible real transactions");
+   await page.locator("#refreshTx").click();
+   assert.equal(await page.locator("#recentTransactions .reference-row").count(),8,
+    "View All expands the actual received RPC sample");
+   assert.equal(await page.locator("#refreshTx").getAttribute("aria-expanded"),"true");
+   await page.locator("#refreshTx").click();
+   assert.equal(await page.locator("#recentTransactions .reference-row").count(),3,
+    "Show Less returns to the approved three-row view");
    await page.locator("#network").selectOption("solana");
    await page.waitForFunction(()=>document.querySelector("#summaryNetwork")?.textContent==="Solana",{timeout:12000});
    await page.locator("#network").selectOption("bnb");
