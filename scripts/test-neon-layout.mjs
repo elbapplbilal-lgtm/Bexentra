@@ -82,6 +82,11 @@ try{
    return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
     hero:rect(".hero-card"),header:rect(".app-header"),brand:rect(".brand"),
     network:rect(".network-pill"),search:rect(".hero-search"),searchInput:rect("#globalInput"),
+    titleRange:(()=>{const e=document.querySelector(".hero-copy h1");
+      const r=document.createRange();r.selectNodeContents(e);
+      const b=r.getBoundingClientRect();
+      return {left:b.left,right:b.right,lineCount:r.getClientRects().length}})(),
+    solCube:rect(".sol-cube"),bnbCube:rect(".bnb-cube"),
     searchButton:rect("#globalSearch button[type=submit]"),nav:rect(".bottom-nav"),
     quick,stat,card:rect(".stats-card"),statsCount:stat.length,
     source:getComputedStyle(document.querySelector(".hero-card")).backgroundImage,
@@ -97,6 +102,11 @@ try{
   assert(rects.statsCount===4,"Four real-data metric cards at "+width);
   assert(rects.stat[0].y===rects.stat[1].y,"Metric cards align in a row at "+width);
   assert(rects.brand.l>rects.network.r,"No header brand/network overlap at "+width);
+  if(width<=430) {
+   assert.equal(rects.titleRange.lineCount,1,"Arabic headline must stay on one line");
+   assert(rects.titleRange.left>rects.solCube.r-3,"Arabic headline must not cover left Solana cube");
+   assert(rects.titleRange.right<rects.bnbCube.l+3,"Arabic headline must not cover right BNB cube");
+  }
   assert(rects.nav&&rects.nav.b<=852&&rects.nav.l>=0,"Bottom nav stays inside the viewport at "+width);
   assert(rects.card.w>0,"Stats section must be visible at "+width);
   assert.equal(rects.networkName,"BNB Smart Chain");
