@@ -169,6 +169,33 @@ try{
    assert(!(await page.locator("#detailFields").innerText()).includes("0 BNB"),
     "Details must not manufacture a zero fee when a matching receipt is absent");
   }
+  // Regression: user opened a real transaction from the live feed and their
+  // Android page showed neither navigation nor a usable on-chain retry.
+  // Test both normal phone and Chrome desktop-site viewport, with intentionally
+  // unavailable RPC to verify honest fallback and visible external verification.
+  if(width===390||width===980){
+   const hash="0x"+"a".repeat(64);
+   await page.goto("http://127.0.0.1:"+port+"/explorer.html?chain=bnb&type=tx&q="+hash,{waitUntil:"domcontentloaded"});
+   await page.waitForSelector("#detailError:not([hidden])",{timeout:15000});
+   const info=await page.evaluate(()=>{
+    const nav=document.querySelector(".bottom-nav.bottom-v30");
+    const r=nav.getBoundingClientRect();
+    return {display:getComputedStyle(nav).display,x:r.x,y:r.y,right:r.right,bottom:r.bottom,
+     vw:innerWidth,vh:innerHeight,
+     links:[...nav.querySelectorAll("a")].map(a=>({href:a.getAttribute("href"),text:a.textContent.trim()})),
+     actions:[...document.querySelectorAll("#detailError .error-actions a")].map(a=>a.href),
+     reload:document.querySelector("#detailError .error-actions button")?.textContent};
+   });
+   console.log("DETAIL_NAV",width,JSON.stringify(info));
+   assert.equal(info.display,"grid","Detail bottom bar must remain visible at "+width);
+   assert(info.x>=0&&info.right<=info.vw+1&&info.bottom<=info.vh+1,
+     "Detail navigation must stay within device viewport at "+width);
+   assert(info.links.length===4,"Detail navigation must retain its four destinations");
+   assert(info.actions.some(a=>a.startsWith("https://bscscan.com/tx/")),
+     "Unverified hash must show real external verification link");
+   assert(info.reload,"Unverified hash must show read-only retry");
+   await page.screenshot({path:path.join(root,"ui-test-shots","detail-"+width+".png"),fullPage:true});
+  }
   console.log("PASS viewport",width,"actual data slots, mobile alignment and navigation");
   await context.close();
  }
@@ -176,4 +203,4 @@ try{
  if(browser)await browser.close();
  await new Promise(resolve=>server.close(resolve));
 }
-console.log("PASS 5 device viewports, real BNB vector, 3D icons, nav in desktop mode, search/network/menu, CSS syntax, no fake production stats");
+console.log("PASS 5 device viewports plus detail navigation in Android and desktop-site modes, real BNB vector, 3D icons, nav in desktop mode, search/network/menu, CSS syntax, no fake production stats");
