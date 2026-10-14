@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="public/realtime.css?v=1">
 <link rel="stylesheet" href="public/neon-reference-v5.css?v=1">
 <link rel="stylesheet" href="public/neon-reference-v6.css?v=1">
+<link rel="stylesheet" href="public/category-view.css?v=1">
 </head>
 <body class="bex-home bex-reference neon-fidelity">
 
@@ -42,12 +43,18 @@
 
 <aside id="mobileMenu" class="mobile-menu" aria-hidden="true">
   <div class="mobile-menu-head"><b>BEXENTRA</b><button id="menuClose" type="button" aria-label="Close">×</button></div>
-  <a href="#dashboard" data-i18n="menu.home">الرئيسية</a><a href="#blocks" data-i18n="menu.blocks">البلوكات</a><a href="#transactions" data-i18n="menu.transactions">المعاملات</a><a href="explorer.html" data-i18n="menu.explorer">Explorer</a><button class="menu-settings-entry" data-open-settings type="button"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#settings"></use></svg> <span data-i18n="menu.settings">الإعدادات</span></button>
+  <a href="./" data-i18n="menu.home">الرئيسية</a><a href="?view=blocks" data-i18n="menu.blocks">البلوكات</a><a href="?view=transactions" data-i18n="menu.transactions">المعاملات</a><a href="explorer.html" data-i18n="menu.explorer">Explorer</a><button class="menu-settings-entry" data-open-settings type="button"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#settings"></use></svg> <span data-i18n="menu.settings">الإعدادات</span></button>
   <p data-i18n="menu.safety">مستكشف عام للقراءة فقط. لا ندخل إلى محفظتك ولا نطلب Seed Phrase.</p>
 </aside>
 <div id="menuBackdrop" class="menu-backdrop"></div>
 
 <main id="dashboard" class="app-shell">
+  <section id="categoryIntro" class="category-intro" hidden aria-labelledby="categoryHeading">
+    <div class="category-eyebrow"><span class="category-dot" aria-hidden="true"></span> BEXENTRA · MAINNET EXPLORER</div>
+    <h1 id="categoryHeading">البلوكات</h1>
+    <p id="categorySubtitle" data-i18n="category.subtitle">أحدث البيانات المتاحة من شبكة البلوكتشين. اضغط على أي صف لعرض تفاصيله.</p>
+    <p id="categoryMeta" class="category-meta" role="status" aria-live="polite">جاري تحميل البيانات…</p>
+  </section>
   <section class="hero-card">
     <img class="reference-globe" src="public/orbit-globe.svg" alt="" aria-hidden="true" width="760" height="470"><div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
@@ -69,8 +76,8 @@
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="#blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <a href="#transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="?view=blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="?view=transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
       <button id="quickRefresh" type="button"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#refresh"></use></svg></span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></button>
       <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
     </div>
@@ -102,10 +109,10 @@
 </main>
 
 <nav class="bottom-nav" aria-label="التنقل">
-  <a href="#transactions"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><b data-i18n="nav.transactions">المعاملات</b></a>
-  <a href="#blocks"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><b data-i18n="nav.blocks">البلوكات</b></a>
+  <a href="?view=transactions"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#transactions"></use></svg></span><b data-i18n="nav.transactions">المعاملات</b></a>
+  <a href="?view=blocks"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><b data-i18n="nav.blocks">البلوكات</b></a>
   <a href="explorer.html"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></span><b data-i18n="nav.explorer">Explorer</b></a>
-  <a class="active" href="#dashboard"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#home"></use></svg></span><b data-i18n="nav.home">الرئيسية</b></a>
+  <a class="active" href="./"><span><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#home"></use></svg></span><b data-i18n="nav.home">الرئيسية</b></a>
 </nav>
 
 <div id="settingsOverlay" class="settings-overlay" hidden>
@@ -123,7 +130,7 @@
 </div>
 <script src="public/preferences.js?v=6" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=41" defer></script>
+<script src="public/app.js?v=42" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/realtime-client.js?v=1" defer></script>
 </body>
