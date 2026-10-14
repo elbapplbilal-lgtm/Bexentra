@@ -83,8 +83,10 @@ function localWhen(value){
  if(!value)return easy("غير متوفر","Unavailable");
  const date=new Date(value);
  if(!Number.isFinite(date.getTime()))return easy("غير متوفر","Unavailable");
- return new Intl.DateTimeFormat(document.documentElement.lang==="en"?"en-GB":"ar-MA-u-nu-latn",
-  {dateStyle:"medium",timeStyle:"short"}).format(date);
+ try{
+  return new Intl.DateTimeFormat(document.documentElement.lang==="en"?"en-GB":"ar-MA-u-nu-latn",
+   {dateStyle:"medium",timeStyle:"short"}).format(date);
+ }catch{return date.toLocaleString()}
 }
 function plainSummary(heading,description,metrics,note,tone="normal"){
  const section=$("simpleResult");
