@@ -1,0 +1,144 @@
+/* BEXENTRA Explorer Pro — original clean block-explorer layout.
+ * Intentionally follows familiar explorer information hierarchy without
+ * copying BscScan logos, copyrighted art or proprietary branding.
+ * Only visual styling; never fakes network numbers or coverage.
+ */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view){
+ background:#f6f8fc!important;
+ color:#1b2b42!important;
+ font-family:"Cairo","Manrope",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .app-header{
+ background:#fff!important;
+ border-bottom:1px solid #dce5f0!important;
+ box-shadow:0 2px 12px rgba(24,49,80,.045)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-card{
+ background:linear-gradient(155deg,#fff 0%,#f0f6fd 100%)!important;
+ border:1px solid #dce6f3!important;
+ border-radius:16px!important;
+ box-shadow:0 8px 25px rgba(25,53,85,.06)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-card :is(.reference-globe,.world-glow,.grid-glow,.hero-beam,.hero-shine){
+ opacity:.09!important;pointer-events:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-overline{
+ color:#53718d!important;
+ letter-spacing:.02em!important;
+ text-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy h1{
+ color:#152e4e!important;
+ font-weight:850!important;
+ letter-spacing:-.025em!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search{
+ background:#fff!important;border:1px solid #bbd2ea!important;
+ border-radius:12px!important;
+ box-shadow:0 2px 14px rgba(5,68,130,.09)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search input{
+ color:#1d3348!important;
+ caret-color:#096ca9!important;
+ background:#fff!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search input::placeholder{
+ color:#71869b!important;opacity:1!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search button[type=submit]{
+ background:linear-gradient(135deg,#087ab9,#0966aa)!important;
+ color:#fff!important;
+ border:1px solid #0e6fa8!important;
+ border-radius:10px!important;
+ box-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a{
+ background:#fff!important;
+ border:1px solid #dfe7f0!important;
+ border-radius:12px!important;
+ box-shadow:0 3px 12px rgba(39,67,100,.045)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a:focus-visible,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .watchlist-shortcut:focus-visible{
+ outline:3px solid #3d98cf!important;outline-offset:2px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) :is(.stats-card,.data-card){
+ border:1px solid #dfe7f1!important;
+ border-radius:13px!important;
+ background:#fff!important;
+ box-shadow:0 3px 16px rgba(39,67,100,.048)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .stats-card .section-title,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-head{
+ border-bottom:1px solid #edf1f6!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .stats-grid article{
+ border-color:#e5ecf5!important;
+ border-radius:10px!important;
+ background:#fbfdff!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .stats-grid article strong{
+ font-variant-numeric:tabular-nums!important;
+ letter-spacing:-.02em!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row{
+ background:#fff!important;
+ transition:background .15s ease!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row:hover{
+ background:#f5faff!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-main a{
+ color:#086eaf!important;
+ font-weight:700!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-main a:hover{
+ color:#045289!important;text-decoration:underline!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) a.watchlist-shortcut{
+ background:#eaf4ff!important;
+ border:1px solid #c5def5!important;
+ border-radius:12px!important;
+ color:#134d7a!important;
+ box-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) a.watchlist-shortcut small{
+ color:#496981!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .coverage-truth{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:11px 14px;margin:12px 0 20px;
+ background:#f1f6fc;border:1px solid #d4e4f1;border-radius:11px;
+ color:#425e78;font-size:12px;line-height:1.65;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .coverage-truth strong{
+ color:#1d4565;font-weight:800;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .coverage-truth a{
+ color:#006eb0;font-weight:750;white-space:nowrap;
+ text-decoration:none;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .coverage-truth a:hover{text-decoration:underline}
+body.detail-v31.light-mode .detail-header{
+ background:#fff!important;border-bottom:1px solid #dfe7f1!important;
+ box-shadow:0 2px 12px rgba(25,56,84,.05)!important;
+}
+body.detail-v31.light-mode .detail-shell :is(.detail-card,.detail-hero,.detail-panel){
+ box-shadow:0 3px 16px rgba(39,67,100,.05)!important;
+}
+@media(max-width:520px){
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .coverage-truth{
+  align-items:flex-start;flex-direction:column;gap:4px;font-size:11px;
+  padding:10px 12px;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) :is(.stats-card,.data-card){
+  border-radius:11px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-card{border-radius:13px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row{transition:none!important}
+}
+
+/* Category listing pages keep their focused explorer view. */
+body.bex-home.category-view .coverage-truth{display:none!important}
