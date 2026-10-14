@@ -308,6 +308,23 @@ function renderTokenOnlySummary(t,transfers){
 }
 /* BEXENTRA wallet summary uses on-chain values only.
    The USD value and token holdings remain unavailable until real providers exist. */
+
+// Exact native units are multiplied using BigInt; the result is an approximate
+// USD amount from a timestamped, independent market source.
+function approximateNativeUsd(balance,decimals,price){
+ if(typeof balance!=="string"||!/^\d{1,80}$/.test(balance)||
+  !Number.isInteger(decimals)||decimals<0||decimals>18||
+  typeof price!=="number"||!Number.isFinite(price)||price<=0||price>1e9)return null;
+ try{
+  const raw=BigInt(balance),scaled=BigInt(Math.round(price*1e8));
+  if(scaled<=0n)return null;
+  const divisor=10n**BigInt(decimals)*100000000n;
+  const cents=(raw*scaled*100n+divisor/2n)/divisor;
+  if(cents===0n&&raw>0n)return "< $0.01";
+  const whole=(cents/100n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  return "≈ $"+whole+"."+(cents%100n).toString().padStart(2,"0");
+ }catch{return null}
+}
 function prepareWalletProfile(address){
  const profile=$("walletProfile");
  if(!profile)return;
@@ -605,6 +622,19 @@ async function loadAddress(){
   if(query!==address||chain!==network||b.chain!==network||b.source!=="rpc_live")return;
   if(!setVerifiedWalletBalance(address,b))return;
   walletBalance=b;renderAddressSummary(address,walletCount,b);
+  // The price is not blockchain data. Validate its source and age independently.
+  void request("/price",{chain:network}).then(quote=>{
+   if(query!==address||chain!==network||walletBalance!==b||
+    quote?.chain!==network||quote?.source!=="coingecko"||
+    quote?.quote_currency!=="USD"||!Number.isFinite(quote.usd_price)||
+    !Number.isFinite(Date.parse(quote.price_updated_at))||
+    Date.now()-Date.parse(quote.price_updated_at)>600000||
+    Date.parse(quote.price_updated_at)>Date.now()+60000)return;
+   const display=approximateNativeUsd(b.native_balance,network==="bnb"?18:9,quote.usd_price);
+   if(!display)return;
+   $("walletFiatValue").textContent=display;
+   $("walletSourceNote").textContent=tr("wallet.note")+" "+tr("wallet.priceVerified");
+  }).catch(()=>{}); // Market data outage: leave "Unavailable".
  }).catch(()=>{
   if(query===address&&chain===network)$("walletNativeBalance").textContent=tr("wallet.balanceFailed");
  });
