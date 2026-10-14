@@ -47,8 +47,30 @@ for(const chain of ["bnb","solana"]){
  if(address){
   const a=await get(api,"/address?chain="+chain+"&address="+encodeURIComponent(address)+"&limit=5",14000);
   mark(chain+" address lookup",a,x=>x.status===200&&Array.isArray(x.body.transactions));
+  mark(chain+" partial pagination metadata",a,x=>x.status===200&&
+    x.body.coverage==="indexed_only"&&typeof x.body.has_more==="boolean"&&
+    (!x.body.has_more||Number.isSafeInteger(Number(x.body.next_cursor?.before_height))));
+  if(a.status===200&&a.body.has_more&&a.body.next_cursor){
+   const cursor=a.body.next_cursor;
+   const second=await get(api,"/address?chain="+chain+"&address="+encodeURIComponent(address)+
+    "&limit=5&before_height="+encodeURIComponent(cursor.before_height)+
+    "&before_hash="+encodeURIComponent(cursor.before_hash));
+   mark(chain+" indexed history page 2",second,x=>x.status===200&&
+    x.body.coverage==="indexed_only"&&Array.isArray(x.body.transactions)&&
+    x.body.transactions.length<=5);
+   if(second.status===200){
+    const old=new Set(a.body.transactions.map(t=>t.tx_hash?.toLowerCase()));
+    if(second.body.transactions.some(t=>old.has(t.tx_hash?.toLowerCase())))
+     errors.push({name:chain+" duplicated history page"});
+   }
+  }
+  const balance=await get(api,"/balance?chain="+chain+"&address="+encodeURIComponent(address),21000);
+  mark(chain+" native balance RPC (or explicit outage)",balance,x=>
+   x.status===200&&x.body.source==="rpc_live"&&/^\\d+$/.test(x.body.native_balance||"")||
+   x.status===503&&x.body.reason==="rpc_unavailable");
   console.log("ADDRESS_COVERAGE",JSON.stringify({chain,rows:a.body.transactions?.length??null,
-   indexed_only:a.body.coverage??"not-labeled",balance_present:a.body.native_balance!==undefined&&a.body.native_balance!==null}));
+   indexed_only:a.body.coverage??"not-labeled",has_more:a.body.has_more??null,
+   balance_http:balance.status,balance_verified:balance.status===200&&balance.body.source==="rpc_live"}));
  }
 }
 console.log("SUMMARY",JSON.stringify({passed:reports.filter(x=>x.pass).length,total:reports.length,errors:errors.length}));
