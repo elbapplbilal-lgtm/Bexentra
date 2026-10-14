@@ -230,14 +230,16 @@ for(const page of [home,detail]){
 }
 assert(home.includes('id="homeMenuNetwork"'));
 assert(detail.includes('id="detailMenuNetwork"'));
-assert(sw.includes('bexentra-shell-v93-six-languages'));
+assert(/const CACHE="bexentra-shell-v[0-9]+-[a-z0-9-]+"/.test(sw),
+ "PWA must use a versioned shell cache for predictable Android updates");
 for(const translationKey of ["searchTitle","searchPlaceholder","searchNetwork","searchNote"])
  assert.equal(prefs.split('"bnav.'+translationKey+'":').length,3);
 
 assert(!home.includes('<i class="network-live"></i>'),"Green BNB network status dot must be hidden");
 assert(home.includes('<select id="network" aria-label="الشبكة">'),"Network selector must stay functional");
 assert(home.includes('id="networkIcon"'),"Keep the real BNB icon");
-assert(sw.includes('bexentra-shell-v93-six-languages'));
+assert(/const CACHE="bexentra-shell-v[0-9]+-[a-z0-9-]+"/.test(sw),
+ "PWA must use a versioned shell cache for predictable Android updates");
 
 const locales=await read("public/i18n-extra.js");
 const settingsCSS=await read("public/settings-polish-v2.css");
