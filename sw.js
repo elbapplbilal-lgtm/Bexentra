@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v79-explorer-white-menu";
+const CACHE="bexentra-shell-v80-bilingual-white-explorer";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -7,7 +7,7 @@ const SHELL=[
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2","./public/tx-detail-help.css?v=1",
  "./public/detail-nav-rescue.css?v=1","./public/category-view.css?v=4","./public/result-clarity.css?v=3","./public/visitor-guide.css?v=1","./public/home-refinement.css?v=1","./public/bex-scanlight-v1.css?v=2","./public/scanlight-mobile-fixes.css?v=2","./public/scanlight-detail-v2.css?v=1",
- "./public/preferences.js?v=10","./public/search-input.js?v=3",
+ "./public/preferences.js?v=11","./public/search-input.js?v=3",
  "./public/app.js?v=45","./public/explorer.js?v=47",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=1",
