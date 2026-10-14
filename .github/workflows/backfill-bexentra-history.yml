@@ -1,5 +1,12 @@
 name: BEXENTRA Bounded History Backfill
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/backfill-bexentra-history.yml'
+      - 'backend/src/repair-gaps.js'
+      - 'backend/src/gap-planner.js'
+      - 'backend/test/gap-planner.test.js'
   workflow_dispatch:
   schedule:
     - cron: '29 * * * *'
