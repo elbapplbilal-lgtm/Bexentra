@@ -14,6 +14,7 @@ function applyPageNavigation(){
   document.body.classList.add("category-view","category-"+pageView);
   const intro=$("categoryIntro"),heading=$("categoryHeading");
   if(intro)intro.hidden=false;
+  const subtitle=$("categorySubtitle");if(subtitle)subtitle.textContent=tr(pageView==="blocks"?"category.blocksHelp":"category.transactionsHelp");
   if(heading){
    const key=pageView==="blocks"?"nav.blocks":"nav.transactions";
    heading.dataset.i18n=key;heading.textContent=tr(key);
@@ -280,6 +281,6 @@ if(backdrop)backdrop.addEventListener("click",()=>setMenu(false));
 if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
 
 let refreshTimer=setInterval(()=>{if(!document.hidden && window.BexentraPrefs?.get("refresh")!=="off")loadDashboard()},15000);
-document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset"){displayFeedButtons();loadDashboard()}});
+document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset"){applyPageNavigation();displayFeedButtons();loadDashboard()}});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadDashboard()});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
