@@ -348,25 +348,21 @@ function renderAddressSummary(address,count,balance=null){
 }
 function showSearchWelcome(){
  document.body.classList.remove("wallet-loaded");
+ document.body.classList.add("explorer-welcome");
  $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("detailLoading").hidden=true;$("detailError").hidden=true;$("detailOverview").hidden=true;
  $("addressActivity").hidden=true;$("tokenActivity").hidden=true;
- $("detailTitle").textContent=easy("استكشف البلوكتشين","Explore the blockchain");
- $("detailSubtitle").textContent=easy("لسّق رقم بلوك، رمز معاملة، أو عنوان محفظة.","Enter a block number, transaction hash, or wallet address.");
+ $("simpleResult").hidden=true;
+ $("searchWelcome").hidden=false;
+ const guide=$("detailEducation");if(guide)guide.hidden=true;
+ $("detailTitle").textContent=easy("مستكشف البلوكتشين","Blockchain Explorer");
+ $("detailSubtitle").textContent=easy("ابحث عن عنوان محفظة، معاملة أو بلوك.","Search an address, transaction hash or block.");
  $("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
- plainSummary(easy("دليل قراءة نتائج البحث","How to understand results"),
- easy("تُعرض خلاصة واضحة للبيانات المتاحة قبل التفاصيل التقنية، مع توضيح مصدر المعلومات.",
-      "Choose what you're searching for. You'll see a simple summary before technical details."),
- [[easy("رقم بحال 127556204","A number such as 127556204"),easy("بلوك","Block")],
-  [easy("رمز معاملة طويل","Long transaction hash"),easy("معاملة واحدة","One transaction")],
-  [easy("عنوان محفظة","Wallet address"),easy("نشاط مفهرس فقط","Indexed activity only")]],
- easy("BEXENTRA ما كيطلبش كلمات استرجاع المحفظة أو مفاتيحها الخاصة.",
-      "BEXENTRA never asks for wallet recovery words or private keys."));
- const g=$("detailEducation");if(g)g.hidden=false;
 }
 
 function showError(msg,title){
- document.body.classList.remove("wallet-loaded");
+ document.body.classList.remove("wallet-loaded","explorer-welcome");
+ $("searchWelcome").hidden=true;
  $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("simpleResult").hidden=true;
  const g=$("detailEducation");if(g)g.hidden=true;
@@ -388,7 +384,7 @@ function showError(msg,title){
   actions.append(retry,verify);$("detailError").append(actions);
  }
 }
-function start(title){document.body.classList.remove("wallet-loaded");$("walletProfile").hidden=true;$("walletTabs").hidden=true;$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function start(title){document.body.classList.remove("wallet-loaded","explorer-welcome");$("searchWelcome").hidden=true;$("walletProfile").hidden=true;$("walletTabs").hidden=true;$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function showProvenance(source){
  const live=source==="rpc_live"||source==="indexed_plus_rpc"||source==="rpc_block_verified";
  const title=$("detailSideTitle"),message=$("detailSideText");
@@ -615,6 +611,33 @@ function showSearchError(error){
  const message=tr("search."+error);
  showError(message,tr("details.lookupErrorTitle"));
 }
+
+/* Mobile navigation and focused explorer entry points; no wallet connection. */
+const detailMenu=$("detailMenu"),detailMenuToggle=$("detailMenuToggle"),
+ detailMenuClose=$("detailMenuClose"),detailMenuBackdrop=$("detailMenuBackdrop");
+function setDetailMenu(open){
+ if(!detailMenu||!detailMenuBackdrop)return;
+ detailMenu.hidden=!open;detailMenuBackdrop.hidden=!open;
+ detailMenu.setAttribute("aria-hidden",String(!open));
+ detailMenuToggle?.setAttribute("aria-expanded",String(open));
+ if(open)detailMenuClose?.focus();
+ else if(detailMenu.contains(document.activeElement))detailMenuToggle?.focus();
+}
+detailMenuToggle?.addEventListener("click",()=>setDetailMenu(true));
+detailMenuClose?.addEventListener("click",()=>setDetailMenu(false));
+detailMenuBackdrop?.addEventListener("click",()=>setDetailMenu(false));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!detailMenu?.hidden)setDetailMenu(false)});
+document.querySelectorAll("[data-search-kind]").forEach(button=>button.addEventListener("click",()=>{
+ const kind=button.dataset.searchKind;
+ if(!["address","tx","block"].includes(kind))return;
+ $("detailType").value=kind;
+ const input=$("detailInput");
+ if(kind==="address")input.placeholder=easy("عنوان محفظة BNB أو Solana","Wallet address on BNB or Solana");
+ else if(kind==="tx")input.placeholder=easy("الصق معرّف المعاملة","Paste a transaction hash");
+ else input.placeholder=easy("أدخل رقم البلوك","Enter block number");
+ input.focus();
+}));
+
 async function load(){
  if(!query.trim()){
   document.body.classList.toggle("bex-address-layout",type==="address");
