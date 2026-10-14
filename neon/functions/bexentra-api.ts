@@ -81,6 +81,31 @@ async function chainRpc(chain,method,params,{retryNull=false}={}){
  if(sawNull)return null;
  throw Error("Network RPC temporarily unavailable: "+String(reason?.message||"unknown"));
 }
+
+// Market quotes are external observations, never on-chain prices.
+const quoteCache=new Map();
+async function recentNativeUsdQuote(chain){
+ const previous=quoteCache.get(chain);
+ if(previous&&previous.expires>Date.now())return previous.quote;
+ const coin=chain==="bnb"?"binancecoin":"solana";
+ const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),5000);
+ try{
+  const response=await fetch("https://api.coingecko.com/api/v3/simple/price?ids="+coin+
+   "&vs_currencies=usd&include_last_updated_at=true",{
+    headers:{Accept:"application/json"},signal:ac.signal
+   });
+  if(!response.ok)throw Error("Market source HTTP "+response.status);
+  const json=await response.json(),usd=json?.[coin]?.usd,at=json?.[coin]?.last_updated_at;
+  const now=Math.floor(Date.now()/1000);
+  if(typeof usd!=="number"||!Number.isFinite(usd)||usd<=0||
+     !Number.isSafeInteger(at)||at<=0||at>now+60||now-at>600)
+   throw Error("Market quote absent or stale");
+  const quote={chain,native_unit:chain==="bnb"?"BNB":"SOL",usd_price:usd,
+   quote_currency:"USD",source:"coingecko",price_updated_at:new Date(at*1000).toISOString()};
+  quoteCache.set(chain,{quote,expires:Date.now()+75000});
+  return quote;
+ }finally{clearTimeout(timer)}
+}
 function liveBlockRecord(chain,result,height){
  return {
   chain,height,
@@ -239,6 +264,11 @@ export default async function handler(req){
      Number(rawLimit)>50))return json({error:"Invalid limit (1-50)"},400);
   const limit=rawLimit===null?8:Number(rawLimit);
   if(u.pathname.endsWith("/health")){await db().query("SELECT 1");return json({ok:true,service:"bexentra-public-api"})}
+  if(u.pathname.endsWith("/price")){
+   try{return json(await recentNativeUsdQuote(chain))}
+   catch(e){console.warn("Recent market price unavailable",chain,String(e?.message||"unknown").slice(0,80));
+    return json({error:"Recent market price unavailable",reason:"price_unavailable"},503)}
+  }
   if(u.pathname.endsWith("/live")){
    try{return json(await liveSample(chain,limit),200)}
    catch(e){
