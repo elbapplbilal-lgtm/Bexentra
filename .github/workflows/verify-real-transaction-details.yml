@@ -1,0 +1,27 @@
+name: Verify BEXENTRA Real Transaction Details
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/src/tx-lookup.js'
+      - 'cloudflare/test/tx-lookup.test.mjs'
+      - 'public/explorer.js'
+      - '.github/workflows/verify-real-transaction-details.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check client JavaScript syntax
+        run: node --check public/explorer.js
+      - name: Check Cloudflare Worker source syntax
+        run: node --check cloudflare/src/tx-lookup.js
+      - name: Test verified receipt and transaction data
+        run: node --test cloudflare/test/tx-lookup.test.mjs
