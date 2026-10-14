@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v65-compact-category-mobile";
+const CACHE="bexentra-shell-v66-category-compact-viewport";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -6,7 +6,7 @@ const SHELL=[
  "./public/reference-match.css?v=1","./public/mobile-layout-stability.css?v=1","./public/orbit-globe.svg","./public/neon-icons.svg",
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2","./public/tx-detail-help.css?v=1",
- "./public/detail-nav-rescue.css?v=1","./public/category-view.css?v=2","./public/result-clarity.css?v=1","./public/visitor-guide.css?v=1",
+ "./public/detail-nav-rescue.css?v=1","./public/category-view.css?v=3","./public/result-clarity.css?v=1","./public/visitor-guide.css?v=1",
  "./public/preferences.js?v=9","./public/search-input.js?v=1",
  "./public/app.js?v=43","./public/explorer.js?v=42",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
