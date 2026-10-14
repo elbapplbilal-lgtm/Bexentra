@@ -163,7 +163,7 @@ function txMetrics(t){
   [easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)]
  ];
  if(chain==="bnb"){
-  result.splice(3,0,[easy("BNB المرسلة مباشرة","Direct BNB value"),
+  result.splice(3,0,[easy("قيمة BNB في المعاملة","BNB transaction value"),
    nativeAmount(t.native_value_wei)]);
   result.push([easy("الغاز المستعمل","Gas used"),t.gas_used!=null?easyCount(t.gas_used):easy("غير متوفر","Unavailable")]);
   result.push([easy("سعر الغاز","Gas price"),t.gas_price_wei!=null
@@ -177,14 +177,17 @@ function txNote(t){
  ?easy("المعلومات مأخوذة من بيانات شبكة أو من فهرس مع تحقق مباشر.","Data originates from RPC or from indexed data enhanced with live verification.")
  :easy("بعض البيانات من فهرس BEXENTRA الجزئي وقد لا تكون جميع التفاصيل متوفرة.","Some data comes from the partial BEXENTRA index.");
  if(chain!=="bnb")return source;
+ if(t.status==="failed"&&isDecimal(t.native_value_wei))return easy(
+  "المعاملة فشلت؛ قيمة BNB المرفقة بطلب المعاملة لا تعني حدوث تحويل ناجح. ",
+  "Execution failed: the BNB value specified in the transaction is not a successful transfer. ")+source;
  if(t.native_value_wei===null||t.native_value_wei===undefined)return easy(
   "القيمة المحوّلة غير متاحة من المصدر الحالي. لا يمكن اعتبارها صفرًا. ",
   "Transfer value is unavailable; this must not be treated as zero. ")+source;
  return t.native_value_wei==="0"
  ?easy("قيمة BNB المباشرة تساوي صفراً، لكن قد تتضمن العملية تحويل توكنات أو تفاعلاً مع عقد ذكي. ",
        "Direct BNB value is zero, but token transfers or smart-contract interactions may still be present. ")+source
- :easy("القيمة المذكورة هي BNB المباشرة ولا تشمل تحويلات التوكنات المحتملة. ",
-        "This is the direct BNB value and does not include any token transfers. ")+source;
+ :easy("القيمة المذكورة هي قيمة BNB المرفقة بالمعاملة، ولا تشمل تحويلات التوكنات أو صافي الرصيد النهائي. ",
+        "This is the BNB amount attached to the transaction, not the net balance change or token transfers. ")+source;
 }
 function paintTx(t){
  finish(tr("details.txTitle"),t.source==="rpc_block_verified"?tr("details.blockVerifiedSource"):
@@ -197,7 +200,7 @@ function paintTx(t){
   row(tr("details.from"),t.sender||"—",!!t.sender),
   row(tr("details.to"),t.recipient||"—",!!t.recipient),
   ...(chain==="bnb"?[
-   row(easy("BNB المرسلة مباشرة","Direct BNB value"),nativeAmount(t.native_value_wei)),
+   row(easy("قيمة BNB في المعاملة","BNB transaction value"),nativeAmount(t.native_value_wei)),
    row(easy("الغاز المستعمل","Gas used"),t.gas_used??easy("غير متوفر","Unavailable")),
    row(easy("حد الغاز","Gas limit"),t.gas_limit??easy("غير متوفر","Unavailable")),
    row(easy("سعر الغاز","Gas price"),t.gas_price_wei!=null?nativeAmount(t.gas_price_wei,"Gwei",9):easy("غير متوفر","Unavailable")),
