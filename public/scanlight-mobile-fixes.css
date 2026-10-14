@@ -1,0 +1,128 @@
+/* BEXENTRA ScanLight screenshot corrections; visual only, home page on light theme */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy p,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy p *,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy h1,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-overline,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .trust-pills>span{
+ text-shadow:none!important;filter:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy p{
+ color:#55677b!important;font-weight:500!important;line-height:1.75!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-overline .signal-dot{box-shadow:none!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search input{
+ font-weight:500!important;text-shadow:none!important;filter:none!important;
+ min-width:0!important;text-overflow:ellipsis!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search button{
+ gap:5px!important;min-width:0!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid{align-items:stretch!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a{
+ min-width:0!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a div{min-width:0!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a small{overflow-wrap:anywhere!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .stats-card .section-title{
+ display:flex!important;justify-content:space-between!important;align-items:center!important;
+ flex-wrap:wrap!important;gap:8px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #quickRefresh{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ gap:5px!important;flex:0 0 auto!important;padding:7px 11px!important;
+ min-height:36px!important;border:1px solid #cfe2f0!important;border-radius:9px!important;
+ color:#0877b2!important;background:#edf7fc!important;box-shadow:none!important;
+ font:750 12px/1.5 Cairo,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #quickRefresh .ui-icon{
+ width:16px!important;height:16px!important;
+}
+/* Draw the menu in front of the sticky header and keep links compact and reachable. */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu{
+ position:fixed!important;top:0!important;right:0!important;
+ width:min(310px,83vw)!important;max-width:calc(100vw - 40px)!important;
+ height:100dvh!important;max-height:100dvh!important;
+ overflow-y:auto!important;overscroll-behavior:contain!important;
+ padding:15px 13px calc(18px + env(safe-area-inset-bottom))!important;
+ gap:6px!important;background:#fff!important;
+ border-inline-start:1px solid #e4eaf1!important;
+ z-index:160!important;box-shadow:-8px 0 30px #193b5d2b!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu-head{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ margin:0 0 10px!important;padding:2px 2px 12px!important;
+ border-bottom:1px solid #e5ebf2!important;color:#233749!important;font-size:14px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu-head button{
+ display:grid!important;place-items:center!important;
+ width:36px!important;height:36px!important;background:#f2f7fb!important;
+ color:#2b506d!important;border:1px solid #dce6ee!important;border-radius:9px!important;
+ font-size:21px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu>a,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu>.menu-settings-entry{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ box-sizing:border-box!important;width:100%!important;
+ min-height:48px!important;height:auto!important;max-height:none!important;
+ flex:0 0 auto!important;margin:0!important;padding:9px 12px!important;
+ color:#31495e!important;background:#fff!important;
+ border:1px solid #e2e8ef!important;border-radius:10px!important;
+ box-shadow:none!important;text-shadow:none!important;
+ font:750 14px/1.5 Cairo,sans-serif!important;text-align:start!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu>a:hover,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu>.menu-settings-entry:hover{
+ background:#eef7fc!important;border-color:#b9d9ef!important;color:#0977ae!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu>.menu-settings-entry .ui-icon{
+ width:19px!important;height:19px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .mobile-menu p{
+ margin:16px 3px 0!important;padding-top:13px!important;
+ border-top:1px solid #e5edf4!important;color:#75879c!important;
+ font-size:11px!important;line-height:1.75!important;text-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .menu-backdrop{
+ z-index:150!important;background:#14334e66!important;backdrop-filter:blur(2px)!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .settings-overlay{z-index:190!important}
+@media(max-width:420px){
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .app-header{
+  height:59px!important;min-height:59px!important;padding-inline:9px!important;gap:4px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .menu-button{
+  width:35px!important;height:36px!important;flex-basis:35px!important;padding:7px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .network-pill{
+  height:36px!important;padding-inline:6px!important;gap:4px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .network-pill select{
+  width:77px!important;max-width:77px!important;font-size:10px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .brand-name{
+  font-size:clamp(12px,3.55vw,16px)!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .brand-logo{
+  width:36px!important;height:36px!important;flex-basis:36px!important;font-size:19px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-card{padding:16px 12px!important}
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy h1{font-size:clamp(22px,6.3vw,27px)!important}
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-copy p{
+  font-size:12px!important;line-height:1.7!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search{
+  grid-template-columns:minmax(0,1fr) 104px!important;gap:4px!important;padding:5px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search input{
+  padding:9px 7px!important;font-size:12px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .hero-search button{
+  height:43px!important;min-height:43px!important;font-size:12px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .trust-pills>span{
+  font-size:9px!important;padding:5px 7px!important;
+ }
+ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .quick-grid>a{
+  min-height:68px!important;
+ }
+}
