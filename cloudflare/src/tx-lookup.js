@@ -51,6 +51,31 @@ async function rpc(chain,method,params,env,fetcher=fetch){
  }
  return {result:null,unavailable:unavailable&&!seenNull};
 }
+
+function baseUnits(value){
+ try{
+  if(typeof value!=='string'||!/^0x[0-9a-fA-F]+$/.test(value))return null;
+  const v=BigInt(value);
+  return v>=0n&&v<=(2n**256n-1n)?v.toString():null;
+ }catch{return null}
+}
+function txMethod(input){
+ if(typeof input!=='string'||!/^0x(?:[0-9a-fA-F]{2})*$/.test(input))return null;
+ return input.length>=10?input.slice(0,10).toLowerCase():null;
+}
+function blockchainTime(block,height,hash){
+ if(!block||safeNumber(block.number)!==height||
+   (hash&&String(block.hash||'').toLowerCase()!==hash.toLowerCase()))return null;
+ const t=safeNumber(block.timestamp);
+ return t!==null&&t>0&&t<1e11?new Date(t*1000).toISOString():null;
+}
+function verifiedGas(receipt,hash,height,blockHash){
+ const valid=receipt&&String(receipt.transactionHash||'').toLowerCase()===hash.toLowerCase()&&
+  safeNumber(receipt.blockNumber)===height&&
+  (!blockHash||!receipt.blockHash||String(receipt.blockHash).toLowerCase()===blockHash.toLowerCase());
+ return valid?receipt:null;
+}
+
 function receiptDetails(receipt,hash,txBlock,blockHash){
  const matching=receipt&&
   String(receipt.transactionHash||'').toLowerCase()===hash.toLowerCase()&&
@@ -92,11 +117,28 @@ export async function lookupBnb(hash,height,env,fetcher=fetch){
  if(txHeight===null || (height!==null&&txHeight!==height))return {
   status:404,error:'Transaction height not verified',reason:'not_verified'};
  const receipt=await rpc('bnb','eth_getTransactionReceipt',[hash],env,fetcher);
- const evidence=receiptDetails(receipt.result,hash,txHeight,blockHash);
+ const txBlockHash=BNB_HASH.test(tx.blockHash||'')?tx.blockHash
+  :BNB_HASH.test(blockHash||'')?blockHash:null;
+ const checkedReceipt=verifiedGas(receipt.result,hash,txHeight,txBlockHash);
+ const evidence=receiptDetails(checkedReceipt,hash,txHeight,txBlockHash);
+ // Block timestamp is displayed only after matching the transaction's actual block.
+ // A failed provider lookup leaves the timestamp unavailable, never inferred.
+ const blockResult=await rpc('bnb','eth_getBlockByNumber',['0x'+txHeight.toString(16),false],env,fetcher);
+ const timestamp=blockchainTime(blockResult.result,txHeight,txBlockHash);
+ const value=baseUnits(tx.value);
+ const gasLimit=baseUnits(tx.gas);
+ const gasUsed=checkedReceipt?baseUnits(checkedReceipt.gasUsed):null;
+ const price=checkedReceipt?baseUnits(checkedReceipt.effectiveGasPrice):null;
+ const nonce=safeNumber(tx.nonce);
+ const txIndex=safeNumber(tx.transactionIndex);
  return {status:200,data:{
   chain:'bnb',tx_hash:tx.hash,block_height:txHeight,
+  block_hash:txBlockHash,block_time:timestamp,
   sender:tx.from||null,recipient:tx.to||null,
   status:evidence.status,fee_native:evidence.fee_native,
+  native_value_wei:value,gas_used:gasUsed,gas_limit:gasLimit,
+  gas_price_wei:price,nonce,transaction_index:txIndex,
+  method_id:txMethod(tx.input),contract_creation:tx.to===null,
   indexed_at:null,source:verifiedInBlock?'rpc_block_verified':'rpc_live',
   coverage:verifiedInBlock?'on_demand_block':'on_demand'
  }};
@@ -115,7 +157,12 @@ export async function lookupSolana(hash,env,fetcher=fetch){
  const execution=value.meta&&Object.prototype.hasOwnProperty.call(value.meta,'err')
   ?(value.meta.err===null?'success':'failed'):null;
  const lamports=value.meta?.fee;
+ const blockTime=safeNumber(value.blockTime);
+ const time=blockTime!==null&&blockTime>0&&blockTime<1e11
+  ?new Date(blockTime*1000).toISOString():null;
+ const compute=safeNumber(value.meta?.computeUnitsConsumed);
  return {status:200,data:{chain:'solana',tx_hash:hash,block_height:slot,
+  block_time:time,compute_units:compute,
   sender,recipient:null,status:execution,fee_native:safeNumber(lamports)===null?null:String(lamports),
   indexed_at:null,source:'rpc_live',coverage:'on_demand'}};
 }
