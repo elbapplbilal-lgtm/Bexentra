@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#020a1c">
+<meta name="theme-color" content="#f5f7fb">
 <meta name="description" content="BEXENTRA indexed blockchain detail view">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="public/icon.svg" type="image/svg+xml">
@@ -21,8 +21,9 @@
 <link rel="stylesheet" href="public/detail-nav-rescue.css?v=1">
 <link rel="stylesheet" href="public/result-clarity.css?v=3">
 <link rel="stylesheet" href="public/visitor-guide.css?v=1">
+<link rel="stylesheet" href="public/bex-scanlight-v1.css?v=1">
 </head>
-<body class="detail-page detail-v31">
+<body class="detail-page detail-v31 light-mode">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
 <header class="detail-header">
   <a class="detail-back" href="./"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#arrow"></use></svg> <span data-i18n="details.back">رجوع</span></a>
@@ -53,6 +54,26 @@
 
   <section id="detailError" class="detail-error" hidden></section>
 
+  <section id="walletProfile" class="wallet-profile" hidden aria-labelledby="walletHeading">
+    <span class="wallet-kicker">BEXENTRA · ACCOUNT EXPLORER</span>
+    <h1 id="walletHeading" data-i18n="wallet.title">تفاصيل العنوان</h1>
+    <p class="wallet-subtitle" data-i18n="wallet.subtitle">معلومات عامة للقراءة فقط من الشبكة المختارة.</p>
+    <div class="wallet-address-bar">
+      <code id="walletFullAddress" dir="ltr"></code>
+      <button id="walletCopyBtn" type="button" data-i18n="details.copy">نسخ</button>
+    </div>
+    <div class="wallet-summary-grid">
+      <div class="wallet-summary-card"><span data-i18n="wallet.native">رصيد العملة الأساسية</span><strong id="walletNativeBalance" aria-live="polite">—</strong></div>
+      <div class="wallet-summary-card"><span data-i18n="wallet.usd">القيمة بالدولار</span><strong id="walletFiatValue" data-i18n="wallet.unavailable">غير متوفرة</strong></div>
+      <div class="wallet-summary-card"><span data-i18n="wallet.holdings">حيازات الرموز</span><strong id="walletTokenHoldings" data-i18n="wallet.unavailable">غير متوفرة</strong></div>
+    </div>
+    <p class="wallet-info" id="walletSourceNote" data-i18n="wallet.note">الرصيد يأتي من RPC إذا توفر. تقييم الدولار وحيازات التوكنات غير محسوبين، والنشاط المفهرس ليس التاريخ الكامل.</p>
+  </section>
+  <nav id="walletTabs" class="wallet-tabs" aria-label="أقسام العنوان" hidden>
+    <a href="#addressActivity" data-i18n="wallet.tabTransactions">المعاملات المفهرسة</a>
+    <a id="walletTokenTab" href="#tokenActivity" data-i18n="wallet.tabTransfers">تحويلات BEP-20</a>
+    <a href="#detailOverview" data-i18n="wallet.tabInfo">مزيد من المعلومات</a>
+  </nav>
   <section id="simpleResult" class="simple-result" aria-live="polite" hidden></section>
 
   <details id="detailEducation" class="visitor-guide" hidden>
@@ -112,9 +133,9 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=9" defer></script>
+<script src="public/preferences.js?v=10" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
-<script src="public/explorer.js?v=45" defer></script>
+<script src="public/explorer.js?v=46" defer></script>
 </body>
 </html>
