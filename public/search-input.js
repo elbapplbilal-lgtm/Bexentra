@@ -6,6 +6,7 @@
  const solAddr=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
  const solTx=/^[1-9A-HJ-NP-Za-km-z]{70,100}$/;
  function normalize(raw,chain,forced="auto"){
+  if(!["bnb","solana"].includes(chain))return {error:"wrongNetwork"};
   let q=String(raw??"").trim(),type=forced;
   if(!q)return {error:"empty"};
   if(q.length>500)return {error:"invalid"};
@@ -29,7 +30,8 @@
    else if(chain==="solana"&&solAddr.test(q))type="address";
    else type="tx";
   }
-  if(type==="block"&&!/^[0-9]+$/.test(q))return {error:"invalid"};
+  if(type==="block"&&(!/^[0-9]{1,16}$/.test(q)||
+      !Number.isSafeInteger(Number(q))))return {error:"invalid"};
   if(chain==="bnb"){
    if(type==="address"&&!bnbAddr.test(q))return {error:"invalid"};
    if(type==="tx"&&!bnbTx.test(q))return {error:"invalid"};
