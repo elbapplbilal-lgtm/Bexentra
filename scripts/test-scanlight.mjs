@@ -15,8 +15,8 @@ for(const id of ["detailSearch","detailInput","detailFields","addressFeed","toke
 assert(home.includes('bex-scanlight-v1.css?v=2')&&detail.includes('bex-scanlight-v1.css?v=2'));
 assert(home.includes("bex-scanlight light-mode"));
 assert(detail.includes('href="public/explorer.js?v=46"')===false); // Script, not stylesheet
-assert(detail.includes('src="public/explorer.js?v=46"'));
-assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=46"));
+assert(detail.includes('src="public/explorer.js?v=47"'));
+assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=47"));
 assert(css.includes("bex-scanlight.light-mode:not(.category-view)"));
 assert(css.includes("bex-address-layout.light-mode"));
 assert(css.includes(".wallet-tabs[hidden]"));
