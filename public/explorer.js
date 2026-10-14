@@ -303,6 +303,31 @@ function renderTokenOnlySummary(t,transfers){
   easy("الكمية الخام ماشي بالضرورة عدد التوكنات الحقيقي؛ خاص decimals ديال التوكن.",
        "Raw amount must be adjusted by token decimals before interpreting the token quantity."));
 }
+/* BEXENTRA wallet summary uses on-chain values only.
+   The USD value and token holdings remain unavailable until real providers exist. */
+function prepareWalletProfile(address){
+ const profile=$("walletProfile");
+ if(!profile)return;
+ profile.hidden=false;
+ $("walletTabs").hidden=false;
+ $("walletTokenTab").hidden=chain!=="bnb";
+ $("walletFullAddress").textContent=address;
+ $("walletCopyBtn").onclick=()=>copyText(address,$("walletCopyBtn"));
+ $("walletNativeBalance").textContent=tr("wallet.loading");
+ $("walletFiatValue").textContent=tr("wallet.unavailable");
+ $("walletTokenHoldings").textContent=tr("wallet.unavailable");
+ $("walletSourceNote").textContent=tr("wallet.note");
+}
+function setVerifiedWalletBalance(address,value){
+ if(!value||value.chain!==chain||value.source!=="rpc_live"||
+  typeof value.address!=="string"||value.address.toLowerCase()!==address.toLowerCase()||
+  !isDecimal(value.native_balance))return false;
+ $("walletNativeBalance").textContent=nativeAmount(value.native_balance,
+  chain==="bnb"?"BNB":"SOL",chain==="bnb"?18:9);
+ $("walletSourceNote").textContent=tr("wallet.balanceVerified")+" "+tr("wallet.note");
+ return true;
+}
+
 function renderAddressSummary(address,count,balance=null){
  const items=[
  [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
@@ -321,6 +346,7 @@ function renderAddressSummary(address,count,balance=null){
     "Index coverage is partial, not a full history. Native balance is a point-in-time reading and excludes token balances."));
 }
 function showSearchWelcome(){
+ $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("detailLoading").hidden=true;$("detailError").hidden=true;$("detailOverview").hidden=true;
  $("addressActivity").hidden=true;$("tokenActivity").hidden=true;
  $("detailTitle").textContent=easy("استكشف البلوكتشين","Explore the blockchain");
@@ -338,6 +364,7 @@ function showSearchWelcome(){
 }
 
 function showError(msg,title){
+ $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("simpleResult").hidden=true;
  const g=$("detailEducation");if(g)g.hidden=true;
  $("detailLoading").hidden=true;
@@ -358,7 +385,7 @@ function showError(msg,title){
   actions.append(retry,verify);$("detailError").append(actions);
  }
 }
-function start(title){$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function start(title){$("walletProfile").hidden=true;$("walletTabs").hidden=true;$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function showProvenance(source){
  const live=source==="rpc_live"||source==="indexed_plus_rpc"||source==="rpc_block_verified";
  const title=$("detailSideTitle"),message=$("detailSideText");
@@ -567,14 +594,18 @@ async function loadAddress(){
   row(easy("التغطية","Coverage"),easy("فهرس جزئي","Partial index"))
  ],query,"address");
  $("addressActivity").hidden=false;$("addressFeed").replaceChildren();
+ prepareWalletProfile(query);
  insertWalletPage(data,query);
  if(!walletCount)$("addressFeed").textContent=tr("details.noActivity");
  offerMoreWallet(query);
  const address=query,network=chain;
  void request("/balance",{chain:network,address}).then(b=>{
   if(query!==address||chain!==network||b.chain!==network||b.source!=="rpc_live")return;
+  if(!setVerifiedWalletBalance(address,b))return;
   walletBalance=b;renderAddressSummary(address,walletCount,b);
- }).catch(()=>{});
+ }).catch(()=>{
+  if(query===address&&chain===network)$("walletNativeBalance").textContent=tr("wallet.balanceFailed");
+ });
  if(chain==="bnb")void loadTokenTransfers(address);
 }
 function showSearchError(error){
@@ -582,12 +613,16 @@ function showSearchError(error){
  showError(message,tr("details.lookupErrorTitle"));
 }
 async function load(){
- if(!query.trim()){showSearchWelcome();return}
+ if(!query.trim()){
+  document.body.classList.toggle("bex-address-layout",type==="address");
+  showSearchWelcome();return;
+ }
  const parsed=window.BexentraSearch?.normalize(query,chain,type);
  if(!parsed){showSearchError("invalid");return}
  if(parsed.error){showSearchError(parsed.error);return}
  query=parsed.value;
  type=parsed.type;
+ document.body.classList.toggle("bex-address-layout",type==="address");
  $("detailInput").value=query;
  $("detailKicker").replaceChildren(document.createElement("i"),document.createTextNode(" "+type.toUpperCase()+" · BEXENTRA"));
  try{
