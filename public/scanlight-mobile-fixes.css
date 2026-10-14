@@ -126,3 +126,45 @@ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .settin
   min-height:68px!important;
  }
 }
+
+
+/* ScanLight v2: readable on-chain results on white backgrounds. */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #recentBlocks .reference-row .feed-side{
+ background:#eaf4fe!important;color:#174870!important;
+ border:1px solid #bddcf2!important;box-shadow:none!important;
+ font-weight:800!important;text-shadow:none!important;opacity:1!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #recentTransactions .reference-row .feed-side:not(.feed-failed):not(.feed-unconfirmed){
+ background:#e6f7ef!important;color:#126345!important;
+ border:1px solid #b9e6d1!important;box-shadow:none!important;
+ text-shadow:none!important;font-weight:800!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #recentTransactions .reference-row .feed-side.feed-failed{
+ background:#fff0f2!important;color:#a42a48!important;
+ border:1px solid #efc5d0!important;box-shadow:none!important;font-weight:800!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) #recentTransactions .reference-row .feed-side.feed-unconfirmed{
+ background:#fff8e6!important;color:#895b13!important;
+ border:1px solid #e7d4a8!important;box-shadow:none!important;font-weight:800!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-row.reference-row{
+ border-top:1px solid #e6edf4!important;border-bottom:0!important;background:#fff!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row .feed-main a,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row .feed-main b{
+ color:#1b3955!important;text-shadow:none!important;filter:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row .feed-main small{
+ color:#6b7b8c!important;text-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-row .feed-icon,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .data-icon{
+ background:#eef6fe!important;color:#0879b9!important;
+ border:1px solid #d4e6f4!important;box-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-row .feed-icon .ui-icon,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .data-icon .ui-icon{
+ color:#0879b9!important;filter:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-chevron{color:#708aa4!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .feed-chevron .ui-icon{filter:none!important}
