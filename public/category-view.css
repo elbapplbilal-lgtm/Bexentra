@@ -214,3 +214,140 @@ body.bex-home.neon-fidelity.light-mode .category-intro h1{color:#f8fcff}
  }
  body.bex-home.neon-fidelity.category-view .reference-row .feed-side {max-width: 85px !important}
 }
+
+/* v3: extra compact visitor layout. Also applies to wider CSS mobile viewports,
+   which some Android browser display/zoom configurations report as >600px. */
+@media (max-width: 820px) {
+ body.bex-home.neon-fidelity.category-view .app-header {
+   height: 54px !important;
+   padding: 0 8px !important;
+   gap: 5px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .menu-button {
+   height: 35px !important; width: 35px !important; flex-basis: 35px !important;
+   padding: 6px !important; border-radius: 11px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .menu-button .ui-icon {
+   width: 21px !important; height: 21px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .network-pill {
+   height: 35px !important; padding-inline: 6px !important;
+   gap: 4px !important; border-radius: 11px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .network-logo {
+   width: 18px !important; height: 18px !important; flex-basis: 18px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .network-pill select {
+   width: 83px !important; max-width: 83px !important; font-size: 10.5px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .brand-name {
+   font-size: clamp(12px,3.5vw,16px) !important;
+ }
+ body.bex-home.neon-fidelity.category-view .brand-logo {
+   width: 34px !important; height: 34px !important; flex-basis: 34px !important;
+   border-radius: 11px !important; font-size: 19px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .app-shell {
+   padding-top: 8px !important; padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+ }
+ body.bex-home.neon-fidelity.category-view .category-intro {
+   display: block !important;
+   padding: 12px 12px 13px !important;
+   margin: 0 0 8px !important; border-radius: 15px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .category-eyebrow {
+   font-size: 9px !important; line-height: 1.35 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .category-intro h1 {
+   font-size: clamp(20px,5.2vw,24px) !important;
+   line-height: 1.25 !important; margin: 8px 0 2px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .category-intro p {
+   font-size: clamp(11px,2.7vw,12px) !important;
+   line-height: 1.5 !important; margin: 3px 0 0 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .category-intro .category-meta {
+   padding: 5px 9px !important; margin-top: 8px !important;
+   font-size: 10px !important; line-height: 1.4 !important; border-radius: 15px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide {
+   margin: 8px 0 !important; border-radius: 14px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide>summary {
+   min-height: 41px !important; padding: 7px 10px !important;
+   gap: 6px !important; font-size: clamp(11px,2.8vw,13px) !important;
+   line-height: 1.45 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-chevron {
+   font-size: 16px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-body {
+   padding: 9px 11px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-steps {
+   gap: 7px !important; margin: 9px 0 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-steps li {
+   padding: 8px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-body>p,
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-steps p {
+   font-size: 11px !important; line-height: 1.6 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .visitor-guide .guide-steps h3 {
+   font-size: 12px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-card {
+   padding: 8px !important; border-radius: 15px !important;
+   margin-top: 8px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-head {
+   min-height: 28px !important; padding-bottom: 5px !important; margin-bottom: 2px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-head h2 {
+   font-size: 15px !important; line-height: 1.35 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-icon {
+   width: 27px !important; height: 27px !important; flex-basis: 27px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-icon .ui-icon {
+   width: 18px !important; height: 18px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .data-head button {
+   min-height: 29px !important; font-size: 10px !important; padding: 4px 8px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .feed-row.reference-row {
+   grid-template-columns: 28px minmax(0,1fr) auto 12px !important;
+   min-height: 39px !important; padding: 4px 2px !important; gap: 5px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .feed-row .feed-icon {
+   width: 27px !important; height: 27px !important; border-radius: 8px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .feed-row .feed-icon .ui-icon {
+   width: 18px !important; height: 18px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .reference-row .feed-main a {
+   font-size: 12px !important; line-height: 1.4 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .reference-row .feed-main small {
+   font-size: 10px !important; line-height: 1.4 !important;
+ }
+ body.bex-home.neon-fidelity.category-view .reference-row .feed-side {
+   max-width: 93px !important; padding: 4px 6px !important; font-size: 10px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .bottom-nav {
+   height: calc(57px + env(safe-area-inset-bottom)) !important;
+   min-height: 57px !important;
+   bottom: 5px !important;
+   padding: 3px !important; border-radius: 16px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .bottom-nav>a {
+   gap: 2px !important; padding: 2px 1px !important; border-radius: 11px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .bottom-nav a .ui-icon {
+   width: 20px !important; height: 20px !important;
+ }
+ body.bex-home.neon-fidelity.category-view .bottom-nav a b {
+   font-size: clamp(10px,2.5vw,11px) !important; line-height: 1.2 !important;
+ }
+}
