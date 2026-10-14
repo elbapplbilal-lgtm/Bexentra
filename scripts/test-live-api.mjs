@@ -27,6 +27,8 @@ function makeHandler({rpc,dbRows={}}){
   const body=JSON.parse(init.body);
   rpcCalls.push({method:body.method,chain:String(url).includes("solana")?"solana":"bnb"});
   if(rpc.fail)throw Error("Mock provider unavailable");
+  if(rpc.solanaPrimaryUnavailable&&String(url).includes("api.mainnet-beta.solana.com"))
+   throw Error("Primary public Solana RPC rate-limited");
   const result=rpc[body.method];
   if(result===undefined)throw Error("Mock lacks "+body.method);
   return new Response(JSON.stringify({jsonrpc:"2.0",id:1,result}),{
@@ -278,6 +280,19 @@ await scenario("Indexed address cursor remains stable across same-height transac
  assert(sql.sql.includes("block_height<$3"));
  assert(sql.sql.includes("lower(tx_hash)<$4"));
  assert.equal(sql.args[4],3);
+});
+
+await scenario("Solana retries on secondary public RPC when primary is rate-limited",async()=>{
+ const h=makeHandler({rpc:{solanaPrimaryUnavailable:true,
+  getTransaction:{slot:12345,blockTime:1790960000,
+   meta:{err:null,fee:5000},transaction:{message:{accountKeys:[solSignature.slice(0,44)]}}}
+ }});
+ const r=await h.request("/tx?chain=solana&hash="+solSignature);
+ assert.equal(r.status,200);
+ assert.equal(r.data.status,"success");
+ assert.equal(r.data.fee_native,"5000");
+ assert.equal(r.data.block_time,new Date(1790960000*1000).toISOString());
+ assert.equal(h.rpcCalls.filter(x=>x.method==="getTransaction").length,2);
 });
 
 console.log("BEXENTRA live API:",passed,"scenarios passed");
