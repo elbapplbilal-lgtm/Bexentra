@@ -1,0 +1,67 @@
+:root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color-scheme:dark;background:#06112c;color:#ecf5ff}
+*{box-sizing:border-box}
+body.watchlist-page{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 10%,#083f85 0%,transparent 44%),radial-gradient(ellipse at 92% 2%,#04576c 0%,transparent 39%),linear-gradient(155deg,#071733,#040c20 90%);line-height:1.65}
+a{color:inherit;text-decoration:none}button,select,input{font:inherit}button,select{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #56d7ff;outline-offset:3px}
+.watch-header{max-width:1050px;margin:0 auto;display:flex;align-items:center;gap:18px;justify-content:space-between;min-height:76px;padding:12px 20px;border-bottom:1px solid #72c8ff2a}
+.watch-brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:900;letter-spacing:.08em}
+.watch-brand img{object-fit:contain;filter:drop-shadow(0 0 9px #1799ff)}
+.watch-header nav{display:flex;gap:16px;font-size:13px;color:#c9e6fa}
+.watch-header a:hover{color:#6cdbff}
+.language-label{display:flex;flex-direction:column;color:#bcd3eb;font-size:10px;gap:2px}
+.language-label select{color:#fff;background:#152d57;border:1px solid #409be3;border-radius:10px;padding:5px 7px;max-width:115px}
+.watch-shell{max-width:960px;margin:auto;padding:20px 16px 58px}
+.watch-hero{margin:16px 0 20px;padding:27px clamp(16px,4vw,38px);border:1px solid #38b5fa79;border-radius:22px;background:linear-gradient(115deg,#0f376aef,#071a3edb 70%);box-shadow:0 0 36px #006bda35,inset 0 1px #9fd9ff3a}
+.watch-overline{font-size:11px;letter-spacing:.12em;color:#66e5ff;font-weight:800}
+.watch-hero h1{font-size:clamp(28px,5vw,43px);margin:6px 0 8px;color:#fff}
+.watch-hero p{margin:0;color:#cbddf6;font-size:15px}
+.watch-privacy{margin-top:18px;border-radius:12px;background:#02112b91;padding:11px 13px;color:#bbdcf2;font-size:12px}
+.watch-panel{border:1px solid #3c84c36d;background:#0d2144c9;box-shadow:0 12px 40px #0000001b;border-radius:18px;margin-bottom:16px;padding:18px}
+.watch-panel h2{font-size:18px;margin:0 0 13px}
+#watchForm{display:grid;grid-template-columns:150px minmax(0,1fr) 165px auto;gap:10px;align-items:end}
+#watchForm label{display:flex;flex-direction:column;min-width:0;color:#bed7f5;font-size:12px;gap:4px}
+#watchForm select,#watchForm input{width:100%;background:#07152e;border:1px solid #3f83bb;border-radius:11px;color:#fff;min-height:43px;padding:9px 10px;font-size:13px}
+#watchForm input::placeholder{color:#859bb4}
+#watchForm button,.watch-section-header button{border:1px solid #42bbff;border-radius:11px;background:linear-gradient(125deg,#0072ff,#079fdc);color:white;font-weight:800;font-size:12px;padding:10px 16px;min-height:43px;box-shadow:0 0 13px #0088ff60}
+button:disabled{opacity:.5;cursor:not-allowed}
+.watch-message{min-height:1.2em;margin:10px 0 0;color:#80daff;font-size:12px}
+.watch-message.error,.watch-status.error{color:#ffbdc8}
+.watch-section-header{display:flex;gap:14px;align-items:center;justify-content:space-between}
+.watch-section-header h2{margin:0}.watch-section-header p{margin:0;color:#a2bed9;font-size:11px}
+.watch-section-header button{flex-shrink:0}
+.watch-list{display:grid;gap:11px;margin-top:15px}
+.watch-empty{padding:35px 14px;text-align:center;border:1px dashed #4382b7;border-radius:15px;color:#b9d6ec}
+.watch-card{padding:15px;border:1px solid #4389c770;border-radius:14px;background:linear-gradient(135deg,#102c55,#071936);min-width:0}
+.watch-card-top{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.watch-card-title{display:flex;align-items:center;gap:10px;min-width:0}
+.watch-chain-icon{width:35px;height:35px;object-fit:contain;padding:5px;background:#031933;border:1px solid #2c6eab;border-radius:10px}
+.watch-card-name{min-width:0;font-weight:900;font-size:14px}
+.watch-card-address{display:block;max-width:100%;font-size:11px;color:#9bc2e7;overflow-wrap:anywhere;direction:ltr;text-align:start}
+.watch-chain-tag{font-size:11px;font-weight:800;color:#6fe4fb;flex-shrink:0}
+.watch-card-balance{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font-size:23px;font-weight:800;margin:12px 0 1px;direction:ltr;justify-content:flex-end}
+.watch-card-balance span{color:#7ddbf8;font-size:14px}
+.watch-status{color:#a5c4de;font-size:11px;margin:2px 0 12px}
+.watch-actions{display:flex;gap:8px;flex-wrap:wrap}
+.watch-actions button,.watch-actions a{min-height:37px;padding:8px 10px;border-radius:9px;background:#143b64;border:1px solid #478ab2;color:#eaf7ff;font-size:11px;font-weight:700}
+.watch-actions .watch-remove{background:#4b1a34;border-color:#ae5a7b}
+.watch-actions button:hover,.watch-actions a:hover{filter:brightness(1.2)}
+.watch-shell footer{padding:8px 4px 0;font-size:12px;color:#9bb8d6}
+.watch-shell footer a{color:#6cdbff;font-weight:800}.watch-shell footer p{margin:0 0 12px}
+@media(max-width:760px){
+.watch-header{min-height:64px;padding:9px 12px;gap:8px}
+.watch-brand{font-size:13px;gap:5px}
+.watch-brand img{width:31px;height:31px}
+.watch-header nav{gap:7px;font-size:11px}
+.language-label select{max-width:89px;font-size:11px}
+#watchForm{grid-template-columns:1fr 1fr}
+#watchForm .watch-address-field{grid-column:1/-1;grid-row:2}
+#watchForm .watch-label-field{grid-column:1/-1;grid-row:3}
+#watchForm button{grid-column:1/-1;grid-row:4}
+.watch-shell{padding:12px 10px 32px}
+.watch-hero{margin:8px 0 13px;padding:20px 14px}
+.watch-panel{padding:13px}
+.watch-card-balance{font-size:20px}
+.watch-card-top{align-items:flex-start}
+.watch-chain-tag{font-size:10px}
+}
+@media(prefers-reduced-motion:no-preference){.watch-card,.watch-panel{transition:border-color .2s}.watch-card:hover{border-color:#46c8ff}}
