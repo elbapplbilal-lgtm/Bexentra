@@ -229,3 +229,8 @@ assert(detail.includes('id="detailMenuNetwork"'));
 assert(sw.includes('bexentra-shell-v91-compact-menu-search'));
 for(const translationKey of ["searchTitle","searchPlaceholder","searchNetwork","searchNote"])
  assert.equal(prefs.split('"bnav.'+translationKey+'":').length,3);
+
+assert(!home.includes('<i class="network-live"></i>'),"Green BNB network status dot must be hidden");
+assert(home.includes('<select id="network" aria-label="الشبكة">'),"Network selector must stay functional");
+assert(home.includes('id="networkIcon"'),"Keep the real BNB icon");
+assert(sw.includes('bexentra-shell-v92-no-network-dot'));

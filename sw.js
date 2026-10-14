@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v91-compact-menu-search";
+const CACHE="bexentra-shell-v92-no-network-dot";
 const SHELL=[
  "./","./index.html","./explorer.html","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=1","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
