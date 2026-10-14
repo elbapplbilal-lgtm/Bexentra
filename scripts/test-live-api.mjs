@@ -188,4 +188,43 @@ await scenario("Solana on-demand tx verifies fee and status",async()=>{
  assert.equal(res.data.fee_native,"5000");
 });
 
+
+await scenario("BNB RPC returns real value, timestamp, gas, method and nonce",async()=>{
+ const tx={...exampleTx,blockHash:block.hash,value:"0x2386f26fc10000",
+  gas:"0x186a0",nonce:"0x3",transactionIndex:"0x2",input:"0xa9059cbb"};
+ const h=makeHandler({rpc:{eth_getTransactionByHash:tx,
+  eth_getTransactionReceipt:{...receipt,blockHash:block.hash},
+  eth_getBlockByNumber:block}});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash);
+ assert.equal(res.data.native_value_wei,"10000000000000000");
+ assert.equal(res.data.gas_used,"21000");
+ assert.equal(res.data.gas_price_wei,"1000000000");
+ assert.equal(res.data.method_id,"0xa9059cbb");
+ assert.equal(res.data.nonce,3);
+ assert.equal(res.data.block_time,new Date(Number(BigInt(block.timestamp))*1000).toISOString());
+});
+await scenario("Missing value and mismatched receipt leave fields unverified",async()=>{
+ const tx={...exampleTx,blockHash:block.hash,value:undefined};
+ const mismatch={...receipt,blockHash:"0x"+"9".repeat(64)};
+ const h=makeHandler({rpc:{eth_getTransactionByHash:tx,
+  eth_getTransactionReceipt:mismatch,eth_getBlockByNumber:{...block,hash:mismatch.blockHash}}});
+ const res=await h.request("/tx?chain=bnb&hash="+receiptHash);
+ assert.equal(res.data.status,null);
+ assert.equal(res.data.gas_used,null);
+ assert.equal(res.data.block_time,null);
+ assert.equal(res.data.native_value_wei,null);
+});
+await scenario("Invalid BNB/Solana hash address and limits avoid RPC",async()=>{
+ const h=makeHandler({rpc:{}});
+ for(const url of [
+  "/tx?chain=solana&hash=invalid",
+  "/address?chain=bnb&address=0x123",
+  "/address?chain=solana&address=invalid***",
+  "/block?chain=bnb&height=999999999999999999",
+  "/live?chain=bnb&limit=9999",
+  "/transactions?chain=bnb&limit=-1"
+ ])assert.equal((await h.request(url)).status,400,url);
+ assert.equal(h.rpcCalls.length,0);
+});
+
 console.log("BEXENTRA live API:",passed,"scenarios passed");
