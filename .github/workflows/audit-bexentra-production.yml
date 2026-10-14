@@ -1,0 +1,21 @@
+name: Audit BEXENTRA Production API & Safety
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-production.mjs'
+      - '.github/workflows/audit-bexentra-production.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Audit BNB/Solana data, wallet lookup, errors, and origin safety
+        run: node scripts/audit-production.mjs
