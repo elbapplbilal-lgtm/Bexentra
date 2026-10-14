@@ -164,7 +164,11 @@ try{
    await page.locator("#recentTransactions .reference-row .feed-main a").first().click();
    await page.waitForURL(/explorer\.html\?.*height=128000123/,{timeout:10000});
    await page.waitForSelector("#detailOverview:not([hidden])",{timeout:15000});
-   assert((await page.locator("#detailFields").innerText()).includes("128000123"),
+   // Wait for the asynchronous verified response instead of racing the loading UI.
+   await page.waitForFunction(()=>document.querySelector("#detailFields")?.textContent?.includes("128000123"),{timeout:3000}).catch(()=>{});
+   const txFields=await page.locator("#detailFields").innerText();
+   console.log("OBSERVED_TX_FIELDS",txFields.slice(0,900));
+   assert(txFields.includes("128000123"),
     "Observed BNB hash opens a verified on-chain-block detail instead of a false 404");
    assert(!(await page.locator("#detailFields").innerText()).includes("0 BNB"),
     "Details must not manufacture a zero fee when a matching receipt is absent");
