@@ -45,3 +45,8 @@ max-width:100vw!important;height:calc(100dvh - 59px)!important;
 padding:13px 18px calc(25px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;
 border:0!important;box-shadow:none!important;z-index:175!important}
 }
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu details.bnav-group:not([open])>.bnav-submenu,body.detail-v31.light-mode .detail-menu.bnav-menu details.bnav-group:not([open])>.bnav-submenu{display:none!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group>summary,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group>summary{font:400 14px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;min-height:48px!important;padding:9px 7px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-home,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-home,body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-settings,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-settings{font:400 14px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;min-height:46px!important;padding:8px 7px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-submenu>a,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-submenu>a{font:400 12.5px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;min-height:36px!important;padding:7px 11px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-unavailable,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-unavailable{font-size:12px!important;min-height:35px!important}
