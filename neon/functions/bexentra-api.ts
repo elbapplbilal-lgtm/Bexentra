@@ -30,6 +30,26 @@ const isoSeconds=x=>{
  const n=hexNum(x);
  return n!==null&&n>0&&n<1e11?new Date(n*1000).toISOString():null;
 };
+const BNB_HASH=/^0x[0-9a-fA-F]{64}$/;
+const SOL_SIGNATURE=/^[1-9A-HJ-NP-Za-km-z]{70,100}$/;
+const BNB_ADDRESS=/^0x[0-9a-fA-F]{40}$/;
+const SOL_ADDRESS=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+const baseWei=x=>{
+ try{return typeof x==="string"&&/^0x[0-9a-fA-F]+$/.test(x)?BigInt(x).toString():null}
+ catch{return null}
+};
+const txInputMethod=x=>typeof x==="string"&&/^0x[0-9a-fA-F]{8}/.test(x)
+ ?x.slice(0,10).toLowerCase():null;
+const matchingReceipt=(receipt,tx,hash,height)=>
+ receipt&&String(receipt.transactionHash||"").toLowerCase()===hash.toLowerCase()&&
+ hexNum(receipt.blockNumber)===height&&
+ (!tx.blockHash||!receipt.blockHash||String(receipt.blockHash).toLowerCase()===String(tx.blockHash).toLowerCase());
+const blockTimestamp=(block,tx,height)=>{
+ if(!block||hexNum(block.number)!==height||
+   (tx.blockHash&&String(tx.blockHash).toLowerCase()!==String(block.hash||"").toLowerCase()))
+   return null;
+ return isoSeconds(block.timestamp);
+};
 const weiAmount=(gas,price)=>{
  try{
   const g=BigInt(gas),p=BigInt(price);
@@ -140,32 +160,43 @@ async function indexedFallback(chain,limit){
 async function networkTransaction(chain,hash){
  if(chain==="bnb"){
   const tx=await chainRpc("bnb","eth_getTransactionByHash",[hash],{retryNull:true});
-  if(!tx||typeof tx.hash!=="string")return null;
+  if(!tx||!BNB_HASH.test(tx.hash||"")||tx.hash.toLowerCase()!==hash.toLowerCase())return null;
   const height=tx.blockNumber===null?null:hexNum(tx.blockNumber);
+  if(height===null)return null;
   const receipt=await chainRpc("bnb","eth_getTransactionReceipt",[hash],{retryNull:true}).catch(()=>null);
-  const verified=receipt&&String(receipt.transactionHash||"").toLowerCase()===hash.toLowerCase()
-   &&receipt.blockNumber!==null&&hexNum(receipt.blockNumber)===height;
+  const verified=matchingReceipt(receipt,tx,hash,height);
   const status=verified&&receipt.status!==undefined
    ?(hexNum(receipt.status)===1?"success":hexNum(receipt.status)===0?"failed":null):null;
   const fee=verified&&receipt.gasUsed!==undefined&&receipt.effectiveGasPrice!==undefined
    ?weiAmount(receipt.gasUsed,receipt.effectiveGasPrice):null;
-  return {chain,tx_hash:tx.hash,block_height:height,
-   sender:tx.from||null,recipient:tx.to||null,status,fee_native:fee,
+  const block=await chainRpc("bnb","eth_getBlockByNumber",["0x"+height.toString(16),false],
+   {retryNull:true}).catch(()=>null);
+  return {chain,tx_hash:tx.hash,block_height:height,block_time:blockTimestamp(block,tx,height),
+   block_hash:BNB_HASH.test(tx.blockHash||"")?tx.blockHash:null,
+   sender:BNB_ADDRESS.test(tx.from||"")?tx.from:null,
+   recipient:BNB_ADDRESS.test(tx.to||"")?tx.to:null,
+   status,fee_native:fee,native_value_wei:baseWei(tx.value),
+   gas_used:verified?baseWei(receipt.gasUsed):null,gas_limit:baseWei(tx.gas),
+   gas_price_wei:verified?baseWei(receipt.effectiveGasPrice):null,
+   method_id:txInputMethod(tx.input),nonce:hexNum(tx.nonce),
+   transaction_index:hexNum(tx.transactionIndex),contract_creation:tx.to===null,
    indexed_at:null,source:"rpc_live",coverage:"on_demand"};
  }
  const tx=await chainRpc("solana","getTransaction",[hash,{
   encoding:"json",commitment:"finalized",maxSupportedTransactionVersion:0
- }]);
+ }],{retryNull:true});
  if(!tx)return null;
  const height=hexNum(tx.slot);
- const err=tx.meta&&Object.prototype.hasOwnProperty.call(tx.meta,"err")
+ if(height===null||!tx.transaction)return null;
+ const status=tx.meta&&Object.prototype.hasOwnProperty.call(tx.meta,"err")
   ?(tx.meta.err===null?"success":"failed"):null;
  const fee=tx.meta?.fee===undefined?null:hexNum(tx.meta.fee);
  const first=tx.transaction?.message?.accountKeys?.[0];
  const sender=typeof first==="string"?first:typeof first?.pubkey==="string"?first.pubkey:null;
- return {chain,tx_hash:hash,block_height:height,sender,recipient:null,status:err,
-  fee_native:fee===null?null:String(fee),indexed_at:null,
-  source:"rpc_live",coverage:"on_demand"};
+ return {chain,tx_hash:hash,block_height:height,block_time:isoSeconds(tx.blockTime),
+  compute_units:hexNum(tx.meta?.computeUnitsConsumed),
+  sender,recipient:null,status,fee_native:fee===null?null:String(fee),
+  indexed_at:null,source:"rpc_live",coverage:"on_demand"};
 }
 // When a browser opens a hash seen in a live block, it sends the observed height.
 // If by-hash lookup isn't available yet, verify the actual transaction INSIDE that
@@ -186,9 +217,15 @@ async function bnbTransactionFromObservedBlock(hash,height){
   ?weiAmount(receipt.gasUsed,receipt.effectiveGasPrice):null;
  return {
   chain:"bnb",tx_hash:transaction.hash,block_height:height,
+  block_hash:result.record.block_hash,block_time:result.record.block_time,
   sender:transaction.from||null,recipient:transaction.to||null,
-  status,fee_native:fee,indexed_at:null,
-  source:"rpc_block_verified",coverage:"on_demand_block"
+  status,fee_native:fee,native_value_wei:baseWei(transaction.value),
+  gas_used:verified?baseWei(receipt.gasUsed):null,gas_limit:baseWei(transaction.gas),
+  gas_price_wei:verified?baseWei(receipt.effectiveGasPrice):null,
+  method_id:txInputMethod(transaction.input),nonce:hexNum(transaction.nonce),
+  transaction_index:hexNum(transaction.transactionIndex),
+  contract_creation:transaction.to===null,
+  indexed_at:null,source:"rpc_block_verified",coverage:"on_demand_block"
  };
 }
 export default async function handler(req){
@@ -197,7 +234,10 @@ export default async function handler(req){
  try{
   const u=new URL(req.url), chain=u.searchParams.get("chain")||"bnb";
   if(!chains.has(chain))return json({error:"Unsupported chain"},400);
-  const limit=Math.min(50,Math.max(1,Number(u.searchParams.get("limit"))||8));
+  const rawLimit=u.searchParams.get("limit");
+  if(rawLimit!==null&&(!/^\d{1,3}$/.test(rawLimit)||Number(rawLimit)<1||
+     Number(rawLimit)>50))return json({error:"Invalid limit (1-50)"},400);
+  const limit=rawLimit===null?8:Number(rawLimit);
   if(u.pathname.endsWith("/health")){await db().query("SELECT 1");return json({ok:true,service:"bexentra-public-api"})}
   if(u.pathname.endsWith("/live")){
    try{return json(await liveSample(chain,limit),200)}
@@ -212,7 +252,8 @@ export default async function handler(req){
   if(u.pathname.endsWith("/tx")){
    const hash=(u.searchParams.get("hash")||"").trim();
    if(!hash||hash.length>128)return json({error:"Invalid hash"},400);
-   if(chain==="bnb"&&!/^0x[0-9a-fA-F]{64}$/.test(hash))return json({error:"Invalid BNB transaction hash"},400);
+   if(!(chain==="bnb"?BNB_HASH:SOL_SIGNATURE).test(hash))
+    return json({error:"Invalid transaction hash for selected chain"},400);
    const normalized=chain==="bnb"?hash.toLowerCase():hash;
    const observedHeightRaw=u.searchParams.get("height");
    if(observedHeightRaw!==null&&(chain!=="bnb"||!/^\d{1,16}$/.test(observedHeightRaw)||
@@ -221,17 +262,14 @@ export default async function handler(req){
    const r=await db().query("SELECT * FROM indexed_transactions WHERE chain=$1 AND "+(chain==="bnb"?"lower(tx_hash)=lower($2)":"tx_hash=$2"),[chain,normalized]);
    if(r.rowCount){
     const indexed=r.rows[0];
-    if(indexed.status==="success"||indexed.status==="failed"){
-     if(indexed.fee_native!==null)return json(indexed);
-    }
-    // One-off, read-only RPC verification for partially indexed transactions.
+    // An indexed status/fee must not prevent on-demand enrichment with exact value,
+    // gas and block time. On failure, the existing indexed record is returned.
     try{
      const live=await networkTransaction(chain,normalized);
      if(live&&live.block_height===Number(indexed.block_height)){
-      return json({...indexed,
-       status:indexed.status==="success"||indexed.status==="failed"?indexed.status:live.status,
-       fee_native:indexed.fee_native??live.fee_native,
-       sender:indexed.sender||live.sender,recipient:indexed.recipient||live.recipient,
+      return json({...indexed,...live,
+       status:live.status??indexed.status,fee_native:live.fee_native??indexed.fee_native,
+       sender:live.sender||indexed.sender,recipient:live.recipient||indexed.recipient,
        source:"indexed_plus_rpc"});
      }
     }catch(e){console.warn("On-demand tx data unavailable",chain);}
@@ -269,7 +307,7 @@ export default async function handler(req){
   }
   if(u.pathname.endsWith("/block")){
    const height=u.searchParams.get("height")||"";
-   if(!/^\d+$/.test(height)||!Number.isSafeInteger(Number(height)))return json({error:"Invalid height"},400);
+   if(!/^\d{1,16}$/.test(height)||!Number.isSafeInteger(Number(height)))return json({error:"Invalid height"},400);
    const r=await db().query("SELECT * FROM indexed_blocks WHERE chain=$1 AND height=$2",[chain,height]);
    if(r.rowCount)return json(r.rows[0]);
    try{
@@ -291,8 +329,9 @@ export default async function handler(req){
   }
   if(u.pathname.endsWith("/address")){
    let address=u.searchParams.get("address")||"";
-   if(!address||address.length>128)return json({error:"Invalid address"},400);
    if(chain==="bnb"&&!address.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(address))address="0x"+address;
+   if(!(chain==="bnb"?BNB_ADDRESS:SOL_ADDRESS).test(address))
+    return json({error:"Invalid address for selected chain"},400);
    const sql=chain==="bnb"
     ?"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (lower(sender)=lower($2) OR lower(recipient)=lower($2)) ORDER BY block_height DESC LIMIT $3"
     :"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (sender=$2 OR recipient=$2) ORDER BY block_height DESC LIMIT $3";
