@@ -15,7 +15,7 @@ concurrency:
 jobs:
   index-token-transfers:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     defaults:
       run:
         working-directory: backend
@@ -38,5 +38,9 @@ jobs:
           fi
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Test Transfer event parsing before live index writes
+        run: node --test test/token-transfer-batch.test.js
       - name: Index BEP20 Transfer events
-        run: timeout --signal=TERM --kill-after=10s 245s node src/token-indexer.js || test "$?" -eq 124
+        # Give the indexer enough time to commit the current bulk batch on TERM.
+        # Non-timeout errors and forced SIGKILL must still fail the job.
+        run: timeout --signal=TERM --kill-after=30s 225s node src/token-indexer.js || test "$?" -eq 124
