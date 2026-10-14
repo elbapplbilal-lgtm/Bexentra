@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v94-wallet-watchlist";
+const CACHE="bexentra-shell-v95-wallet-offline-routing";
 const SHELL=[
  "./","./index.html","./explorer.html","./watchlist.html","./public/watchlist.css?v=1","./public/watchlist.js?v=1","./public/watchlist-utils.mjs","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=2","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -15,4 +15,40 @@ const SHELL=[
 ];
 self.addEventListener("install",event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).catch(()=>{}))});
 self.addEventListener("activate",event=>{event.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))]))});
-self.addEventListener("fetch",event=>{if(event.request.method!=="GET")return;const url=new URL(event.request.url);if(url.origin!==location.origin)return;event.respondWith(fetch(event.request).then(response=>{const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));return response}).catch(()=>caches.match(event.request).then(r=>r||caches.match("./index.html"))))});
+// Network-first PWA: never silently navigate to the homepage when an
+// offline transaction, block or wallet detail URL was requested.
+const offlineDocument = request => {
+ if (request.mode !== "navigate") return null;
+ const u = new URL(request.url);
+ const leaf = u.pathname.slice(u.pathname.lastIndexOf("/") + 1);
+ if (!leaf || leaf === "index.html") return "./index.html";
+ return ["explorer.html","watchlist.html","api-docs.html"].includes(leaf) ? "./" + leaf : null;
+};
+self.addEventListener("fetch",event=>{
+ const req=event.request;
+ if(req.method!=="GET")return;
+ const url=new URL(req.url);
+ if(url.origin!==location.origin)return;
+ event.respondWith((async()=>{
+  try{
+   const response=await fetch(req);
+   // Broken/404 responses are not permanent app-shell cache entries.
+   if(response.ok){
+    const copy=response.clone();
+    event.waitUntil(caches.open(CACHE).then(cache=>cache.put(req,copy)).catch(()=>{}));
+   }
+   return response;
+  }catch{
+   // Search/filter/hash query strings should not prevent offline lookup.
+   const direct=await caches.match(req,{ignoreSearch:true});
+   if(direct)return direct;
+   const route=offlineDocument(req);
+   if(route){
+    const document=await caches.match(route);
+    if(document)return document;
+   }
+   // Missing scripts/images or unknown routes must NEVER return home HTML.
+   return Response.error();
+  }
+ })());
+});
