@@ -15,8 +15,8 @@ for(const id of ["detailSearch","detailInput","detailFields","addressFeed","toke
 assert(home.includes('bex-scanlight-v1.css?v=2')&&detail.includes('bex-scanlight-v1.css?v=2'));
 assert(home.includes("bex-scanlight light-mode"));
 assert(detail.includes('href="public/explorer.js?v=46"')===false); // Script, not stylesheet
-assert(detail.includes('src="public/explorer.js?v=48"'));
-assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=48"));
+assert(detail.includes('src="public/explorer.js?v=49"'));
+assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=49"));
 assert(css.includes("bex-scanlight.light-mode:not(.category-view)"));
 assert(css.includes("bex-address-layout.light-mode"));
 assert(css.includes(".wallet-tabs[hidden]"));
@@ -72,7 +72,7 @@ assert(app.includes('pageView!=="blocks"'));
 const explorerLight=await read("public/scanlight-detail-v2.css");
 assert(detail.includes('scanlight-detail-v2.css?v=1'));
 assert(sw.includes('scanlight-detail-v2.css?v=1'));
-assert(detail.includes('src="public/explorer.js?v=48"')&&sw.includes('explorer.js?v=48'));
+assert(detail.includes('src="public/explorer.js?v=49"')&&sw.includes('explorer.js?v=49'));
 assert(detail.includes('id="detailMenu"')&&detail.includes('id="detailMenuToggle"'));
 assert(detail.includes('id="searchWelcome"')&&detail.includes('data-search-kind="address"'));
 assert(detail.includes('data-search-kind="tx"')&&detail.includes('data-search-kind="block"'));
@@ -109,7 +109,7 @@ assert(streamClient.includes("التحديثات التي وصلتنا خلال 
 assert(streamClient.includes("ليس مجموع معاملات الشبكة"));
 assert(home.includes("realtime-client.js?v=2")&&sw.includes("realtime-client.js?v=2"));
 assert(home.includes("app.js?v=46")&&sw.includes("app.js?v=46"));
-assert(home.includes("preferences.js?v=13")&&detail.includes("preferences.js?v=13")&&sw.includes("preferences.js?v=13"));
+assert(home.includes("preferences.js?v=14")&&detail.includes("preferences.js?v=14")&&sw.includes("preferences.js?v=14"));
 for(const key of ["stats.title","stats.visibleTx","stats.status","stats.network","stats.onchain","stats.onchainSlow","stats.latestSample"])
  assert.equal(prefs.split('"'+key+'":').length,3,"Visitor label needs Arabic and English: "+key);
 assert(prefs.includes('"stats.onchain":"بيانات حديثة من الشبكة"'));
@@ -122,12 +122,27 @@ const navCss=await read("public/bnav-v1.css");
 assert(navCss.includes("Noto Sans Arabic"));
 assert(navCss.split("{").length===navCss.split("}").length);
 for(const page of [home,detail]){
- assert(page.includes('bnav-v1.css?v=1'));
+ assert(page.includes('bnav-v1.css?v=2'));
  for(const group of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language"])
   assert(page.includes('data-section="'+group+'"'),"Menu section missing: "+group);
  assert(page.includes('data-pref-theme="light"')&&page.includes('data-pref-language="ar"'));
  assert(page.includes('data-i18n="bnav.soon"'));
 }
-assert(sw.includes('bnav-v1.css?v=1')&&sw.includes('preferences.js?v=13'));
+assert(sw.includes('bnav-v1.css?v=2')&&sw.includes('preferences.js?v=14'));
 for(const k of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language","blocks","txs","wallets","validatorsSoon","contract","tokensSoon","nftsSoon","search","solSearch","apiSoon","about","aboutText","bnb","sol","soon","settings","safety"])
  assert.equal(prefs.split('"bnav.'+k+'":').length,3,"Missing bilingual label "+k);
+
+assert(navCss.includes("details.bnav-group:not([open])>.bnav-submenu"));
+assert(navCss.includes("font:400 14px/1.7"));
+assert(explorer.includes('request("/price",{chain:network})'));
+assert(explorer.includes('quote?.source!=="coingecko"'));
+assert(explorer.includes('Date.now()-Date.parse(quote.price_updated_at)>600000'));
+const usdBody=explorer.match(/function approximateNativeUsd\(balance,decimals,price\)\{[\s\S]*?\n\}/)?.[0];
+assert(usdBody);
+const dollar=new Function(usdBody+";return approximateNativeUsd;")();
+assert.equal(dollar("1000000000000000000",18,600),"≈ $600.00");
+assert.equal(dollar("1000000000",9,125.5),"≈ $125.50");
+assert.equal(dollar("0",18,600),"≈ $0.00");
+assert.equal(dollar("1",18,600),"< $0.01");
+assert.equal(dollar("oops",18,600),null);
+assert.equal(prefs.split('"wallet.priceVerified":').length,3);
