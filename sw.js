@@ -1,6 +1,6 @@
-const CACHE="bexentra-shell-v98-web3bio-identity";
+const CACHE="bexentra-shell-v99-market-discovery";
 const SHELL=[
- "./","./index.html","./explorer.html","./watchlist.html","./public/watchlist.css?v=1","./public/watchlist.js?v=1","./public/watchlist-utils.mjs","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=2","./public/openapi.json",
+ "./","./index.html","./explorer.html","./markets.html","./public/markets.css?v=1","./public/markets.js?v=1","./watchlist.html","./public/watchlist.css?v=1","./public/watchlist.js?v=1","./public/watchlist-utils.mjs","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=2","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
  "./public/visual-v2.css?v=2","./public/neon-premium.css?v=1",
  "./public/reference-match.css?v=1","./public/mobile-layout-stability.css?v=1","./public/orbit-globe.svg","./public/neon-icons.svg",
@@ -24,7 +24,7 @@ const offlineDocument = request => {
  const u = new URL(request.url);
  const leaf = u.pathname.slice(u.pathname.lastIndexOf("/") + 1);
  if (!leaf || leaf === "index.html") return "./index.html";
- return ["explorer.html","watchlist.html","api-docs.html"].includes(leaf) ? "./" + leaf : null;
+ return ["explorer.html","watchlist.html","api-docs.html","markets.html"].includes(leaf) ? "./" + leaf : null;
 };
 self.addEventListener("fetch",event=>{
  const req=event.request;
