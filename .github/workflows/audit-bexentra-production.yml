@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/audit-production.mjs'
+      - 'neon/functions/bexentra-api.ts'
+      - 'public/search-input.js'
       - '.github/workflows/audit-bexentra-production.yml'
 permissions:
   contents: read
