@@ -7,6 +7,32 @@ const networkIcon=$("networkIcon"),summaryChainLabel=$("summaryChainLabel");
 const indexStatus=$("indexStatus"),indexStatusNote=$("indexStatusNote");
 const esc=s=>String(s??"");
 const tr=k=>window.BexentraPrefs?.t(k)??k;
+const viewParam=new URLSearchParams(location.search).get("view");
+const pageView=viewParam==="blocks"||viewParam==="transactions"?viewParam:"home";
+function applyPageNavigation(){
+ if(pageView!=="home"){
+  document.body.classList.add("category-view","category-"+pageView);
+  const intro=$("categoryIntro"),heading=$("categoryHeading");
+  if(intro)intro.hidden=false;
+  if(heading){
+   const key=pageView==="blocks"?"nav.blocks":"nav.transactions";
+   heading.dataset.i18n=key;heading.textContent=tr(key);
+  }
+  document.title=tr(pageView==="blocks"?"nav.blocks":"nav.transactions")+" | BEXENTRA";
+ }
+ document.querySelectorAll(".bottom-nav a").forEach(link=>{
+  const url=new URL(link.getAttribute("href"),location.href);
+  const candidate=url.searchParams.get("view");
+  const destination=candidate==="blocks"||candidate==="transactions"?candidate
+   :url.pathname.endsWith("/explorer.html")?"explorer":"home";
+  const active=destination===pageView;
+  link.classList.toggle("active",active);
+  if(active)link.setAttribute("aria-current","page");
+  else link.removeAttribute("aria-current");
+ });
+}
+applyPageNavigation();
+
 function short(s,n=12){s=esc(s);return s.length>n*2?s.slice(0,n)+"…"+s.slice(-n):s}
 function ago(v){
  if(!v)return"—";
@@ -107,7 +133,7 @@ function detectType(q,forced="auto"){
 // Keep a short, real observed-block history only while the browser is active.
 // No numbers, confirmations, transfers, or blocks are invented for design purposes.
 const observedBlocks={bnb:[],solana:[]};
-let expandedBlocks=false,expandedTx=false,lastDashboardView=null;
+let expandedBlocks=pageView==="blocks",expandedTx=pageView==="transactions",lastDashboardView=null;
 function displayFeedButtons(){
  for(const [id,expanded] of [["refreshBlocks",expandedBlocks],["refreshTx",expandedTx]]){
   const button=$(id);if(!button)continue;
@@ -137,6 +163,13 @@ function renderDashboardView(view,chain){
  const bs=visibleBlocksFor(view,chain);
  const ts=Array.isArray(view.transactions)?view.transactions:[];
  const onchain=view.source==="rpc_live"||view.source==="ws_live";
+ const meta=$("categoryMeta");
+ if(meta&&pageView!=="home"){
+  const count=pageView==="blocks"?bs.length:ts.length;
+  const label=tr(pageView==="blocks"?"nav.blocks":"nav.transactions");
+  const source=onchain?(document.documentElement.lang==="en"?"Network sample":"عينة من الشبكة"):(document.documentElement.lang==="en"?"Indexed data":"بيانات مفهرسة");
+  meta.textContent=count+" "+label+" · "+source;
+ }
  displayFeedButtons();
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=ts.length?String(ts.length):"—";
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time||view.last_event_at:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0],view.source==="ws_live"?view.last_event_at:null);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
