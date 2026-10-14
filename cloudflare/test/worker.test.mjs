@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker, {observe, snapshot, freshState, getBnbBlock, openStream, configure} from '../src/worker.js';
+import worker, {observe, snapshot, freshState, getBnbBlock, openStream, configure,withTxCapacity} from '../src/worker.js';
 
 const H='0x'+'a'.repeat(64), BH='0x'+'b'.repeat(64), S='3'.repeat(88);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -111,4 +111,22 @@ test('upstream RPC rejection cannot be falsely labeled as a live feed',()=>{
  ws.message({id:1,error:{code:-32000,message:'rate limit'}});
  assert.equal(stream.state.connected,false);
  assert.equal(ws.closed,true);
+});
+
+test('RPC transaction lookup has bounded per-isolate capacity and releases slots after completion',async()=>{
+ let finish;
+ const blocked=new Promise(resolve=>{finish=resolve});
+ const active=Array.from({length:4},()=>withTxCapacity(()=>blocked));
+ const busy=await withTxCapacity(async()=>new Response("unexpected"));
+ assert.equal(busy.status,429);
+ assert.equal((await busy.json()).reason,'rate_limited');
+ finish(new Response('ok',{status:200}));
+ const completed=await Promise.all(active);
+ assert(completed.every(x=>x.status===200));
+ const recovered=await withTxCapacity(async()=>new Response('recovered',{status:200}));
+ assert.equal(recovered.status,200);
+});
+test('a failed transaction lookup does not permanently occupy capacity',async()=>{
+ await assert.rejects(()=>withTxCapacity(async()=>{throw Error('upstream outage')}),/upstream outage/);
+ assert.equal((await withTxCapacity(async()=>new Response('ok'))).status,200);
 });
