@@ -134,6 +134,26 @@ function detectType(q,forced="auto"){
 // Keep a short, real observed-block history only while the browser is active.
 // No numbers, confirmations, transfers, or blocks are invented for design purposes.
 const observedBlocks={bnb:[],solana:[]};
+// Indexed blocks are an optional, explicitly labeled supplement when live RPC
+// has returned fewer blocks. No heights, hashes, or transaction counts are generated.
+const indexedSamples={bnb:[],solana:[]};
+const indexedSampleRequestedAt={bnb:0,solana:0};
+async function refreshIndexedBlockSample(chain){
+ if(pageView!=="blocks"||!(chain in indexedSamples))return;
+ const now=Date.now();
+ if(now-indexedSampleRequestedAt[chain]<60000)return;
+ indexedSampleRequestedAt[chain]=now;
+ try{
+  const data=await blocks(chain,12);
+  if(!Array.isArray(data))return;
+  indexedSamples[chain]=data.filter(block=>
+   block&&Number.isSafeInteger(Number(block.height))&&Number(block.height)>=0&&
+   (block.chain==null||block.chain===chain))
+   .map(block=>({...block,_indexed_sample:true})).slice(0,12);
+  if(lastDashboardView?.chain===chain&&network.value===chain)
+   renderDashboardView(lastDashboardView.view,chain);
+ }catch(err){console.warn("BEXENTRA indexed sample unavailable",err?.message||err)}
+}
 let expandedBlocks=pageView==="blocks",expandedTx=pageView==="transactions",lastDashboardView=null;
 function displayFeedButtons(){
  for(const [id,expanded] of [["refreshBlocks",expandedBlocks],["refreshTx",expandedTx]]){
@@ -144,19 +164,30 @@ function displayFeedButtons(){
 }
 function visibleBlocksFor(view,chain){
  const incoming=Array.isArray(view.blocks)?view.blocks:[];
- if(view.source!=="rpc_live"&&view.source!=="ws_live")return incoming;
- const previous=observedBlocks[chain]||[];
- for(const block of incoming){
-  const height=Number(block?.height);
-  if(!Number.isSafeInteger(height)||height<0)continue;
-  const old=previous.find(v=>Number(v.height)===height);
-  const next={...old,...block,observed_at:old?.observed_at||new Date().toISOString()};
-  const at=previous.findIndex(v=>Number(v.height)===height);
-  if(at>=0)previous[at]=next;else previous.push(next);
+ const live=view.source==="rpc_live"||view.source==="ws_live";
+ let verified=incoming;
+ if(live){
+  const previous=observedBlocks[chain]||[];
+  for(const block of incoming){
+   const height=Number(block?.height);
+   if(!Number.isSafeInteger(height)||height<0)continue;
+   const old=previous.find(v=>Number(v.height)===height);
+   const next={...old,...block,observed_at:old?.observed_at||new Date().toISOString()};
+   const at=previous.findIndex(v=>Number(v.height)===height);
+   if(at>=0)previous[at]=next;else previous.push(next);
+  }
+  previous.sort((a,b)=>Number(b.height)-Number(a.height));
+  previous.splice(12);
+  verified=previous;
  }
- previous.sort((a,b)=>Number(b.height)-Number(a.height));
- previous.splice(12);
- return previous;
+ if(pageView!=="blocks")return verified;
+ const heights=new Map();
+ for(const block of [...verified,...(indexedSamples[chain]||[])]){
+  const height=Number(block?.height);
+  if(!Number.isSafeInteger(height)||height<0||heights.has(height))continue;
+  heights.set(height,block);
+ }
+ return [...heights.values()].sort((a,b)=>Number(b.height)-Number(a.height)).slice(0,12);
 }
 function renderDashboardView(view,chain){
  if(network.value!==chain)return;
@@ -168,7 +199,10 @@ function renderDashboardView(view,chain){
  if(meta&&pageView!=="home"){
   const count=pageView==="blocks"?bs.length:ts.length;
   const label=tr(pageView==="blocks"?"nav.blocks":"nav.transactions");
-  const source=onchain?(document.documentElement.lang==="en"?"Network sample":"عينة من الشبكة"):(document.documentElement.lang==="en"?"Indexed data":"بيانات مفهرسة");
+  const mixed=onchain&&bs.some(b=>b._indexed_sample);
+  const source=mixed?(document.documentElement.lang==="en"?"Network + partial index":"الشبكة + فهرس جزئي"):
+   onchain?(document.documentElement.lang==="en"?"Network sample":"عينة من الشبكة"):
+   (document.documentElement.lang==="en"?"Indexed data":"بيانات مفهرسة");
   meta.textContent=count+" "+label+" · "+source;
  }
  displayFeedButtons();
@@ -181,7 +215,11 @@ function renderDashboardView(view,chain){
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("blocks"));
    const main=document.createElement("div");main.className="feed-main";
    const link=document.createElement("a");link.href=url;link.textContent=Number(block.height).toLocaleString("en-US");
-   const age=document.createElement("small");age.textContent=ago(block.block_time||block.indexed_at||block.observed_at);
+   const age=document.createElement("small");
+   age.textContent=block._indexed_sample
+    ?(document.documentElement.lang==="en"?"Indexed · ":"مفهرس · ")+
+      (block.block_time?ago(block.block_time):document.documentElement.lang==="en"?"block time unavailable":"وقت البلوك غير متوفر")
+    :ago(block.block_time||block.observed_at||block.indexed_at);
    main.append(link,age);
    const count=document.createElement("span");count.className="feed-side";
    count.textContent=String(block.transaction_count??"—")+" "+tr("api.transactionsUnit");
@@ -211,6 +249,7 @@ function renderDashboardView(view,chain){
 }
 async function loadDashboard(){
  const chain=network.value;
+ if(pageView==="blocks")void refreshIndexedBlockSample(chain);
  if(window.BexentraStreamIsActive?.(chain))return;
  syncNetworkUI();$("metricNetwork").textContent=chain==="bnb"?"BNB Chain":"Solana";
  if(heroNetwork)heroNetwork.textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
