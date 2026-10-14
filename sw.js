@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v92-no-network-dot";
+const CACHE="bexentra-shell-v93-six-languages";
 const SHELL=[
  "./","./index.html","./explorer.html","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=1","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -7,8 +7,8 @@ const SHELL=[
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2","./public/tx-detail-help.css?v=1",
  "./public/detail-nav-rescue.css?v=1","./public/category-view.css?v=4","./public/result-clarity.css?v=3","./public/visitor-guide.css?v=1","./public/home-refinement.css?v=1","./public/bnav-v1.css?v=3","./public/bex-scanlight-v1.css?v=2","./public/scanlight-mobile-fixes.css?v=2","./public/scanlight-detail-v2.css?v=1",
- "./public/preferences.js?v=18","./public/search-input.js?v=3",
- "./public/app.js?v=48","./public/explorer.js?v=51",
+ "./public/preferences.js?v=19","./public/i18n-extra.js?v=1","./public/settings-polish-v2.css?v=1","./public/search-input.js?v=3",
+ "./public/app.js?v=49","./public/explorer.js?v=52",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=3",
  "./public/bnb-mark.svg?v=2","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"

@@ -40,7 +40,7 @@ function ago(v){
  const d=Math.max(0,(Date.now()-new Date(v).getTime())/1000);
  const unit=d<60?"time.seconds":d<3600?"time.minutes":d<86400?"time.hours":"time.days";
  const value=d<60?Math.floor(d):d<3600?Math.floor(d/60):d<86400?Math.floor(d/3600):Math.floor(d/86400);
- return window.BexentraPrefs?.get("language")==="en"?value+" "+tr(unit)+" "+tr("time.ago"):tr("time.ago")+" "+value+" "+tr(unit);
+ return window.BexentraPrefs?.get("language")!=="ar"?value+" "+tr(unit)+" "+tr("time.ago"):tr("time.ago")+" "+value+" "+tr(unit);
 }
 function syncNetworkUI(){const chain=network.value;if(networkIcon){networkIcon.src=chain==="bnb"?"public/bnb-mark.svg?v=2":"public/solana-mark.svg";networkIcon.alt=chain==="bnb"?"BNB Chain":"Solana"}if(summaryChainLabel)summaryChainLabel.textContent=chain==="bnb"?"BNB Chain":"Solana"}
 function paintIndexSignal(mode){
@@ -200,16 +200,16 @@ function renderDashboardView(view,chain){
   const count=pageView==="blocks"?bs.length:ts.length;
   const label=tr(pageView==="blocks"?"nav.blocks":"nav.transactions");
   const mixed=onchain&&bs.some(b=>b._indexed_sample);
-  const source=mixed?(document.documentElement.lang==="en"?"Recent and saved information":"معلومات حديثة وأخرى سابقة"):
-   onchain?(document.documentElement.lang==="en"?"Available network data":"معلومات من الشبكة"):
-   (document.documentElement.lang==="en"?"Available saved records":"معلومات مسجلة من قبل");
+  const source=mixed?(document.documentElement.lang!=="ar"?"Recent and saved information":"معلومات حديثة وأخرى سابقة"):
+   onchain?(document.documentElement.lang!=="ar"?"Available network data":"معلومات من الشبكة"):
+   (document.documentElement.lang!=="ar"?"Available saved records":"معلومات مسجلة من قبل");
   meta.textContent=count+" "+label+" · "+source;
  }
  displayFeedButtons();
   $("summaryNetwork").textContent=chain==="bnb"?"BNB Smart Chain":"Solana";$("summaryHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("summaryTx").textContent=String(ts.length);
    const txCaption=document.querySelector('[data-i18n="stats.latestSample"]');
    if(txCaption)txCaption.textContent=ts.length
-    ?(document.documentElement.lang==="en"?"Last "+ts.length+" transactions":"آخر "+ts.length+" معاملة")
+    ?(document.documentElement.lang!=="ar"?"Last "+ts.length+" transactions":"آخر "+ts.length+" معاملة")
     :tr("api.emptyTx");
   $("metricHeight").textContent=bs[0]?Number(bs[0].height).toLocaleString("en-US"):"—";$("metricBlocks").textContent=bs.length?String(bs.length):"—";$("metricUpdated").textContent=bs[0]?ago(onchain?bs[0].block_time||view.last_event_at:bs[0].indexed_at):"—";if(onchain)setOnchainStatus(bs[0],view.source==="ws_live"?view.last_event_at:null);else{setIndexStatus(bs[0]?.indexed_at);const src=$("statsLive");if(src)src.textContent="◌ "+tr("stats.indexedOnly")};const blockLabel=$("summaryBlockLabel");if(blockLabel)blockLabel.textContent=tr(onchain?"stats.lastBlockOnchain":"stats.lastBlock");
   const rb=$("recentBlocks");rb.replaceChildren();if(!bs.length)rb.textContent=tr("api.emptyBlocks");
@@ -221,8 +221,8 @@ function renderDashboardView(view,chain){
    const link=document.createElement("a");link.href=url;link.textContent=Number(block.height).toLocaleString("en-US");
    const age=document.createElement("small");
    age.textContent=block._indexed_sample
-    ?(document.documentElement.lang==="en"?"Saved record · ":"مسجل من قبل · ")+
-      (block.block_time?ago(block.block_time):document.documentElement.lang==="en"?"block time unavailable":"وقت البلوك غير متوفر")
+    ?(document.documentElement.lang!=="ar"?"Saved record · ":"مسجل من قبل · ")+
+      (block.block_time?ago(block.block_time):document.documentElement.lang!=="ar"?"block time unavailable":"وقت البلوك غير متوفر")
     :ago(block.block_time||block.observed_at||block.indexed_at);
    main.append(link,age);
    const count=document.createElement("span");count.className="feed-side";
@@ -238,7 +238,7 @@ function renderDashboardView(view,chain){
    const symbol=document.createElement("span");symbol.className="feed-icon";symbol.append(makeIcon("transactions"));
    const main=document.createElement("div");main.className="feed-main";
    const link=document.createElement("a");link.href=url;link.textContent=short(tx.tx_hash,10);
-   const detail=document.createElement("small");detail.textContent=tx.block_height!=null?(document.documentElement.lang==="en"?"Block ":"بلوك ")+Number(tx.block_height).toLocaleString("en-US"):short(tx.sender||tx.recipient||"—",10);
+   const detail=document.createElement("small");detail.textContent=tx.block_height!=null?(document.documentElement.lang!=="ar"?"Block ":"بلوك ")+Number(tx.block_height).toLocaleString("en-US"):short(tx.sender||tx.recipient||"—",10);
    main.append(link,detail);
    const status=document.createElement("span");status.className="feed-side";
    const isLiveTx=tx.source==="rpc_live"||tx.source==="ws_live"||onchain;

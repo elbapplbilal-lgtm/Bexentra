@@ -225,7 +225,7 @@ function row(label,value,copy=false){const d=document.createElement("div");d.cla
 async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent=tr("details.copyDone");setTimeout(()=>button.textContent=tr("details.copy"),1200)}catch{}}
 
 /* Human-readable, read-only explanations derived only from returned chain/index data. */
-const easy=(ar,en)=>document.documentElement.lang==="en"?en:ar;
+const easy=(ar,en)=>document.documentElement.lang==="ar"?ar:en;
 function easyCount(v){
  const n=Number(v);
  return v!==null&&v!==undefined&&v!==""&&Number.isSafeInteger(n)&&n>=0
@@ -237,7 +237,7 @@ function utcWhen(value){
  const date=new Date(value);
  if(!Number.isFinite(date.getTime()))return easy("غير متوفر","Unavailable");
  try{
-  return new Intl.DateTimeFormat(document.documentElement.lang==="en"?"en-GB":"ar-MA-u-nu-latn",{
+  return new Intl.DateTimeFormat(document.documentElement.lang==="ar"?"ar-MA-u-nu-latn":({"en":"en-GB","fr":"fr-FR","de":"de-DE","es":"es-ES","it":"it-IT"}[document.documentElement.lang]||"en-GB"),{
    timeZone:"UTC",year:"numeric",month:"short",day:"numeric",
    hour:"2-digit",minute:"2-digit",hourCycle:"h23"
   }).format(date)+" UTC";
@@ -420,7 +420,7 @@ async function loadBlock(){
   row(easy("عدد المعاملات داخل البلوك","Transactions inside the block"),b.transaction_count),row(easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),utcWhen(b.block_time))];
  if(b.indexed_at)fields.push(row(easy("وقت تسجيل البيانات","Indexed at"),b.indexed_at));
  fields.push(row(tr("details.source"),tr(fromRpc?"details.sourceLive":"details.sourceIndexed")));
- finish((document.documentElement.lang==="en"?(chain==="bnb"?"Block ":"Slot "):"بلوك ")+Number(b.height).toLocaleString("en-US"),
+ finish((document.documentElement.lang!=="ar"?(chain==="bnb"?"Block ":"Slot "):"بلوك ")+Number(b.height).toLocaleString("en-US"),
   tr(fromRpc?"details.liveBlockSource":"details.subtitle"),fields,b.height,"block");
  showProvenance(b.source);
  renderBlockSummary(b);

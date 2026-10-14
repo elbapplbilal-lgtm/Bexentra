@@ -15,8 +15,8 @@ for(const id of ["detailSearch","detailInput","detailFields","addressFeed","toke
 assert(home.includes('bex-scanlight-v1.css?v=2')&&detail.includes('bex-scanlight-v1.css?v=2'));
 assert(home.includes("bex-scanlight light-mode"));
 assert(detail.includes('href="public/explorer.js?v=46"')===false); // Script, not stylesheet
-assert(detail.includes('src="public/explorer.js?v=51"'));
-assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=51"));
+assert(detail.includes('src="public/explorer.js?v=52"'));
+assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=52"));
 assert(css.includes("bex-scanlight.light-mode:not(.category-view)"));
 assert(css.includes("bex-address-layout.light-mode"));
 assert(css.includes(".wallet-tabs[hidden]"));
@@ -39,7 +39,7 @@ assert(explorer.includes('classList.toggle("bex-address-layout",type==="address"
 console.log("ScanLight verification: preserved search, original white layout, bilingual content, real wallet balances, no fake USD/tokens");
 
 assert(home.includes("scanlight-mobile-fixes.css?v=2")&&sw.includes("scanlight-mobile-fixes.css?v=2"));
-assert(home.includes('src="public/app.js?v=48"')&&sw.includes("app.js?v=48"));
+assert(home.includes('src="public/app.js?v=49"')&&sw.includes("app.js?v=49"));
 assert(home.includes('aria-controls="mobileMenu"'));
 assert.equal(home.split('id="quickRefresh"').length,2);
 const quick=home.slice(home.indexOf('<div class="quick-grid">'),home.indexOf('</div>\n  </section>',home.indexOf('<div class="quick-grid">')));
@@ -72,7 +72,7 @@ assert(app.includes('pageView!=="blocks"'));
 const explorerLight=await read("public/scanlight-detail-v2.css");
 assert(detail.includes('scanlight-detail-v2.css?v=1'));
 assert(sw.includes('scanlight-detail-v2.css?v=1'));
-assert(detail.includes('src="public/explorer.js?v=51"')&&sw.includes('explorer.js?v=51'));
+assert(detail.includes('src="public/explorer.js?v=52"')&&sw.includes('explorer.js?v=52'));
 assert(detail.includes('id="detailMenu"')&&detail.includes('id="detailMenuToggle"'));
 assert(detail.includes('id="searchWelcome"')&&detail.includes('data-search-kind="address"'));
 assert(detail.includes('data-search-kind="tx"')&&detail.includes('data-search-kind="block"'));
@@ -108,8 +108,8 @@ assert(!streamClient.includes(" (عينة)"));
 assert(streamClient.includes('" عملية جديدة دابا"'));
 assert(streamClient.includes("ماشي جميع عمليات الشبكة"));
 assert(home.includes("realtime-client.js?v=3")&&sw.includes("realtime-client.js?v=3"));
-assert(home.includes("app.js?v=48")&&sw.includes("app.js?v=48"));
-assert(home.includes("preferences.js?v=18")&&detail.includes("preferences.js?v=18")&&sw.includes("preferences.js?v=18"));
+assert(home.includes("app.js?v=49")&&sw.includes("app.js?v=49"));
+assert(home.includes("preferences.js?v=19")&&detail.includes("preferences.js?v=19")&&sw.includes("preferences.js?v=19"));
 for(const key of ["stats.title","stats.visibleTx","stats.status","stats.network","stats.onchain","stats.onchainSlow","stats.latestSample"])
  assert.equal(prefs.split('"'+key+'":').length,3,"Visitor label needs Arabic and English: "+key);
 assert(prefs.includes('"stats.onchain":"مباشر الآن ●"'));
@@ -128,7 +128,7 @@ for(const page of [home,detail]){
  assert(page.includes('data-pref-theme="light"')&&page.includes('data-pref-language="ar"'));
  assert(page.includes('data-i18n="bnav.soon"'));
 }
-assert(sw.includes('bnav-v1.css?v=3')&&sw.includes('preferences.js?v=18'));
+assert(sw.includes('bnav-v1.css?v=3')&&sw.includes('preferences.js?v=19'));
 for(const k of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language","blocks","txs","wallets","validatorsSoon","contract","tokensSoon","nftsSoon","search","solSearch","apiSoon","about","aboutText","bnb","sol","soon","settings","safety"])
  assert.equal(prefs.split('"bnav.'+k+'":').length,3,"Missing bilingual label "+k);
 
@@ -175,7 +175,7 @@ for(const text of ["المعاملات المعروضة من الفهرس","وق
 assert(home.includes('data-i18n="hero.overline">BEXENTRA · BNB وSolana'));
 assert(home.includes('data-i18n="nav.explorer">بحث'));
 assert(detail.includes('data-i18n="nav.explorer">بحث'));
-assert(detail.includes('public/explorer.js?v=51'));
+assert(detail.includes('public/explorer.js?v=52'));
 
 assert(home.includes('data-i18n="quick.blocks">آخر البلوكات'));
 assert(home.includes('data-i18n="quick.transactions">آخر التحويلات'));
@@ -215,7 +215,7 @@ assert(navCss.includes('min-height:44px!important'));
 assert(navCss.includes('bnav-search-row'));
 for(const page of [home,detail]){
  assert(page.includes('bnav-v1.css?v=3'));
- assert(page.includes('preferences.js?v=18'));
+ assert(page.includes('preferences.js?v=19'));
  assert(page.includes('data-i18n="bnav.chain">تقنية البلوك تشين'));
  assert(page.includes('class="bnav-search-form" action="explorer.html" method="get"'));
  assert(page.includes('name="q" type="search"'));
@@ -226,11 +226,30 @@ for(const page of [home,detail]){
 }
 assert(home.includes('id="homeMenuNetwork"'));
 assert(detail.includes('id="detailMenuNetwork"'));
-assert(sw.includes('bexentra-shell-v92-no-network-dot'));
+assert(sw.includes('bexentra-shell-v93-six-languages'));
 for(const translationKey of ["searchTitle","searchPlaceholder","searchNetwork","searchNote"])
  assert.equal(prefs.split('"bnav.'+translationKey+'":').length,3);
 
 assert(!home.includes('<i class="network-live"></i>'),"Green BNB network status dot must be hidden");
 assert(home.includes('<select id="network" aria-label="الشبكة">'),"Network selector must stay functional");
 assert(home.includes('id="networkIcon"'),"Keep the real BNB icon");
-assert(sw.includes('bexentra-shell-v92-no-network-dot'));
+assert(sw.includes('bexentra-shell-v93-six-languages'));
+
+const locales=await read("public/i18n-extra.js");
+const settingsCSS=await read("public/settings-polish-v2.css");
+assert(locales.includes("window.BexentraLocales="));
+for(const code of ["fr","de","es","it"]){
+ assert(prefs.includes(code));
+ assert(home.includes('data-pref-language="'+code+'"'));
+ assert(detail.includes('data-pref-language="'+code+'"'));
+ assert(locales.includes('"'+code+'":'));
+}
+assert(settingsCSS.includes("grid-template-columns:repeat(2,minmax(0,1fr))"));
+assert(settingsCSS.includes("grid-template-columns:repeat(3,minmax(0,1fr))"));
+assert(settingsCSS.split("{").length===settingsCSS.split("}").length);
+assert(home.includes('settings-polish-v2.css?v=1') && detail.includes('settings-polish-v2.css?v=1'));
+assert(home.includes('i18n-extra.js?v=1') && detail.includes('i18n-extra.js?v=1'));
+assert(sw.includes('"./public/i18n-extra.js?v=1"'));
+assert(sw.includes('"./public/settings-polish-v2.css?v=1"'));
+assert(prefs.includes('language:["ar","en","fr","de","es","it"]'));
+assert(explorer.includes('"fr":"fr-FR"'));

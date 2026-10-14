@@ -4,7 +4,7 @@
 (()=>{
  const store={language:"bexentra-language",theme:"bexentra-theme",refresh:"bexentra-auto-refresh",network:"bexentra-network"};
  const defaults={language:"ar",theme:"light",refresh:"on",network:"bnb"};
- const allowed={language:["ar","en"],theme:["dark","light"],refresh:["on","off"],network:["bnb","solana"]};
+ const allowed={language:["ar","en","fr","de","es","it"],theme:["dark","light"],refresh:["on","off"],network:["bnb","solana"]};
  function get(k){let value;try{value=localStorage.getItem(store[k])}catch{}return allowed[k].includes(value)?value:defaults[k]}
  function save(k,v){if(!allowed[k].includes(v))return;try{localStorage.setItem(store[k],v)}catch{}apply();document.dispatchEvent(new CustomEvent("bexentra:preferenceschange",{detail:{key:k,value:v}}))}
  const dict={
@@ -101,7 +101,7 @@
    "guide.p4":"يمكنك البحث عن المعاملة لمعرفة حالتها عندما تصلنا البيانات.",
    "guide.caveat":"ظهور المعاملة في بلوك لا يعني بالضرورة نجاحها.",
    "settings.title":"الإعدادات","settings.subtitle":"اختر اللغة والمظهر والشبكة المناسبة لك.",
-   "settings.language":"اللغة","settings.arabic":"العربية","settings.english":"English",
+   "settings.language":"اللغة","settings.arabic":"العربية","settings.english":"English","settings.french":"Français","settings.german":"Deutsch","settings.spanish":"Español","settings.italian":"Italiano",
    "settings.appearance":"المظهر","settings.dark":"داكن","settings.light":"فاتح",
    "settings.network":"الشبكة الافتراضية","settings.refresh":"التحديث التلقائي","settings.refreshOn":"تلقائي","settings.refreshOff":"متوقف",
    "settings.privacyTitle":"الخصوصية والأمان","settings.privacyText":"إعداداتك محفوظة على جهازك فقط. لا نطلب مفاتيح محفظتك.",
@@ -227,7 +227,7 @@
    "guide.p4":"Visitors can search by block number or transaction hash for details and verified execution status when available.",
    "guide.caveat":"Important: A transaction in a block might still have failed.",
    "settings.title":"Settings","settings.subtitle":"Customize BEXENTRA on this device",
-   "settings.language":"Language","settings.arabic":"العربية","settings.english":"English",
+   "settings.language":"Language","settings.arabic":"العربية","settings.english":"English","settings.french":"Français","settings.german":"Deutsch","settings.spanish":"Español","settings.italian":"Italiano",
    "settings.appearance":"Appearance","settings.dark":"Dark","settings.light":"Light",
    "settings.network":"Default network","settings.refresh":"Auto refresh","settings.refreshOn":"Automatic","settings.refreshOff":"Off",
    "settings.privacyTitle":"Privacy & security","settings.privacyText":"Preferences are saved only in this browser. The explorer reads public blockchain data and never needs a private key.",
@@ -261,7 +261,14 @@
    "details.liveBlockSource":"Block information from network.","details.liveTxSource":"Transaction information from network.","details.augmentedSource":"Some transaction details were checked on network.","details.liveSideTitle":"Network information","details.liveSideText":"Data was checked on the network. Status and fees appear only when verified.","details.source":"Data source","details.sourceLive":"Network","details.sourceIndexed":"BEXENTRA records"
   }
  };
- const t=k=>dict[get("language")][k]||dict.ar[k]||k;
+ // Additional locales are loaded before preferences.js. Unknown advanced messages fall back to English.
+ for(const code of ["fr","de","es","it"]){
+  dict[code]={...dict.en,...(window.BexentraLocales?.[code]||{})};
+ }
+ const t=k=>{
+  const language=get("language");
+  return dict[language]?.[k]??dict[language==="ar"?"ar":"en"]?.[k]??k;
+ };
  let focusedBefore=null;
  function apply(){
   const lang=get("language"),theme=get("theme");
@@ -270,7 +277,10 @@
   document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{el.placeholder=t(el.dataset.i18nPlaceholder)});
   document.querySelectorAll("[data-i18n-aria]").forEach(el=>{el.setAttribute("aria-label",t(el.dataset.i18nAria))});
-  document.querySelectorAll("[data-pref-language]").forEach(el=>{const on=el.dataset.prefLanguage===lang;el.classList.toggle("selected",on);el.setAttribute("aria-pressed",String(on))});
+  document.querySelectorAll("[data-pref-language]").forEach(el=>{
+   const on=el.dataset.prefLanguage===lang;el.classList.toggle("selected",on);
+   el.setAttribute("aria-pressed",String(on));el.setAttribute("aria-label",el.dataset.nativeLabel||el.textContent.trim());
+  });
   document.querySelectorAll("[data-pref-theme]").forEach(el=>{const on=el.dataset.prefTheme===theme;el.classList.toggle("selected",on);el.setAttribute("aria-pressed",String(on))});
   const refresh=document.getElementById("prefRefresh");if(refresh)refresh.value=get("refresh");
   const chain=document.getElementById("prefNetwork");if(chain)chain.value=get("network");

@@ -26,6 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="public/bnav-v1.css?v=3">
 <link rel="stylesheet" href="public/logo-glow-v1.css?v=2">
+<link rel="stylesheet" href="public/settings-polish-v2.css?v=1">
 </head>
 <body class="detail-page detail-v31 light-mode">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -49,7 +50,7 @@
 <details class="bnav-group" data-section="more"><summary><span data-i18n="bnav.more">أكثر</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-about"><b data-i18n="bnav.about">عن BEXENTRA</b><p data-i18n="bnav.aboutText">مستكشف للبيانات العامة. نطوّر خدمات إضافية تدريجياً.</p></div></div></details>
 <details class="bnav-group" data-section="explorers"><summary><span data-i18n="bnav.explorers">المستكشفون</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><a href="explorer.html?chain=bnb&type=address" data-i18n="bnav.bnb">مستكشف BNB Chain</a><a href="explorer.html?chain=solana&type=address" data-i18n="bnav.sol">مستكشف Solana</a></div></details>
 <details class="bnav-group" data-section="appearance"><summary><span data-i18n="bnav.appearance">المظهر</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-choices"><button type="button" data-pref-theme="light" data-i18n="settings.light">فاتح</button><button type="button" data-pref-theme="dark" data-i18n="settings.dark">داكن</button></div></div></details>
-<details class="bnav-group" data-section="language"><summary><span data-i18n="bnav.language">اللغة</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-choices"><button type="button" data-pref-language="ar" data-i18n="settings.arabic">العربية</button><button type="button" data-pref-language="en" data-i18n="settings.english">English</button></div></div></details>
+<details class="bnav-group" data-section="language"><summary><span data-i18n="bnav.language">اللغة</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-choices bnav-languages"><button type="button" data-pref-language="ar" data-native-label="العربية"><span data-i18n="settings.arabic">العربية</span></button><button type="button" data-pref-language="en" data-native-label="English"><span data-i18n="settings.english">English</span></button><button type="button" data-pref-language="fr" data-native-label="Français"><span data-i18n="settings.french">Français</span></button><button type="button" data-pref-language="de" data-native-label="Deutsch"><span data-i18n="settings.german">Deutsch</span></button><button type="button" data-pref-language="es" data-native-label="Español"><span data-i18n="settings.spanish">Español</span></button><button type="button" data-pref-language="it" data-native-label="Italiano"><span data-i18n="settings.italian">Italiano</span></button></div></div></details>
 <button type="button" class="bnav-settings" data-open-settings data-i18n="bnav.settings">إعدادات الموقع</button>
 
 <section class="bnav-search-section" aria-label="بحث BEXENTRA">
@@ -170,9 +171,9 @@
 <footer><div class="brand"><span class="logo"><span><img src="logo.png?v=2" width="36" height="36" alt=""></span></span><span class="brand-copy"><b>BEXENTRA</b><small>BLOCKCHAIN EXPLORER</small></span></div><span>Indexed explorer · 2026</span></footer>
 <div id="settingsOverlay" class="settings-overlay" hidden>
   <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
-    <header class="settings-head"><div><span class="settings-eyebrow">BEXENTRA · PREFERENCES</span><h2 id="settingsHeading" data-i18n="settings.title">الإعدادات</h2><p data-i18n="settings.subtitle">خصّص تجربة BEXENTRA على هاد الجهاز</p></div><button class="settings-close" type="button" data-close-settings aria-label="Close">×</button></header>
+    <header class="settings-head"><div><span class="settings-eyebrow">BEXENTRA · SETTINGS</span><h2 id="settingsHeading" data-i18n="settings.title">الإعدادات</h2><p data-i18n="settings.subtitle">خصّص تجربة BEXENTRA على هاد الجهاز</p></div><button class="settings-close" type="button" data-close-settings aria-label="Close">×</button></header>
     <div class="settings-scroll">
-      <div class="settings-option"><label data-i18n="settings.language">اللغة</label><div class="setting-segments" role="group" aria-label="Language"><button data-pref-language="ar" type="button" data-i18n="settings.arabic">العربية</button><button data-pref-language="en" type="button" data-i18n="settings.english">English</button></div></div>
+      <div class="settings-option"><label data-i18n="settings.language">اللغة</label><div class="setting-segments settings-language-grid" role="group" aria-label="Choose display language"><button data-pref-language="ar" data-native-label="العربية" type="button"><span aria-hidden="true" class="language-flag">🇲🇦</span><span data-i18n="settings.arabic">العربية</span></button><button data-pref-language="en" data-native-label="English" type="button"><span aria-hidden="true" class="language-flag">🇬🇧</span><span data-i18n="settings.english">English</span></button><button data-pref-language="fr" data-native-label="Français" type="button"><span aria-hidden="true" class="language-flag">🇫🇷</span><span data-i18n="settings.french">Français</span></button><button data-pref-language="de" data-native-label="Deutsch" type="button"><span aria-hidden="true" class="language-flag">🇩🇪</span><span data-i18n="settings.german">Deutsch</span></button><button data-pref-language="es" data-native-label="Español" type="button"><span aria-hidden="true" class="language-flag">🇪🇸</span><span data-i18n="settings.spanish">Español</span></button><button data-pref-language="it" data-native-label="Italiano" type="button"><span aria-hidden="true" class="language-flag">🇮🇹</span><span data-i18n="settings.italian">Italiano</span></button></div></div>
       <div class="settings-option"><label data-i18n="settings.appearance">المظهر</label><div class="setting-segments" role="group" aria-label="Theme"><button data-pref-theme="dark" type="button">☾ <span data-i18n="settings.dark">داكن</span></button><button data-pref-theme="light" type="button">☀ <span data-i18n="settings.light">فاتح</span></button></div></div>
       <div class="settings-option"><label for="prefNetwork" data-i18n="settings.network">الشبكة الافتراضية</label><select id="prefNetwork"><option value="bnb">BNB Smart Chain</option><option value="solana">Solana Mainnet</option></select></div>
       <div class="settings-option"><label for="prefRefresh" data-i18n="settings.refresh">التحديث التلقائي</label><select id="prefRefresh"><option value="on" data-i18n="settings.refreshOn">مفعّل (كل 15 ثانية)</option><option value="off" data-i18n="settings.refreshOff">متوقف</option></select></div>
@@ -181,9 +182,10 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=18" defer></script>
+<script src="public/i18n-extra.js?v=1" defer></script>
+<script src="public/preferences.js?v=19" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
-<script src="public/explorer.js?v=51" defer></script>
+<script src="public/explorer.js?v=52" defer></script>
 </body>
 </html>
