@@ -274,11 +274,19 @@ if(mobileSearch)mobileSearch.addEventListener("submit",e=>{e.preventDefault();na
 
 const quickRefresh=$("quickRefresh");if(quickRefresh)quickRefresh.addEventListener("click",loadDashboard);
 const menu=$("mobileMenu"),backdrop=$("menuBackdrop"),menuToggle=$("menuToggle"),menuClose=$("menuClose");
-function setMenu(open){if(!menu||!backdrop)return;menu.classList.toggle("open",open);backdrop.classList.toggle("show",open);menu.setAttribute("aria-hidden",String(!open));}
+function setMenu(open){
+ if(!menu||!backdrop)return;
+ menu.classList.toggle("open",open);backdrop.classList.toggle("show",open);
+ menu.setAttribute("aria-hidden",String(!open));
+ menuToggle?.setAttribute("aria-expanded",String(open));
+ if(open)menuClose?.focus();
+ else if(menu.contains(document.activeElement))menuToggle?.focus();
+}
 if(menuToggle)menuToggle.addEventListener("click",()=>setMenu(true));
 if(menuClose)menuClose.addEventListener("click",()=>setMenu(false));
 if(backdrop)backdrop.addEventListener("click",()=>setMenu(false));
 if(menu)menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&menu?.classList.contains("open"))setMenu(false)});
 
 let refreshTimer=setInterval(()=>{if(!document.hidden && window.BexentraPrefs?.get("refresh")!=="off")loadDashboard()},15000);
 document.addEventListener("bexentra:preferenceschange",e=>{if(e.detail?.key==="language"||e.detail?.key==="reset"){applyPageNavigation();displayFeedButtons();loadDashboard()}});
