@@ -1,0 +1,47 @@
+/* BEXENTRA minimal mobile navigation. Original layout; no copied third-party assets. */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu,body.detail-v31.light-mode .detail-menu.bnav-menu{background:#fff!important;color:#263340!important;gap:0!important;font-family:"Noto Sans Arabic",system-ui,"Segoe UI",sans-serif!important;}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-home,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-home,body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-settings,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-settings{display:flex!important;align-items:center!important;min-height:50px!important;
+width:100%!important;box-sizing:border-box!important;margin:0!important;padding:11px 8px!important;border:0!important;
+border-bottom:1px solid #eceff3!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;
+color:#27333e!important;text-align:start!important;font:500 15px/1.8 "Noto Sans Arabic",system-ui,sans-serif!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group{display:block!important;flex:none!important;width:100%!important;margin:0!important;background:#fff!important;border-bottom:1px solid #eceff3!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group>summary,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group>summary{display:flex!important;justify-content:space-between!important;align-items:center!important;
+min-height:54px!important;padding:11px 8px!important;gap:13px!important;box-sizing:border-box!important;
+list-style:none!important;cursor:pointer!important;color:#202d39!important;border:0!important;background:transparent!important;
+font:500 15px/1.8 "Noto Sans Arabic",system-ui,sans-serif!important;text-shadow:none!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group>summary::-webkit-details-marker,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group>summary::-webkit-details-marker{display:none!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-arrow,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-arrow{width:9px!important;height:9px!important;flex:0 0 9px!important;margin-inline:5px!important;
+border-bottom:1.5px solid #415363!important;border-inline-end:1.5px solid #415363!important;transform:rotate(45deg)!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group[open] .bnav-arrow,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group[open] .bnav-arrow{transform:rotate(225deg)!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-submenu,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-submenu{display:flex!important;flex-direction:column!important;gap:2px!important;
+padding:3px 8px 10px!important;background:#fafcfd!important;border-radius:7px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-submenu>a,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-submenu>a{display:block!important;min-height:41px!important;padding:9px 12px!important;box-sizing:border-box!important;
+border:0!important;border-radius:6px!important;background:transparent!important;box-shadow:none!important;
+color:#176fa2!important;text-align:start!important;text-decoration:none!important;
+font:400 13.5px/1.8 "Noto Sans Arabic",system-ui,sans-serif!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-unavailable,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-unavailable{display:flex!important;align-items:center!important;justify-content:space-between!important;
+gap:7px!important;min-height:39px!important;padding:7px 12px!important;color:#7e8996!important;font-size:13px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-unavailable small,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-unavailable small{padding:4px 8px!important;background:#f0f2f5!important;color:#87929d!important;
+border-radius:13px!important;font:500 10px "Noto Sans Arabic",sans-serif!important;white-space:nowrap!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-about,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-about{padding:10px!important;color:#6e7e8d!important;font:400 12px/1.9 "Noto Sans Arabic",sans-serif!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-about b,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-about b{color:#3e586b!important;font-weight:600!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-about p,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-about p{margin:6px 0!important;padding:0!important;border:0!important;font-size:12px!important;color:#66798b!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-choices,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-choices{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:6px!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-choices button,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-choices button{min-height:42px!important;margin:0!important;padding:8px!important;border:1px solid #dbe5ec!important;
+border-radius:8px!important;background:#fff!important;color:#435667!important;box-shadow:none!important;
+font:500 13px/1.7 "Noto Sans Arabic",sans-serif!important;cursor:pointer!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-choices button.selected,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-choices button.selected{background:#ebf7fc!important;color:#087aaf!important;border-color:#9ccde9!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-safety,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-safety{margin:17px 8px!important;padding:15px 0!important;border:0!important;border-top:1px solid #edf0f3!important;
+color:#748494!important;font:400 11px/1.9 "Noto Sans Arabic",sans-serif!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .mobile-menu-head,body.detail-v31.light-mode .detail-menu.bnav-menu .detail-menu-head{margin:0!important;padding:6px 8px 13px!important;
+border-bottom:1px solid #edf0f3!important;color:#273647!important;font:600 15px/1.8 "Noto Sans Arabic",sans-serif!important}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu summary:focus-visible,body.detail-v31.light-mode .detail-menu.bnav-menu summary:focus-visible,body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu button:focus-visible,body.detail-v31.light-mode .detail-menu.bnav-menu button:focus-visible,body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu a:focus-visible,body.detail-v31.light-mode .detail-menu.bnav-menu a:focus-visible{outline:2px solid #1688ba!important;outline-offset:2px!important}
+@media(max-width:780px){
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu{top:59px!important;bottom:0!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;
+height:calc(100dvh - 59px)!important;padding:13px 18px calc(25px + env(safe-area-inset-bottom))!important;
+overflow-y:auto!important;border:0!important;box-shadow:none!important;z-index:165!important}
+body.detail-v31.light-mode .detail-menu.bnav-menu:not([hidden]){top:59px!important;bottom:0!important;left:0!important;right:0!important;width:100vw!important;
+max-width:100vw!important;height:calc(100dvh - 59px)!important;
+padding:13px 18px calc(25px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;
+border:0!important;box-shadow:none!important;z-index:175!important}
+}

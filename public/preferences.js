@@ -10,6 +10,33 @@
  const dict={
   ar:{
    "menu.home":"الرئيسية","menu.blocks":"البلوكات","menu.transactions":"المعاملات","menu.explorer":"المستكشف","menu.settings":"الإعدادات",
+   "bnav.chain":"تقنية البلوكتشين",
+   "bnav.validators":"المدققون",
+   "bnav.tokens":"الرموز",
+   "bnav.nfts":"NFTs",
+   "bnav.resources":"موارد",
+   "bnav.api":"واجهة برمجة التطبيقات (API)",
+   "bnav.more":"أكثر",
+   "bnav.explorers":"المستكشفون",
+   "bnav.appearance":"المظهر",
+   "bnav.language":"اللغة",
+   "bnav.blocks":"أحدث البلوكات",
+   "bnav.txs":"أحدث المعاملات",
+   "bnav.wallets":"المحافظ والعناوين",
+   "bnav.validatorsSoon":"قائمة المدققين",
+   "bnav.contract":"البحث بعنوان عقد",
+   "bnav.tokensSoon":"دليل الرموز",
+   "bnav.nftsSoon":"استكشاف NFTs",
+   "bnav.search":"البحث في البلوكتشين",
+   "bnav.solSearch":"البحث في Solana",
+   "bnav.apiSoon":"وثائق API",
+   "bnav.about":"عن BEXENTRA",
+   "bnav.aboutText":"مستكشف للبيانات العامة. نطوّر خدمات إضافية تدريجياً.",
+   "bnav.bnb":"مستكشف BNB Chain",
+   "bnav.sol":"مستكشف Solana",
+   "bnav.soon":"قريباً",
+   "bnav.settings":"إعدادات الموقع",
+   "bnav.safety":"معلومات عامة للقراءة فقط. لا تشارك كلمات الاسترداد أو مفاتيح المحفظة.",
    "menu.safety":"مستكشف للقراءة فقط. ما كنطلبوش ربط المحفظة أو كلمات الاسترداد.",
    "scan.menuBrowse":"استكشاف الشبكة",
    "scan.menuWallets":"المحافظ",
@@ -104,6 +131,33 @@
   },
   en:{
    "menu.home":"Home","menu.blocks":"Blocks","menu.transactions":"Transactions","menu.explorer":"Explorer","menu.settings":"Settings",
+   "bnav.chain":"Blockchain",
+   "bnav.validators":"Validators",
+   "bnav.tokens":"Tokens",
+   "bnav.nfts":"NFTs",
+   "bnav.resources":"Resources",
+   "bnav.api":"API",
+   "bnav.more":"More",
+   "bnav.explorers":"Explorers",
+   "bnav.appearance":"Appearance",
+   "bnav.language":"Language",
+   "bnav.blocks":"Latest blocks",
+   "bnav.txs":"Latest transactions",
+   "bnav.wallets":"Wallets and addresses",
+   "bnav.validatorsSoon":"Validator directory",
+   "bnav.contract":"Search contract address",
+   "bnav.tokensSoon":"Token directory",
+   "bnav.nftsSoon":"Explore NFTs",
+   "bnav.search":"Search blockchain",
+   "bnav.solSearch":"Search Solana",
+   "bnav.apiSoon":"API documentation",
+   "bnav.about":"About BEXENTRA",
+   "bnav.aboutText":"Public-data explorer. Additional services are in development.",
+   "bnav.bnb":"BNB Chain explorer",
+   "bnav.sol":"Solana explorer",
+   "bnav.soon":"Coming soon",
+   "bnav.settings":"Site settings",
+   "bnav.safety":"Read-only public information. Never share wallet keys or recovery phrases.",
    "menu.safety":"Read-only blockchain explorer. We never ask you to connect a wallet or share a seed phrase.",
    "scan.menuBrowse":"Explore network",
    "scan.menuWallets":"Wallet addresses",
@@ -222,7 +276,8 @@
    }
   }catch{}
   apply();
-  document.querySelectorAll("[data-open-settings]").forEach(el=>el.addEventListener("click",()=>{const menu=document.getElementById("mobileMenu");menu?.classList.remove("open");menu?.setAttribute("aria-hidden","true");document.getElementById("menuBackdrop")?.classList.remove("show");open()}));
+  document.querySelectorAll("[data-open-settings]").forEach(el=>el.addEventListener("click",()=>{const menu=document.getElementById("mobileMenu");menu?.classList.remove("open");menu?.setAttribute("aria-hidden","true");document.getElementById("menuBackdrop")?.classList.remove("show");document.getElementById("menuToggle")?.setAttribute("aria-expanded","false");
+   const detail=document.getElementById("detailMenu");if(detail){detail.hidden=true;detail.setAttribute("aria-hidden","true");document.getElementById("detailMenuBackdrop")?.setAttribute("hidden","");document.getElementById("detailMenuToggle")?.setAttribute("aria-expanded","false")}open()}));
   document.querySelectorAll("[data-close-settings]").forEach(el=>el.addEventListener("click",close));
   document.getElementById("settingsOverlay")?.addEventListener("click",e=>{if(e.target.id==="settingsOverlay")close()});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});

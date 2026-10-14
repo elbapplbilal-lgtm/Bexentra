@@ -109,7 +109,7 @@ assert(streamClient.includes("التحديثات التي وصلتنا خلال 
 assert(streamClient.includes("ليس مجموع معاملات الشبكة"));
 assert(home.includes("realtime-client.js?v=2")&&sw.includes("realtime-client.js?v=2"));
 assert(home.includes("app.js?v=46")&&sw.includes("app.js?v=46"));
-assert(home.includes("preferences.js?v=12")&&detail.includes("preferences.js?v=12")&&sw.includes("preferences.js?v=12"));
+assert(home.includes("preferences.js?v=13")&&detail.includes("preferences.js?v=13")&&sw.includes("preferences.js?v=13"));
 for(const key of ["stats.title","stats.visibleTx","stats.status","stats.network","stats.onchain","stats.onchainSlow","stats.latestSample"])
  assert.equal(prefs.split('"'+key+'":').length,3,"Visitor label needs Arabic and English: "+key);
 assert(prefs.includes('"stats.onchain":"بيانات حديثة من الشبكة"'));
@@ -117,3 +117,17 @@ assert(prefs.includes('"stats.visibleTx":"المعاملات المعروضة"')
 assert(prefs.includes('"stats.latestSample":"أحدث النتائج المتاحة فقط"'));
 assert(app.includes('"بيانات الشبكة المتاحة"'));
 assert(app.includes('"السجلات المحفوظة المتاحة"'));
+
+const navCss=await read("public/bnav-v1.css");
+assert(navCss.includes("Noto Sans Arabic"));
+assert(navCss.split("{").length===navCss.split("}").length);
+for(const page of [home,detail]){
+ assert(page.includes('bnav-v1.css?v=1'));
+ for(const group of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language"])
+  assert(page.includes('data-section="'+group+'"'),"Menu section missing: "+group);
+ assert(page.includes('data-pref-theme="light"')&&page.includes('data-pref-language="ar"'));
+ assert(page.includes('data-i18n="bnav.soon"'));
+}
+assert(sw.includes('bnav-v1.css?v=1')&&sw.includes('preferences.js?v=13'));
+for(const k of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language","blocks","txs","wallets","validatorsSoon","contract","tokensSoon","nftsSoon","search","solSearch","apiSoon","about","aboutText","bnb","sol","soon","settings","safety"])
+ assert.equal(prefs.split('"bnav.'+k+'":').length,3,"Missing bilingual label "+k);
