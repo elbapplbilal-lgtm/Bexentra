@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="public/neon-detail.css?v=2">
 <link rel="stylesheet" href="public/tx-detail-help.css?v=1">
 <link rel="stylesheet" href="public/detail-nav-rescue.css?v=1">
+<link rel="stylesheet" href="public/result-clarity.css?v=1">
 </head>
 <body class="detail-page detail-v31">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -44,16 +45,22 @@
     <button data-i18n="details.searchButton">بحث</button>
   </form>
 
+  <p class="result-search-hint" data-i18n="details.searchHelp">رقم فقط = بلوك، رمز معاملة طويل = معاملة، عنوان محفظة = نشاط المحفظة.</p>
   <section id="detailLoading" class="detail-loading">
     <div class="skeleton wide"></div><div class="skeleton"></div><div class="skeleton"></div>
   </section>
 
   <section id="detailError" class="detail-error" hidden></section>
 
+  <section id="simpleResult" class="simple-result" aria-live="polite" hidden></section>
+
   <section id="detailOverview" class="detail-overview" hidden>
     <div class="detail-main-card">
       <div class="card-head"><div><span class="kicker">OVERVIEW</span><h2 id="overviewTitle" data-i18n="details.overview">التفاصيل</h2></div><div class="detail-actions"><button id="copyPrimary" class="ghost" type="button" data-i18n="details.copy">نسخ</button><a id="externalLink" class="ghost" target="_blank" rel="noopener" data-i18n="details.verify">تحقق خارجي ↗</a></div></div>
-      <div id="detailFields" class="detail-fields"></div>
+      <details class="technical-details">
+        <summary data-i18n="details.technical">عرض التفاصيل التقنية (الرموز والمعلومات الكاملة)</summary>
+        <div id="detailFields" class="detail-fields"></div>
+      </details>
     </div>
     <aside class="detail-side-card">
       <span class="kicker">BEXENTRA INDEX</span>
@@ -93,9 +100,9 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=7" defer></script>
+<script src="public/preferences.js?v=8" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
-<script src="public/explorer.js?v=39" defer></script>
+<script src="public/explorer.js?v=40" defer></script>
 </body>
 </html>
