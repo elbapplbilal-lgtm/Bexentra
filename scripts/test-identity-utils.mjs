@@ -27,7 +27,7 @@ test("accept matching ENS identity with non-trusted social metadata",()=>{
  assert.equal(p.avatar,"https://euc.li/vitalik.eth");
  assert.equal(p.source,"web3.bio");
  assert.equal(p.service,"ENS (Ethereum)");
- assert.deepEqual(p.links.map(x=>x.label),["Website","GitHub","X / Twitter"]);
+ assert.deepEqual(Array.from(p.links,x=>x.label),["Website","GitHub","X / Twitter"]);
 });
 test("reject provider address mismatches and unknown network/platform",()=>{
  assert.equal(U.normalize({...mock,address:"0x"+"1".repeat(40)},"bnb",evm),null);
@@ -53,7 +53,7 @@ test("discard javascript, http, credentials and malformed URLs",()=>{
   website:{link:"javascript:alert(1)"},github:{link:"http://github.com/vbuterin"},twitter:{link:"https://x.com/VitalikButerin"}
  }}, "bnb",evm);
  assert.equal(p.avatar,null);
- assert.deepEqual(p.links.map(x=>x.label),["X / Twitter"]);
+ assert.deepEqual(Array.from(p.links,x=>x.label),["X / Twitter"]);
 });
 test("do not leak private metadata fields or embed HTML via profile parser",()=>{
  const p=U.normalize({...mock,email:"secret@example.com",description:"<script>alert('x')</script>",links:{website:{link:"https://example.org"}}},"bnb",evm);
