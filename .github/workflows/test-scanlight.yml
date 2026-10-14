@@ -1,0 +1,34 @@
+name: Verify BEXENTRA ScanLight UI
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'explorer.html'
+      - 'public/bex-scanlight-v1.css'
+      - 'public/preferences.js'
+      - 'public/explorer.js'
+      - 'sw.js'
+      - 'scripts/test-scanlight.mjs'
+      - '.github/workflows/test-scanlight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check production JavaScript syntax
+        run: |
+          node --check public/app.js
+          node --check public/explorer.js
+          node --check public/preferences.js
+      - name: Verify clean home and address, no fabricated wallet metrics
+        run: node scripts/test-scanlight.mjs
+      - name: Verify chain-aware wallet and transaction searches
+        run: node scripts/test-search-input.mjs
