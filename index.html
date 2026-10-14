@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="public/bnav-v1.css?v=3">
 <link rel="stylesheet" href="public/logo-glow-v1.css?v=2">
 <link rel="stylesheet" href="public/settings-polish-v2.css?v=1">
+<link rel="stylesheet" href="public/explorer-pro-v1.css?v=1">
 
 <style>
 body.bex-home a.watchlist-shortcut{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:12px 0 22px;padding:13px 17px;border-radius:14px;background:linear-gradient(110deg,#0c3f86,#0f6179);border:1px solid #45bafd;color:white;text-decoration:none;box-shadow:0 0 17px #038af540}
@@ -144,6 +145,10 @@ body.bex-home a.watchlist-shortcut strong{font-size:14px}body.bex-home a.watchli
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
+  <aside class="coverage-truth" id="coverageTruth" role="note" aria-label="حدود بيانات BEXENTRA">
+  <span><strong data-coverage-title>تغطية البيانات:</strong> <span data-coverage-message>البلوكات المباشرة عينات من الشبكة؛ سجل المعاملات والمحافظ المفهرس مازال جزئياً.</span></span>
+  <a href="api-docs.html">وثائق API ↗</a>
+</aside>
   <section id="blocks" class="data-card">
     <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.showAll" aria-controls="recentBlocks" aria-expanded="false">عرض الكل ›</button></div>
     <div id="recentBlocks" class="feed">كنجيبو آخر البلوكات...</div>
@@ -183,5 +188,6 @@ body.bex-home a.watchlist-shortcut strong{font-size:14px}body.bex-home a.watchli
 <script src="public/app.js?v=49" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/realtime-client.js?v=3" defer></script>
+<script src="public/coverage-note.js?v=1" defer></script>
 </body>
 </html>
