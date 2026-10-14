@@ -42,7 +42,11 @@ assert(home.includes("scanlight-mobile-fixes.css?v=2")&&sw.includes("scanlight-m
 assert(home.includes('src="public/app.js?v=49"')&&sw.includes("app.js?v=49"));
 assert(home.includes('aria-controls="mobileMenu"'));
 assert.equal(home.split('id="quickRefresh"').length,2);
-const quick=home.slice(home.indexOf('<div class="quick-grid">'),home.indexOf('</div>\n  </section>',home.indexOf('<div class="quick-grid">')));
+const quickStart=home.indexOf('<div class="quick-grid">');
+const quickEnd=home.indexOf('\n    </div>',quickStart);
+assert(quickStart>=0&&quickEnd>quickStart,"Quick grid should have a closing container");
+const quick=home.slice(quickStart,quickEnd);
+assert.equal((quick.match(/<a\\s/g)||[]).length,4,"Exactly four quick actions inside the grid");
 assert(!quick.includes('id="quickRefresh"'),"Refresh should not take a fifth tile");
 assert(app.includes('aria-expanded')&&app.includes('e.key==="Escape"'));
 assert(fixes.includes("text-shadow:none!important")&&fixes.includes("z-index:160!important"));
