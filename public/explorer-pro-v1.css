@@ -139,3 +139,6 @@ body.detail-v31.light-mode .detail-shell :is(.detail-card,.detail-hero,.detail-p
 @media(prefers-reduced-motion:reduce){
  body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-card .reference-row{transition:none!important}
 }
+
+/* Category listing pages keep their focused explorer view. */
+body.bex-home.category-view .coverage-truth{display:none!important}
