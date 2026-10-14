@@ -214,7 +214,7 @@ body.detail-v31.bex-address-layout.light-mode .detail-shell{
 }
 body.detail-v31.bex-address-layout.light-mode .detail-hero,
 body.detail-v31.bex-address-layout.light-mode .result-search-hint,
-body.detail-v31.bex-address-layout.light-mode .simple-result,
+body.detail-v31.bex-address-layout.light-mode.wallet-loaded .simple-result,
 body.detail-v31.bex-address-layout.light-mode .visitor-guide{display:none!important}
 body.detail-v31.bex-address-layout.light-mode .detail-search{
  margin:0 0 15px!important;background:#fff!important;border:1px solid #dce5ee!important;
@@ -383,3 +383,11 @@ body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .data-h
  background:#fff!important;color:#087caf!important;border:1px solid #d8e5ef!important;
  border-radius:9px!important;box-shadow:none!important;
 }
+
+/* The address-search landing page stays informative before a wallet is entered. */
+body.detail-v31.bex-address-layout.light-mode:not(.wallet-loaded) .simple-result:not([hidden]){
+ background:#fff!important;color:#263d53!important;border:1px solid #e1e8f0!important;
+ border-radius:14px!important;box-shadow:0 3px 11px #1a355011!important;margin-top:14px!important;
+}
+body.detail-v31.bex-address-layout.light-mode:not(.wallet-loaded) .simple-result :is(h2,strong){color:#20394f!important}
+body.detail-v31.bex-address-layout.light-mode:not(.wallet-loaded) .simple-result :is(p,small){color:#637d91!important}
