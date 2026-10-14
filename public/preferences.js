@@ -3,7 +3,7 @@
  * All preferences stay on this device. No wallet access or accounts required. */
 (()=>{
  const store={language:"bexentra-language",theme:"bexentra-theme",refresh:"bexentra-auto-refresh",network:"bexentra-network"};
- const defaults={language:"ar",theme:"dark",refresh:"on",network:"bnb"};
+ const defaults={language:"ar",theme:"light",refresh:"on",network:"bnb"};
  const allowed={language:["ar","en"],theme:["dark","light"],refresh:["on","off"],network:["bnb","solana"]};
  function get(k){let value;try{value=localStorage.getItem(store[k])}catch{}return allowed[k].includes(value)?value:defaults[k]}
  function save(k,v){if(!allowed[k].includes(v))return;try{localStorage.setItem(store[k],v)}catch{}apply();document.dispatchEvent(new CustomEvent("bexentra:preferenceschange",{detail:{key:k,value:v}}))}
@@ -12,11 +12,26 @@
    "menu.home":"الرئيسية","menu.blocks":"البلوكات","menu.transactions":"المعاملات","menu.explorer":"المستكشف","menu.settings":"الإعدادات",
    "menu.safety":"مستكشف للقراءة فقط. ما كنطلبوش ربط المحفظة أو كلمات الاسترداد.",
    "hero.overline":"BEXENTRA INDEX · MAINNET",
-   "hero.title":"أوضح. أسرع. أذكى.",
+   "hero.title":"مستكشف البلوكتشين",
    "hero.description":"استكشف البيانات الحقيقية المفهرسة على \u2066BNB Chain\u2069 و\u2066Solana\u2069، من واجهة واحدة مصممة للهاتف.",
    "hero.indexed":"بيانات مفهرسة","hero.multichain":"متعدد الشبكات","hero.readonly":"قراءة فقط",
    "search.placeholder":"عنوان محفظة، Tx Hash أو رقم بلوك","search.button":"استكشف",
    "quick.blocks":"البلوكات","quick.blocksSub":"أحدث بيانات الشبكة",
+   "quick.address":"المحافظ",
+   "quick.addressSub":"رصيد BNB وSOL والنشاط المتاح",
+   "wallet.title":"تفاصيل العنوان",
+   "wallet.subtitle":"معلومات عامة من شبكة البلوكتشين، للقراءة فقط.",
+   "wallet.native":"رصيد العملة الأساسية",
+   "wallet.usd":"القيمة بالدولار",
+   "wallet.holdings":"حيازات الرموز",
+   "wallet.unavailable":"غير متوفرة",
+   "wallet.loading":"جاري التحقق من الرصيد…",
+   "wallet.balanceFailed":"تعذّر جلب الرصيد من الشبكة",
+   "wallet.balanceVerified":"الرصيد مقروء مباشرة من الشبكة. قد يتغير عند تحديث الصفحة.",
+   "wallet.note":"رصيد BNB أو SOL يُقرأ مباشرة من RPC عند توفره. لم نربط مصدراً موثوقاً لتقييم الدولار أو حيازات التوكنات بعد، لذلك لا نعرض أرقاماً تخمينية. نشاط الفهرس ليس التاريخ الكامل.",
+   "wallet.tabTransactions":"المعاملات المفهرسة",
+   "wallet.tabTransfers":"تحويلات BEP-20",
+   "wallet.tabInfo":"مزيد من المعلومات",
    "quick.transactions":"المعاملات","quick.transactionsSub":"آخر نشاط مفهرس",
    "quick.refresh":"تحديث","quick.refreshSub":"إعادة جلب البيانات",
    "quick.networks":"الشبكات","quick.networksSub":"BNB + Solana",
@@ -81,11 +96,26 @@
    "menu.home":"Home","menu.blocks":"Blocks","menu.transactions":"Transactions","menu.explorer":"Explorer","menu.settings":"Settings",
    "menu.safety":"Read-only blockchain explorer. We never ask you to connect a wallet or share a seed phrase.",
    "hero.overline":"BEXENTRA INDEX · MAINNET",
-   "hero.title":"Clearer. Faster. Smarter.",
+   "hero.title":"Blockchain Explorer",
    "hero.description":"Explore real indexed data on BNB Chain and Solana in one mobile-first experience.",
    "hero.indexed":"Indexed data","hero.multichain":"Multi-chain","hero.readonly":"Read-only",
    "search.placeholder":"Wallet address, Tx Hash or block number","search.button":"Explore",
    "quick.blocks":"Blocks","quick.blocksSub":"Latest network blocks",
+   "quick.address":"Addresses",
+   "quick.addressSub":"Native balance and indexed activity",
+   "wallet.title":"Address overview",
+   "wallet.subtitle":"Public, read-only blockchain address information.",
+   "wallet.native":"Native balance",
+   "wallet.usd":"USD value",
+   "wallet.holdings":"Token holdings",
+   "wallet.unavailable":"Unavailable",
+   "wallet.loading":"Checking network balance…",
+   "wallet.balanceFailed":"Network balance unavailable",
+   "wallet.balanceVerified":"Native balance is read from network RPC and may change.",
+   "wallet.note":"BNB or SOL balance comes directly from RPC when available. Reliable USD prices and token holdings are not yet connected, so no estimates are displayed. Indexed transactions are not the complete wallet history.",
+   "wallet.tabTransactions":"Indexed transactions",
+   "wallet.tabTransfers":"BEP-20 transfers",
+   "wallet.tabInfo":"More information",
    "quick.transactions":"Transactions","quick.transactionsSub":"Recent indexed activity",
    "quick.refresh":"Refresh","quick.refreshSub":"Fetch latest indexed data",
    "quick.networks":"Networks","quick.networksSub":"BNB + Solana",
@@ -164,6 +194,13 @@
  function open(){const panel=document.getElementById("settingsOverlay");if(!panel)return;focusedBefore=document.activeElement;panel.hidden=false;document.body.classList.add("settings-open");apply();panel.querySelector("button")?.focus()}
  function close(){const panel=document.getElementById("settingsOverlay");if(!panel)return;panel.hidden=true;document.body.classList.remove("settings-open");focusedBefore?.focus?.()}
  function init(){
+  // Migrate the existing neon-only appearance once, then respect visitors' later choices.
+  try{
+   if(!localStorage.getItem("bexentra-scanlight-choice-v1")){
+    localStorage.setItem(store.theme,"light");
+    localStorage.setItem("bexentra-scanlight-choice-v1","1");
+   }
+  }catch{}
   apply();
   document.querySelectorAll("[data-open-settings]").forEach(el=>el.addEventListener("click",()=>{const menu=document.getElementById("mobileMenu");menu?.classList.remove("open");menu?.setAttribute("aria-hidden","true");document.getElementById("menuBackdrop")?.classList.remove("show");open()}));
   document.querySelectorAll("[data-close-settings]").forEach(el=>el.addEventListener("click",close));
