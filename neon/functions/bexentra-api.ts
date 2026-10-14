@@ -15,7 +15,7 @@ const bnbPublic=[
  "https://bsc-dataseed-public.bnbchain.org",
  "https://bsc-rpc.publicnode.com"
 ];
-const solPublic=["https://api.mainnet-beta.solana.com"];
+const solPublic=["https://api.mainnet-beta.solana.com","https://solana-rpc.publicnode.com"];
 const rpcEndpoints=chain=>{
  const configured=chain==="bnb"?process.env.BNB_RPC_URL:process.env.SOLANA_RPC_URL;
  return [...new Set([...(configured?[configured]:[]),...(chain==="bnb"?bnbPublic:solPublic)])];
