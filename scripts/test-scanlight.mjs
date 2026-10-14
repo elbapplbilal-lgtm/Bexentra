@@ -67,3 +67,20 @@ assert(app.includes('heights.has(height)'));
 assert(app.includes('block._indexed_sample'));
 assert(app.includes('Network + partial index'));
 assert(app.includes('pageView!=="blocks"'));
+
+const explorerLight=await read("public/scanlight-detail-v2.css");
+assert(detail.includes('scanlight-detail-v2.css?v=1'));
+assert(sw.includes('scanlight-detail-v2.css?v=1'));
+assert(detail.includes('src="public/explorer.js?v=47"')&&sw.includes('explorer.js?v=47'));
+assert(detail.includes('id="detailMenu"')&&detail.includes('id="detailMenuToggle"'));
+assert(detail.includes('id="searchWelcome"')&&detail.includes('data-search-kind="address"'));
+assert(detail.includes('data-search-kind="tx"')&&detail.includes('data-search-kind="block"'));
+assert(explorer.includes('function setDetailMenu(open)')&&explorer.includes('setDetailMenu(false)'));
+assert(explorer.includes('document.body.classList.add("explorer-welcome")'));
+assert(explorer.includes('document.body.classList.remove("wallet-loaded","explorer-welcome")'));
+assert(explorerLight.includes('.explorer-welcome .simple-result'));
+assert(explorerLight.includes('background:#fff!important'));
+assert(explorerLight.split("{").length===explorerLight.split("}").length);
+for(const key of ["scan.menuBrowse","scan.menuWallets","scan.menuTools","scan.tx",
+ "scan.block","scan.sol","scan.welcome","scan.welcomeText","scan.address","scan.safety"])
+ assert.equal(prefs.split('"'+key+'":').length,3,"Missing bilingual translation for "+key);
