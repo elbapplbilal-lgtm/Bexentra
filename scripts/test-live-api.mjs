@@ -24,6 +24,12 @@ const solBlock={blockhash:"G".repeat(32),blockTime:1790960000,signatures:[solSig
 function makeHandler({rpc,dbRows={}}){
  const rpcCalls=[],queries=[];
  const fetch=async(url,init)=>{
+  if(String(url).includes("api.coingecko.com")){
+   if(rpc.priceUnavailable)return new Response("Throttled",{status:429});
+   const coin=String(url).includes("binancecoin")?"binancecoin":"solana";
+   const quote=rpc.priceQuote||{usd:rpc.priceUsd||0,last_updated_at:Math.floor(Date.now()/1000)};
+   return new Response(JSON.stringify({[coin]:quote}),{status:200,headers:{"content-type":"application/json"}});
+  }
   const body=JSON.parse(init.body);
   rpcCalls.push({method:body.method,chain:String(url).includes("solana")?"solana":"bnb"});
   if(rpc.fail)throw Error("Mock provider unavailable");
@@ -295,4 +301,28 @@ await scenario("Solana retries on secondary public RPC when primary is rate-limi
  assert.equal(h.rpcCalls.filter(x=>x.method==="getTransaction").length,2);
 });
 
+
+await scenario("BNB quote has validated timestamp and explicit market source",async()=>{
+ const h=makeHandler({rpc:{priceUsd:610.24}});
+ const a=await h.request("/price?chain=bnb");
+ assert.equal(a.status,200);assert.equal(a.data.native_unit,"BNB");
+ assert.equal(a.data.source,"coingecko");assert.equal(a.data.usd_price,610.24);
+ assert(Number.isFinite(Date.parse(a.data.price_updated_at)));
+});
+await scenario("SOL quote uses Solana source identity",async()=>{
+ const h=makeHandler({rpc:{priceUsd:162.5}});
+ const a=await h.request("/price?chain=solana");
+ assert.equal(a.status,200);assert.equal(a.data.native_unit,"SOL");
+ assert.equal(a.data.usd_price,162.5);
+});
+await scenario("Stale quote yields unavailable instead of a made-up value",async()=>{
+ const h=makeHandler({rpc:{priceQuote:{usd:610,last_updated_at:Math.floor(Date.now()/1000)-720}}});
+ const a=await h.request("/price?chain=bnb");
+ assert.equal(a.status,503);assert.equal(a.data.reason,"price_unavailable");
+});
+await scenario("Rate-limited price provider yields unavailable",async()=>{
+ const h=makeHandler({rpc:{priceUnavailable:true}});
+ const a=await h.request("/price?chain=bnb");
+ assert.equal(a.status,503);assert.equal(a.data.reason,"price_unavailable");
+});
 console.log("BEXENTRA live API:",passed,"scenarios passed");
