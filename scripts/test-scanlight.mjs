@@ -38,7 +38,7 @@ assert(explorer.includes('walletCopyBtn").onclick=()=>copyText'));
 assert(explorer.includes('classList.toggle("bex-address-layout",type==="address")'));
 console.log("ScanLight verification: preserved search, original white layout, bilingual content, real wallet balances, no fake USD/tokens");
 
-assert(home.includes("scanlight-mobile-fixes.css?v=1")&&sw.includes("scanlight-mobile-fixes.css?v=1"));
+assert(home.includes("scanlight-mobile-fixes.css?v=2")&&sw.includes("scanlight-mobile-fixes.css?v=2"));
 assert(home.includes('src="public/app.js?v=44"')&&sw.includes("app.js?v=44"));
 assert(home.includes('aria-controls="mobileMenu"'));
 assert.equal(home.split('id="quickRefresh"').length,2);
@@ -47,3 +47,9 @@ assert(!quick.includes('id="quickRefresh"'),"Refresh should not take a fifth til
 assert(app.includes('aria-expanded')&&app.includes('e.key==="Escape"'));
 assert(fixes.includes("text-shadow:none!important")&&fixes.includes("z-index:160!important"));
 assert(fixes.split("{").length===fixes.split("}").length);
+
+assert(fixes.includes('#recentBlocks .reference-row .feed-side'));
+assert(fixes.includes('color:#174870!important'));
+assert(fixes.includes('background:#eaf4fe!important'));
+assert(fixes.includes('#recentTransactions .reference-row .feed-side'));
+assert(fixes.includes('box-shadow:none!important'));
