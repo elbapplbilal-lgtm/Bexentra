@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#020a1c">
+<meta name="theme-color" content="#f5f7fb">
 <meta name="color-scheme" content="dark light">
 <meta name="description" content="BEXENTRA blockchain explorer for indexed BNB Chain and Solana data">
 <link rel="manifest" href="manifest.webmanifest">
@@ -24,8 +24,9 @@
 <link rel="stylesheet" href="public/visitor-guide.css?v=1">
 <link rel="stylesheet" href="public/category-view.css?v=3">
 <link rel="stylesheet" href="public/home-refinement.css?v=1">
+<link rel="stylesheet" href="public/bex-scanlight-v1.css?v=1">
 </head>
-<body class="bex-home bex-reference neon-fidelity">
+<body class="bex-home bex-reference neon-fidelity bex-scanlight light-mode">
 
 <header class="app-header">
   <div class="header-left">
@@ -91,6 +92,7 @@
     <div class="quick-grid">
       <a href="?view=blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
       <a href="?view=transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="explorer.html?type=address" aria-label="محافظ العملات الرقمية"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#scan"></use></svg></span><div><b data-i18n="quick.address">المحافظ</b><small data-i18n="quick.addressSub">رصيد BNB وSOL والنشاط</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
       <button id="quickRefresh" type="button"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#refresh"></use></svg></span><div><b data-i18n="quick.refresh">تحديث</b><small data-i18n="quick.refreshSub">إعادة جلب البيانات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></button>
       <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
     </div>
@@ -141,7 +143,7 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=9" defer></script>
+<script src="public/preferences.js?v=10" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/app.js?v=43" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
