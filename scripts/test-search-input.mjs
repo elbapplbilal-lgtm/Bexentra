@@ -1,0 +1,22 @@
+import assert from "node:assert/strict";
+import {readFile} from "node:fs/promises";
+import {runInNewContext} from "node:vm";
+const window={};
+runInNewContext(await readFile(new URL("../public/search-input.js",import.meta.url),"utf8"),{window,URL});
+const parse=window.BexentraSearch.normalize;
+const hash="0x"+"a".repeat(64),address="0x"+"b".repeat(40);
+const signature="3".repeat(88),solanaAccount="4".repeat(44);
+assert.equal(parse("127481196","bnb").type,"block");
+assert.equal(parse(hash,"bnb").type,"tx");
+assert.equal(parse(address,"bnb").type,"address");
+assert.equal(parse(signature,"solana").type,"tx");
+assert.equal(parse(solanaAccount,"solana").type,"address");
+assert.equal(parse("https://bscscan.com/tx/"+hash,"bnb").value,hash);
+assert.equal(parse("https://solscan.io/tx/"+signature,"solana").value,signature);
+assert.equal(parse("https://bscscan.com/tx/"+hash,"solana").error,"wrongNetwork");
+for(const v of ["99999999999999999999","9007199254740992","-1","12.5"])
+ assert.equal(parse(v,"bnb","block").error,"invalid");
+assert.equal(parse("https://evil.example/tx/"+hash,"bnb").error,"unsupportedUrl");
+assert.equal(parse("123","invalid-chain").error,"wrongNetwork");
+assert.equal(parse("0x123","bnb").error,"invalid");
+console.log("Search parser passed: BNB, Solana, URLs, bounds and invalid networks");
