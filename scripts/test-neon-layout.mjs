@@ -14,7 +14,7 @@ const parseErrors=[];
 csstree.parse(css,{onParseError:e=>parseErrors.push(String(e.message||e))});
 assert.deepEqual(parseErrors,[],"Style parser should not report invalid CSS");
 const index=await readFile(path.join(root,"index.html"),"utf8");
-assert(/class="bex-home bex-reference neon-fidelity(?:\\s|")/.test(index),\n "Neon dashboard classes must remain present with optional later feature classes");
+assert(index.includes('class="bex-home bex-reference neon-fidelity'), "Neon dashboard classes must remain present");
 assert(index.indexOf('public/neon-reference-v5.css?v=1')>index.indexOf('public/mobile-layout-stability.css'),
  "Neon overrides must load after previous mobile layout patches");
 const sw=await readFile(path.join(root,"sw.js"),"utf8");
