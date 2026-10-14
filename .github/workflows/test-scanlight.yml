@@ -9,6 +9,11 @@ on:
       - 'public/preferences.js'
       - 'public/explorer.js'
       - 'sw.js'
+      - 'api-docs.html'
+      - 'public/api-docs.css'
+      - 'public/api-docs.js'
+      - 'public/openapi.json'
+      - 'scripts/test-api-docs.mjs'
       - 'scripts/test-scanlight.mjs'
       - '.github/workflows/test-scanlight.yml'
   workflow_dispatch:
@@ -28,7 +33,10 @@ jobs:
           node --check public/app.js
           node --check public/explorer.js
           node --check public/preferences.js
+          node --check public/api-docs.js
       - name: Verify clean home and address, no fabricated wallet metrics
         run: node scripts/test-scanlight.mjs
+      - name: Verify bilingual public API docs match implemented routes
+        run: node scripts/test-api-docs.mjs
       - name: Verify chain-aware wallet and transaction searches
         run: node scripts/test-search-input.mjs
