@@ -25,7 +25,8 @@
   }
   if(!["auto","tx","address","block"].includes(type))type="auto";
   if(type==="auto"){
-   if(/^[0-9]+$/.test(q))type="block";
+   if(chain==="solana"&&solTx.test(q))type="tx";
+   else if(/^[0-9]+$/.test(q))type="block";
    else if(chain==="bnb"&&bnbAddr.test(q))type="address";
    else if(chain==="solana"&&solAddr.test(q))type="address";
    else type="tx";
