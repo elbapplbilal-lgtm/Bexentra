@@ -76,10 +76,10 @@ function setIndexStatus(v){
 // A green "Live" status is only shown for a recent, actually observed RPC block.
 function setOnchainStatus(block,observedAt){
  const timestamp=block?.block_time||observedAt;const elapsed=timestamp?Date.now()-new Date(timestamp).getTime():Infinity;
- const recent=Number.isFinite(elapsed)&&elapsed>=-30000&&elapsed<180000;
+ const recent=Number.isFinite(elapsed)&&elapsed>=-30000&&elapsed<45000;
  paintIndexSignal(recent?"recent":"stale");
  if(indexStatus){
-  indexStatus.textContent="● "+tr(recent?"stats.onchain":"stats.onchainSlow");
+  indexStatus.textContent=recent?tr("stats.onchain"):"● "+tr("stats.onchainSlow");
   indexStatus.className=recent?"status-good":"status-stale";
  }
  if(indexStatusNote)indexStatusNote.textContent=timestamp?ago(timestamp):"—";
@@ -200,7 +200,7 @@ function renderDashboardView(view,chain){
   const count=pageView==="blocks"?bs.length:ts.length;
   const label=tr(pageView==="blocks"?"nav.blocks":"nav.transactions");
   const mixed=onchain&&bs.some(b=>b._indexed_sample);
-  const source=mixed?(document.documentElement.lang==="en"?"Recent data and saved records":"معلومات جديدة وسجلات سابقة"):
+  const source=mixed?(document.documentElement.lang==="en"?"Recent and saved information":"معلومات حديثة وأخرى سابقة"):
    onchain?(document.documentElement.lang==="en"?"Available network data":"معلومات من الشبكة"):
    (document.documentElement.lang==="en"?"Available saved records":"معلومات مسجلة من قبل");
   meta.textContent=count+" "+label+" · "+source;

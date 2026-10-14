@@ -375,8 +375,8 @@ function showSearchWelcome(){
  $("simpleResult").hidden=true;
  $("searchWelcome").hidden=false;
  const guide=$("detailEducation");if(guide)guide.hidden=true;
- $("detailTitle").textContent=easy("مستكشف البلوكتشين","Blockchain Explorer");
- $("detailSubtitle").textContent=easy("ابحث عن عنوان محفظة، معاملة أو بلوك.","Search an address, transaction hash or block.");
+ $("detailTitle").textContent=easy("ابحث في الشبكة","Search the network");
+ $("detailSubtitle").textContent=easy("ابحث عن محفظة، معاملة، أو بلوك.","Search a wallet, transaction, or block.");
  $("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA";
 }
 
@@ -420,7 +420,7 @@ async function loadBlock(){
   row(easy("عدد المعاملات داخل البلوك","Transactions inside the block"),b.transaction_count),row(easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),utcWhen(b.block_time))];
  if(b.indexed_at)fields.push(row(easy("وقت تسجيل البيانات","Indexed at"),b.indexed_at));
  fields.push(row(tr("details.source"),tr(fromRpc?"details.sourceLive":"details.sourceIndexed")));
- finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),
+ finish((document.documentElement.lang==="en"?(chain==="bnb"?"Block ":"Slot "):"بلوك ")+Number(b.height).toLocaleString("en-US"),
   tr(fromRpc?"details.liveBlockSource":"details.subtitle"),fields,b.height,"block");
  showProvenance(b.source);
  renderBlockSummary(b);
@@ -439,7 +439,7 @@ async function loadTx(){
    row(easy("الحالة والرسوم","Status and fee"),tr("details.noNativeStatus"))
   ],t.tx_hash,"tx");
   $("tokenActivity").hidden=false;
-  $("tokenCount").textContent=transfers.length+" EVENTS";
+  $("tokenCount").textContent=transfers.length+" "+easy("تحويلات","transfers");
   renderTokenEvents(transfers,"");
   renderTokenOnlySummary(t,transfers);
   const guide=$("detailEducation");if(guide)guide.hidden=false;
@@ -489,12 +489,12 @@ function renderTokenEvents(transfers,address){
    const hash=document.createElement("b");
    hash.textContent=short(t.tx_hash,12);
    const token=document.createElement("small");
-   token.textContent="Token: "+short(t.token_address,10)+" · Block "+esc(t.block_height);
+   token.textContent=easy("العملة: ","Token: ")+short(t.token_address,10)+" · "+easy("بلوك ","Block ")+esc(t.block_height);
    const amount=document.createElement("small");
-   amount.textContent="Raw amount: "+esc(t.amount_raw);
+   amount.textContent=easy("الكمية قبل الحساب: ","Amount before adjustment: ")+esc(t.amount_raw);
    const side=document.createElement("span");
    side.className="feed-side";
-   side.textContent=direction+" · "+tr("details.detailsLabel");
+   side.textContent=easy(direction==="OUT"?"صادر":direction==="IN"?"وارد":direction==="IN / OUT"?"تحويل داخلي":"تحويل",direction==="OUT"?"Sent":direction==="IN"?"Received":direction==="IN / OUT"?"Internal":"Transfer")+" · "+tr("details.detailsLabel");
    main.append(hash,token,amount);
    summary.append(symbol,main,side);
    const details=document.createElement("div");
@@ -512,12 +512,12 @@ function renderTokenEvents(transfers,address){
     details.append(line);
    }
    field(tr("details.txHash"),t.tx_hash);
-   field("Block",t.block_height);
+   field(easy("بلوك","Block"),t.block_height);
    field(tr("details.logIndex"),t.log_index);
    field(tr("details.tokenContract"),t.token_address,true);
    field(tr("details.from"),from,true);
    field(tr("details.to"),to,true);
-   field(tr("details.rawAmount")+" (base units)",t.amount_raw);
+   field(tr("details.rawAmount"),t.amount_raw);
    const note=document.createElement("p");
    note.className="token-transfer-note";
    note.textContent=tr("details.tokenNote");
@@ -541,7 +541,7 @@ async function loadTokenTransfers(address){
  try{
   const data=await request("/token-transfers",{chain:"bnb",address,limit:"30"});
   const transfers=Array.isArray(data.transfers)?data.transfers:[];
-  count.textContent=transfers.length+" EVENTS";
+  count.textContent=transfers.length+" "+easy("تحويلات","transfers");
   renderTokenEvents(transfers,address);
  }catch(e){count.textContent="—";feed.textContent=tr("details.tokenFailed")+" "+e.message}
 }
@@ -558,12 +558,12 @@ function addAddressRow(t,address){
  const main=document.createElement("div");main.className="feed-main";
  const hash=document.createElement("b");hash.textContent=short(t.tx_hash,12);
  const info=document.createElement("small");
- info.textContent=direction+" · "+(sent?easy("إلى: ","To: ")+short(recipient,8):
-  received?easy("من: ","From: ")+short(sender,8):"Block "+esc(t.block_height));
- const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+
+ info.textContent=easy(direction==="OUT"?"صادر":direction==="IN"?"وارد":direction==="IN / OUT"?"تحويل داخلي":"—",direction==="OUT"?"Sent":direction==="IN"?"Received":direction)+" · "+(sent?easy("إلى: ","To: ")+short(recipient,8):
+  received?easy("من: ","From: ")+short(sender,8):easy("بلوك ","Block ")+esc(t.block_height));
+ const meta=document.createElement("small");meta.textContent=easy("بلوك ","Block ")+esc(t.block_height)+" · "+
   (t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):
   easy("غير مؤكدة","Unverified"));
- const side=document.createElement("span");side.className="feed-side";side.textContent=direction;
+ const side=document.createElement("span");side.className="feed-side";side.textContent=easy(direction==="OUT"?"صادر":direction==="IN"?"وارد":direction==="IN / OUT"?"تحويل داخلي":"—",direction==="OUT"?"Sent":direction==="IN"?"Received":direction);
  main.append(hash,info,meta);row.append(icon,main,side);return row;
 }
 function insertWalletPage(data,address){
@@ -574,7 +574,7 @@ function insertWalletPage(data,address){
   if(seenWalletTransactions.has(key))continue;
   seenWalletTransactions.add(key);feed.append(addAddressRow(tx,address));walletCount++;
  }
- $("addressCount").textContent=walletCount+" TX";
+ $("addressCount").textContent=walletCount+" "+easy("معاملة","transactions");
  walletCursor=data.has_more&&data.next_cursor?data.next_cursor:null;
  renderAddressSummary(address,walletCount,walletBalance);
 }
@@ -665,8 +665,8 @@ document.querySelectorAll("[data-search-kind]").forEach(button=>button.addEventL
  if(!["address","tx","block"].includes(kind))return;
  $("detailType").value=kind;
  const input=$("detailInput");
- if(kind==="address")input.placeholder=easy("عنوان محفظة BNB أو Solana","Wallet address on BNB or Solana");
- else if(kind==="tx")input.placeholder=easy("الصق معرّف المعاملة","Paste a transaction hash");
+ if(kind==="address")input.placeholder=easy("ابحث عن عنوان المحفظة","Enter a wallet address");
+ else if(kind==="tx")input.placeholder=easy("أدخل رقم المعاملة","Enter a transaction ID");
  else input.placeholder=easy("أدخل رقم البلوك","Enter block number");
  input.focus();
 }));
