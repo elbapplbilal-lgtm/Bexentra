@@ -174,8 +174,8 @@ function txMetrics(t){
 }
 function txNote(t){
  const source=["rpc_live","rpc_block_verified","indexed_plus_rpc"].includes(t.source)
- ?easy("المعلومات مأخوذة من بيانات شبكة أو من فهرس مع تحقق مباشر.","Data originates from RPC or from indexed data enhanced with live verification.")
- :easy("بعض البيانات من فهرس BEXENTRA الجزئي وقد لا تكون جميع التفاصيل متوفرة.","Some data comes from the partial BEXENTRA index.");
+ ?easy("تأكدنا من بعض التفاصيل من الشبكة.","Data originates from RPC or from indexed data enhanced with live verification.")
+ :easy("بعض التفاصيل ما وصلاتناش بعد.","Some data comes from the partial BEXENTRA index.");
  if(chain!=="bnb")return source;
  if(t.status==="failed"&&isDecimal(t.native_value_wei))return easy(
   "المعاملة فشلت؛ قيمة BNB المرفقة بطلب المعاملة لا تعني حدوث تحويل ناجح. ",
@@ -212,7 +212,7 @@ function paintTx(t){
   row(easy("حالة التنفيذ","Execution status"),["success","failed"].includes(t.status)
    ?tr(t.status==="success"?"details.confirmed":"details.failed"):tr("details.unavailable")),
   row(easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)),
-  ...(t.indexed_at?[row(easy("وقت الفهرسة","Indexed at"),t.indexed_at)]:[]),
+  ...(t.indexed_at?[row(easy("وقت تسجيل البيانات","Indexed at"),t.indexed_at)]:[]),
   row(tr("details.source"),tr(["rpc_live","indexed_plus_rpc","rpc_block_verified"].includes(t.source)
     ?"details.sourceLive":"details.sourceIndexed"))
  ],t.tx_hash,"tx");
@@ -280,9 +280,9 @@ function renderBlockSummary(b){
    [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"]
   ],
   b.source==="rpc_live"
-   ?easy("المصدر: معلومات قراها التطبيق من الشبكة مباشرة. هادشي ما كيعنيش أن جميع المعاملات مفهرسة عندنا.",
+   ?easy("المعلومات من الشبكة مباشرة. بعض المعاملات ممكن ما تبانش هنا.",
          "Source: read directly from the blockchain. This does not mean all transactions are indexed by BEXENTRA.")
-   :easy("المصدر: معلومات من فهرس BEXENTRA، وقد تكون متأخرة عن آخر بلوك.",
+   :easy("المعلومات من سجلات BEXENTRA، وقد تكون متأخرة.",
          "Source: BEXENTRA's partial index, which may lag behind the latest block."));
 }
 function renderTxSummary(t){
@@ -352,18 +352,18 @@ function setVerifiedWalletBalance(address,value){
 function renderAddressSummary(address,count,balance=null){
  const items=[
  [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
- [easy("المعاملات المعروضة من الفهرس","Transactions shown from index"),easyCount(count)],
+ [easy("المعاملات اللي لقينا","Transactions shown from index"),easyCount(count)],
  [easy("العنوان","Address"),short(address,8)]
  ];
  if(balance&&balance.source==="rpc_live"&&balance.chain===chain&&
   balance.address.toLowerCase()===address.toLowerCase()&&isDecimal(balance.native_balance))
-  items.unshift([easy("رصيد العملة الأساسية (RPC)","Native balance (live RPC)"),
+  items.unshift([easy("الرصيد","Native balance (live RPC)"),
    nativeAmount(balance.native_balance,chain==="bnb"?"BNB":"SOL",chain==="bnb"?18:9)]);
  plainSummary(easy("نتائج البحث عن العنوان","Address search results"),
-  easy("المعاملات الظاهرة متاحة في فهرس BEXENTRA. الرصيد عند توفره يُقرأ مباشرة من الشبكة.",
+  easy("المعاملات من سجلات BEXENTRA. الرصيد من الشبكة.",
     "Transactions shown are indexed by BEXENTRA. Native balance, when available, comes from live network RPC."),
   items,
-  easy("الفهرس جزئي وليس السجل الكامل. رصيد العملة الأساسية قراءة لحظية قد تتغير، ولا يشمل أرصدة التوكنات.",
+  easy("ممكن تكون كاينة معاملات أخرى ما ظهرتش هنا. الرصيد كيتغير وما كيشملش باقي العملات.",
     "Index coverage is partial, not a full history. Native balance is a point-in-time reading and excludes token balances."));
 }
 function showSearchWelcome(){
@@ -418,7 +418,7 @@ async function loadBlock(){
  const fromRpc=b.source==="rpc_live";
  const fields=[row(easy("رقم البلوك / Slot","Block / Slot"),b.height,true),row(easy("المعرّف الكامل للبلوك (Block Hash)","Full block hash"),b.block_hash,true),
   row(easy("عدد المعاملات داخل البلوك","Transactions inside the block"),b.transaction_count),row(easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),utcWhen(b.block_time))];
- if(b.indexed_at)fields.push(row(easy("وقت الفهرسة","Indexed at"),b.indexed_at));
+ if(b.indexed_at)fields.push(row(easy("وقت تسجيل البيانات","Indexed at"),b.indexed_at));
  fields.push(row(tr("details.source"),tr(fromRpc?"details.sourceLive":"details.sourceIndexed")));
  finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),
   tr(fromRpc?"details.liveBlockSource":"details.subtitle"),fields,b.height,"block");
@@ -583,7 +583,7 @@ function offerMoreWallet(address){
  if(!walletCursor)return;
  const btn=document.createElement("button");btn.id="walletLoadMore";
  btn.type="button";btn.className="wallet-load-more";
- btn.textContent=easy("عرض معاملات مفهرسة أقدم","Load older indexed transactions");
+ btn.textContent=easy("شوف معاملات أقدم","Load older indexed transactions");
  btn.onclick=async()=>{
   const previous=walletCursor;if(!previous)return;
   btn.disabled=true;btn.textContent=easy("جاري التحميل…","Loading…");
@@ -610,7 +610,7 @@ async function loadAddress(){
   tr("details.indexedTxSummary"),[
   row(tr("details.address"),query,true),
   row(tr("details.network"),chain==="bnb"?"BNB Smart Chain":"Solana"),
-  row(easy("التغطية","Coverage"),easy("فهرس جزئي","Partial index"))
+  row(easy("التغطية","Coverage"),easy("بعض المعلومات فقط","Partial index"))
  ],query,"address");
  $("addressActivity").hidden=false;$("addressFeed").replaceChildren();
  prepareWalletProfile(query);

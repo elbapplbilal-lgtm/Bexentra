@@ -66,7 +66,7 @@ assert(app.includes('blocks(chain,12)'));
 assert(app.includes('heights.has(height)'));
 assert(app.includes('block._indexed_sample'));
 assert(app.includes('Recent data and saved records'));
-assert(app.includes('بيانات حديثة وسجلات محفوظة'));
+assert(app.includes('معلومات جديدة وسجلات سابقة'));
 assert(app.includes('pageView!=="blocks"'));
 
 const explorerLight=await read("public/scanlight-detail-v2.css");
@@ -163,6 +163,11 @@ assert(app.includes('recent?tr("stats.running")'));
 assert(app.includes('timestamp?ago(timestamp):"—"'));
 assert.equal(prefs.split('"stats.running":').length,3);
 assert(prefs.includes('"stats.running":"الشبكة خدامة دابا ● مباشر"'));
-assert(!prefs.includes('Tx Hash'));
-assert(!prefs.includes('مفهرس'));
+assert(!prefs.slice(0,prefs.indexOf('  en:{')).includes('Tx Hash'));
+assert(!prefs.slice(0,prefs.indexOf('  en:{')).includes('مفهرس'));
 assert(!prefs.includes('المعاملات المعروضة'));
+
+const visitorAr=prefs.slice(0,prefs.indexOf('  en:{'));
+assert(visitorAr.includes('"wallet.note":"الرصيد من الشبكة، والقيمة بالدولار تقريبية'));
+for(const text of ["المعاملات المعروضة من الفهرس","وقت الفهرسة","رصيد العملة الأساسية (RPC)"])
+ assert(!explorer.includes(text),"Technical visitor copy remains: "+text);
