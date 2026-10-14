@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v97-explorer-pro";
+const CACHE="bexentra-shell-v98-web3bio-identity";
 const SHELL=[
  "./","./index.html","./explorer.html","./watchlist.html","./public/watchlist.css?v=1","./public/watchlist.js?v=1","./public/watchlist-utils.mjs","./logo.png?v=2","./public/logo-glow-v1.css?v=2","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=2","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -11,6 +11,7 @@ const SHELL=[
  "./public/app.js?v=49","./public/explorer.js?v=52",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/explorer-pro-v1.css?v=1","./public/coverage-note.js?v=1",
+ "./public/identity-profile.css?v=1","./public/identity-utils.js?v=1","./public/identity-profile.js?v=1",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=3",
  "./public/bnb-mark.svg?v=2","./public/solana-mark.svg","./public/icon.svg","./manifest.webmanifest"
 ];
