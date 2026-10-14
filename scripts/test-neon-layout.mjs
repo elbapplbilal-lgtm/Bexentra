@@ -117,7 +117,8 @@ try{
   assert(rects.hero.w>300&&rects.hero.w<=width,"Hero in viewport at "+width);
   assert(rects.searchButton.l>=rects.searchInput.r-2,"Search button should appear on the RIGHT at "+width);
   assert(rects.quick.length===4&&rects.quick[0].y===rects.quick[1].y,"Two quick tiles on the same first row at "+width);
-  assert(rects.quick[2].y>rects.quick[0].y,"Two quick tile rows at "+width);
+  if(width<=768)assert(rects.quick[2].y>rects.quick[0].y,"Two quick tile rows on mobile/tablet at "+width);
+  else assert(rects.quick[2].y===rects.quick[0].y,"Desktop quick links share a single row at "+width);
   assert(rects.statsCount===4,"Four real-data metric cards at "+width);
   assert(rects.stat[0].y===rects.stat[1].y,"Metric cards align in a row at "+width);
   assert(rects.brand.l>rects.network.r,"No header brand/network overlap at "+width);
