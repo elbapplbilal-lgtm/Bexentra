@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 const read=p=>readFile(new URL("../"+p,import.meta.url),"utf8");
-const [home,detail,css,prefs,explorer,sw]=await Promise.all([
+const [home,detail,css,prefs,explorer,sw,fixes,app]=await Promise.all([
  read("index.html"),read("explorer.html"),read("public/bex-scanlight-v1.css"),
- read("public/preferences.js"),read("public/explorer.js"),read("sw.js")
+ read("public/preferences.js"),read("public/explorer.js"),read("sw.js"),read("public/scanlight-mobile-fixes.css"),read("public/app.js")
 ]);
 // Preserve the existing production search, menus, and read-only navigation.
 for(const id of ["globalSearch","globalInput","network","menuToggle","quickRefresh",
@@ -37,3 +37,13 @@ assert(explorer.includes('walletTokenHoldings").textContent=tr("wallet.unavailab
 assert(explorer.includes('walletCopyBtn").onclick=()=>copyText'));
 assert(explorer.includes('classList.toggle("bex-address-layout",type==="address")'));
 console.log("ScanLight verification: preserved search, original white layout, bilingual content, real wallet balances, no fake USD/tokens");
+
+assert(home.includes("scanlight-mobile-fixes.css?v=1")&&sw.includes("scanlight-mobile-fixes.css?v=1"));
+assert(home.includes('src="public/app.js?v=44"')&&sw.includes("app.js?v=44"));
+assert(home.includes('aria-controls="mobileMenu"'));
+assert.equal(home.split('id="quickRefresh"').length,2);
+const quick=home.slice(home.indexOf('<div class="quick-grid">'),home.indexOf('</div>\n  </section>',home.indexOf('<div class="quick-grid">')));
+assert(!quick.includes('id="quickRefresh"'),"Refresh should not take a fifth tile");
+assert(app.includes('aria-expanded')&&app.includes('e.key==="Escape"'));
+assert(fixes.includes("text-shadow:none!important")&&fixes.includes("z-index:160!important"));
+assert(fixes.split("{").length===fixes.split("}").length);
