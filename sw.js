@@ -1,4 +1,4 @@
-const CACHE="bexentra-shell-v60-category-navigation";
+const CACHE="bexentra-shell-v61-category-i18n";
 const SHELL=[
  "./","./index.html","./explorer.html",
  "./public/home.css?v=32","./public/stage1.css?v=1",
@@ -7,7 +7,7 @@ const SHELL=[
  "./public/style.css?v=24","./public/nav.css?v=30",
  "./public/explorer-detail.css?v=31","./public/detail-mobile-fix.css?v=4","./public/neon-detail.css?v=2","./public/tx-detail-help.css?v=1",
  "./public/detail-nav-rescue.css?v=1","./public/category-view.css?v=1",
- "./public/preferences.js?v=6","./public/search-input.js?v=1",
+ "./public/preferences.js?v=7","./public/search-input.js?v=1",
  "./public/app.js?v=42","./public/explorer.js?v=39",
  "./public/neon-reference-v5.css?v=1","./public/neon-reference-v6.css?v=1","./public/feature-icons-3d.svg",
  "./public/realtime.css?v=1","./public/realtime-config.js?v=2","./public/realtime-client.js?v=1",
