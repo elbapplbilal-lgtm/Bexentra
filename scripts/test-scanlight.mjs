@@ -39,7 +39,7 @@ assert(explorer.includes('classList.toggle("bex-address-layout",type==="address"
 console.log("ScanLight verification: preserved search, original white layout, bilingual content, real wallet balances, no fake USD/tokens");
 
 assert(home.includes("scanlight-mobile-fixes.css?v=2")&&sw.includes("scanlight-mobile-fixes.css?v=2"));
-assert(home.includes('src="public/app.js?v=44"')&&sw.includes("app.js?v=44"));
+assert(home.includes('src="public/app.js?v=45"')&&sw.includes("app.js?v=45"));
 assert(home.includes('aria-controls="mobileMenu"'));
 assert.equal(home.split('id="quickRefresh"').length,2);
 const quick=home.slice(home.indexOf('<div class="quick-grid">'),home.indexOf('</div>\n  </section>',home.indexOf('<div class="quick-grid">')));
@@ -60,3 +60,10 @@ assert(categoryCss.includes("bex-scanlight.light-mode.category-view"));
 assert(categoryCss.includes(".feed{\n min-height:0!important"));
 assert(categoryCss.includes("background:#fff!important"));
 assert(categoryCss.split("{").length===categoryCss.split("}").length);
+
+assert(app.includes('refreshIndexedBlockSample(chain)'));
+assert(app.includes('blocks(chain,12)'));
+assert(app.includes('heights.has(height)'));
+assert(app.includes('block._indexed_sample'));
+assert(app.includes('Network + partial index'));
+assert(app.includes('pageView!=="blocks"'));
