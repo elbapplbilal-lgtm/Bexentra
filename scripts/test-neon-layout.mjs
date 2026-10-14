@@ -166,7 +166,9 @@ try{
    await page.waitForSelector("#detailOverview:not([hidden])",{timeout:15000});
    // Wait for the asynchronous verified response instead of racing the loading UI.
    await page.waitForFunction(()=>document.querySelector("#detailFields")?.textContent?.includes("128000123"),{timeout:3000}).catch(()=>{});
-   const txFields=await page.locator("#detailFields").innerText();
+   // The compact detail design intentionally hides the verbose field grid on mobile.
+   // textContent still verifies the exact number in its data source.
+   const txFields=await page.locator("#detailFields").textContent();
    console.log("OBSERVED_TX_FIELDS",txFields.slice(0,900));
    assert(txFields.includes("128000123"),
     "Observed BNB hash opens a verified on-chain-block detail instead of a false 404");
