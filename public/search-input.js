@@ -27,8 +27,8 @@
   if(type==="auto"){
    if(chain==="solana"&&solTx.test(q))type="tx";
    else if(chain==="solana"&&solAddr.test(q))type="address";
-   else if(/^[0-9]+$/.test(q))type="block";
    else if(chain==="bnb"&&bnbAddr.test(q))type="address";
+   else if(/^[0-9]+$/.test(q))type="block";
    else if(chain==="solana"&&solAddr.test(q))type="address";
    else type="tx";
   }
