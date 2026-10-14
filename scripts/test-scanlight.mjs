@@ -39,7 +39,7 @@ assert(explorer.includes('classList.toggle("bex-address-layout",type==="address"
 console.log("ScanLight verification: preserved search, original white layout, bilingual content, real wallet balances, no fake USD/tokens");
 
 assert(home.includes("scanlight-mobile-fixes.css?v=2")&&sw.includes("scanlight-mobile-fixes.css?v=2"));
-assert(home.includes('src="public/app.js?v=45"')&&sw.includes("app.js?v=45"));
+assert(home.includes('src="public/app.js?v=46"')&&sw.includes("app.js?v=46"));
 assert(home.includes('aria-controls="mobileMenu"'));
 assert.equal(home.split('id="quickRefresh"').length,2);
 const quick=home.slice(home.indexOf('<div class="quick-grid">'),home.indexOf('</div>\n  </section>',home.indexOf('<div class="quick-grid">')));
@@ -99,3 +99,20 @@ for(const lang of ["ar","en"]){
  assert(output.includes("10:34")&&output.endsWith(" UTC"),"Invalid visitor UTC time: "+output);
  assert.equal(format(null),lang==="en"?"Unavailable":"غير متوفر");
 }
+
+// Clear, truthful visitor-facing labels on dashboard and real-time sample.
+const streamClient=await read("public/realtime-client.js");
+assert(!streamClient.includes("أحداث مرصودة فآخر ثانية"));
+assert(!streamClient.includes(" (عينة)"));
+assert(streamClient.includes("التحديثات التي وصلتنا خلال آخر ثانية: "));
+assert(streamClient.includes("ليس مجموع معاملات الشبكة"));
+assert(home.includes("realtime-client.js?v=2")&&sw.includes("realtime-client.js?v=2"));
+assert(home.includes("app.js?v=46")&&sw.includes("app.js?v=46"));
+assert(home.includes("preferences.js?v=12")&&detail.includes("preferences.js?v=12")&&sw.includes("preferences.js?v=12"));
+for(const key of ["stats.title","stats.visibleTx","stats.status","stats.network","stats.onchain","stats.onchainSlow","stats.latestSample"])
+ assert.equal(prefs.split('"'+key+'":').length,3,"Visitor label needs Arabic and English: "+key);
+assert(prefs.includes('"stats.onchain":"بيانات حديثة من الشبكة"'));
+assert(prefs.includes('"stats.visibleTx":"المعاملات المعروضة"'));
+assert(prefs.includes('"stats.latestSample":"أحدث النتائج المتاحة فقط"'));
+assert(app.includes('"بيانات الشبكة المتاحة"'));
+assert(app.includes('"السجلات المحفوظة المتاحة"'));
