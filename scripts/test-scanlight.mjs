@@ -15,8 +15,8 @@ for(const id of ["detailSearch","detailInput","detailFields","addressFeed","toke
 assert(home.includes('bex-scanlight-v1.css?v=2')&&detail.includes('bex-scanlight-v1.css?v=2'));
 assert(home.includes("bex-scanlight light-mode"));
 assert(detail.includes('href="public/explorer.js?v=46"')===false); // Script, not stylesheet
-assert(detail.includes('src="public/explorer.js?v=47"'));
-assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=47"));
+assert(detail.includes('src="public/explorer.js?v=48"'));
+assert(sw.includes("bex-scanlight-v1.css?v=2")&&sw.includes("explorer.js?v=48"));
 assert(css.includes("bex-scanlight.light-mode:not(.category-view)"));
 assert(css.includes("bex-address-layout.light-mode"));
 assert(css.includes(".wallet-tabs[hidden]"));
@@ -71,7 +71,7 @@ assert(app.includes('pageView!=="blocks"'));
 const explorerLight=await read("public/scanlight-detail-v2.css");
 assert(detail.includes('scanlight-detail-v2.css?v=1'));
 assert(sw.includes('scanlight-detail-v2.css?v=1'));
-assert(detail.includes('src="public/explorer.js?v=47"')&&sw.includes('explorer.js?v=47'));
+assert(detail.includes('src="public/explorer.js?v=48"')&&sw.includes('explorer.js?v=48'));
 assert(detail.includes('id="detailMenu"')&&detail.includes('id="detailMenuToggle"'));
 assert(detail.includes('id="searchWelcome"')&&detail.includes('data-search-kind="address"'));
 assert(detail.includes('data-search-kind="tx"')&&detail.includes('data-search-kind="block"'));
@@ -84,3 +84,18 @@ assert(explorerLight.split("{").length===explorerLight.split("}").length);
 for(const key of ["scan.menuBrowse","scan.menuWallets","scan.menuTools","scan.tx",
  "scan.block","scan.sol","scan.welcome","scan.welcomeText","scan.address","scan.safety"])
  assert.equal(prefs.split('"'+key+'":').length,3,"Missing bilingual translation for "+key);
+
+const utcFn=explorer.match(/function utcWhen\(value\)\{[\s\S]*?\n\}/)?.[0];
+assert(utcFn,"Missing consistent UTC formatter");
+assert(!explorer.includes("توقيت جهازك"));
+assert(!explorer.includes("your device"));
+assert(!explorer.includes("localWhen("));
+assert(explorer.includes('easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)")'));
+const renderTime=new Function("document","easy",utcFn+"; return utcWhen;");
+const sample="2026-10-12T10:34:00.000Z";
+for(const lang of ["ar","en"]){
+ const format=renderTime({documentElement:{lang}},(ar,en)=>lang==="en"?en:ar);
+ const output=format(sample);
+ assert(output.includes("10:34")&&output.endsWith(" UTC"),"Invalid visitor UTC time: "+output);
+ assert.equal(format(null),lang==="en"?"Unavailable":"غير متوفر");
+}
