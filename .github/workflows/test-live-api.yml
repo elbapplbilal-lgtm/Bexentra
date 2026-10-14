@@ -1,5 +1,13 @@
 name: Verify BEXENTRA Live RPC API
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'neon/functions/**'
+      - 'scripts/test-live-api.mjs'
+      - 'scripts/test-search-input.mjs'
+      - 'public/search-input.js'
+      - '.github/workflows/test-live-api.yml'
   pull_request:
     paths:
       - 'neon/functions/**'
@@ -20,3 +28,5 @@ jobs:
           node-version: '22'
       - name: Test real-response parsing and fallback safety
         run: node scripts/test-live-api.mjs
+      - name: Check BNB / Solana search input edge cases
+        run: node scripts/test-search-input.mjs
