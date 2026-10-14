@@ -192,11 +192,20 @@ const logoCSS=await read("public/logo-glow-v1.css");
 assert(logoCSS.includes("drop-shadow(0 0 6px"));
 assert(logoCSS.split("{").length===logoCSS.split("}").length);
 for(const page of [home,detail]){
- assert(page.includes('logo.png?v=1'));
- assert(page.includes('public/logo-glow-v1.css?v=1'));
- assert(page.includes('<link rel="icon" href="logo.png?v=1" type="image/png">'));
+ assert(page.includes('logo.png?v=2'));
+ assert(page.includes('public/logo-glow-v1.css?v=2'));
+ assert(page.includes('<link rel="icon" href="logo.png?v=2" type="image/png">'));
 }
 assert(home.includes('class="brand-logo"><img'));
 assert(detail.includes('class="detail-brand"')&&detail.includes('class="logo"><span><img'));
-assert(sw.includes('"./logo.png?v=1"'));
-assert(sw.includes('"./public/logo-glow-v1.css?v=1"'));
+assert(sw.includes('"./logo.png?v=2"'));
+assert(sw.includes('"./public/logo-glow-v1.css?v=2"'));
+
+const png=await import("node:fs/promises").then(fs=>fs.readFile(new URL("../logo.png",import.meta.url)));
+assert(png.length>3000 && png.length<200000,"Logo PNG size seems invalid");
+assert.equal(png.subarray(0,8).toString("hex"),"89504e470d0a1a0a","PNG signature");
+assert.equal(png.subarray(-8).toString("hex"),"49454e44ae426082","PNG IEND checksum");
+assert.equal(png.readUInt32BE(16),128,"PNG width");
+assert.equal(png.readUInt32BE(20),128,"PNG height");
+assert(logoCSS.includes("background-image:none!important"));
+assert(logoCSS.includes("visibility:visible!important"));

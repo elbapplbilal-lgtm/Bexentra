@@ -44,5 +44,5 @@ assert(schema.paths["/block"].get.parameters.some(p=>p.name==="height"&&p.requir
 assert(api.includes('"Access-Control-Allow-Origin":"https://elbapplbilal-lgtm.github.io"'));
 console.log("PASS BEXENTRA API documentation: 10 implemented routes, examples, navigation, localization, service worker, safe GET tester, OpenAPI contract");
 
-assert(html.includes('<span class="mark"><img src="logo.png?v=1"'));
-assert(html.includes('logo-glow-v1.css?v=1'));
+assert(html.includes('<span class="mark"><img src="logo.png?v=2"'));
+assert(html.includes('logo-glow-v1.css?v=2'));

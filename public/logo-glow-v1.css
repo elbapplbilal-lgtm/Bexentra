@@ -21,3 +21,19 @@ body.detail-v31 footer .brand .logo img{width:36px;height:36px;display:block;obj
 @media(prefers-reduced-motion:reduce){
  .app-header .brand .brand-logo img,body.detail-v31 .detail-brand b img,.topbar .brand .mark img{animation:none!important;}
 }
+
+/* v2: override earlier blue-square branding even in ScanLight's light mode. */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode:not(.category-view) .app-header .brand .brand-logo,
+body.bex-home.neon-fidelity .app-header .brand .brand-logo,
+body.detail-v31.light-mode .detail-header .detail-brand b,
+body.detail-v31.bex-address-layout.light-mode .detail-header .detail-brand b{
+  background:transparent!important;background-image:none!important;
+  box-shadow:none!important;border:0!important;color:transparent!important;
+}
+body.bex-home.neon-fidelity .app-header .brand .brand-logo > img,
+body.detail-v31.light-mode .detail-header .detail-brand b > img,
+.topbar .brand .mark > img{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  width:100%!important;height:100%!important;object-fit:contain!important;
+  position:relative!important;z-index:2!important;
+}
