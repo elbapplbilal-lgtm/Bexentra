@@ -200,9 +200,9 @@ function renderDashboardView(view,chain){
   const count=pageView==="blocks"?bs.length:ts.length;
   const label=tr(pageView==="blocks"?"nav.blocks":"nav.transactions");
   const mixed=onchain&&bs.some(b=>b._indexed_sample);
-  const source=mixed?(document.documentElement.lang==="en"?"Network + partial index":"الشبكة + فهرس جزئي"):
-   onchain?(document.documentElement.lang==="en"?"Network sample":"عينة من الشبكة"):
-   (document.documentElement.lang==="en"?"Indexed data":"بيانات مفهرسة");
+  const source=mixed?(document.documentElement.lang==="en"?"Recent data and saved records":"بيانات حديثة وسجلات محفوظة"):
+   onchain?(document.documentElement.lang==="en"?"Available network data":"بيانات الشبكة المتاحة"):
+   (document.documentElement.lang==="en"?"Available saved records":"السجلات المحفوظة المتاحة");
   meta.textContent=count+" "+label+" · "+source;
  }
  displayFeedButtons();
@@ -217,7 +217,7 @@ function renderDashboardView(view,chain){
    const link=document.createElement("a");link.href=url;link.textContent=Number(block.height).toLocaleString("en-US");
    const age=document.createElement("small");
    age.textContent=block._indexed_sample
-    ?(document.documentElement.lang==="en"?"Indexed · ":"مفهرس · ")+
+    ?(document.documentElement.lang==="en"?"Saved record · ":"سجل محفوظ · ")+
       (block.block_time?ago(block.block_time):document.documentElement.lang==="en"?"block time unavailable":"وقت البلوك غير متوفر")
     :ago(block.block_time||block.observed_at||block.indexed_at);
    main.append(link,age);
