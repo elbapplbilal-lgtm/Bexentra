@@ -1,5 +1,12 @@
 name: Test BEXENTRA Cloudflare Stream
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'cloudflare/src/worker.js'
+      - 'cloudflare/src/tx-lookup.js'
+      - 'cloudflare/test/**'
+      - '.github/workflows/test-cloudflare-stream.yml'
   pull_request:
     paths:
       - 'cloudflare/**'
