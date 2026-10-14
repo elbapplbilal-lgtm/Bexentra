@@ -1,6 +1,6 @@
-const CACHE="bexentra-shell-v88-simple-arabic-navigation";
+const CACHE="bexentra-shell-v89-neon-brand-logo";
 const SHELL=[
- "./","./index.html","./explorer.html","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=1","./public/openapi.json",
+ "./","./index.html","./explorer.html","./logo.png?v=1","./public/logo-glow-v1.css?v=1","./api-docs.html","./public/api-docs.css?v=1","./public/api-docs.js?v=1","./public/openapi.json",
  "./public/home.css?v=32","./public/stage1.css?v=1",
  "./public/visual-v2.css?v=2","./public/neon-premium.css?v=1",
  "./public/reference-match.css?v=1","./public/mobile-layout-stability.css?v=1","./public/orbit-globe.svg","./public/neon-icons.svg",

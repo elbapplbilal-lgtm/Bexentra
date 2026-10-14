@@ -1,0 +1,23 @@
+/* BEXENTRA neon-B logo - extracted from owner's supplied reference screenshot.
+   Keep existing blue/white layout unchanged; enhance just the brand identity. */
+.app-header .brand .brand-logo,
+body.detail-v31 .detail-brand b,
+.topbar .brand .mark{
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ padding:0!important;line-height:0!important;overflow:visible!important;
+ display:grid!important;place-items:center!important;
+}
+.app-header .brand .brand-logo img,
+body.detail-v31 .detail-brand b img,
+.topbar .brand .mark img{
+ width:100%!important;height:100%!important;display:block!important;object-fit:contain!important;
+ border-radius:11px!important;filter:drop-shadow(0 0 6px rgba(0,141,255,.52))
+ drop-shadow(0 0 11px rgba(37,140,255,.26))!important;
+}
+body.detail-v31 .detail-brand b{flex:none!important;}
+body.detail-v31 footer .brand .logo{background:transparent!important;border:0!important;}
+body.detail-v31 footer .brand .logo span{display:block!important;background:transparent!important;border:0!important;}
+body.detail-v31 footer .brand .logo img{width:36px;height:36px;display:block;object-fit:contain;filter:drop-shadow(0 0 7px rgba(0,150,255,.4));}
+@media(prefers-reduced-motion:reduce){
+ .app-header .brand .brand-logo img,body.detail-v31 .detail-brand b img,.topbar .brand .mark img{animation:none!important;}
+}

@@ -187,3 +187,16 @@ assert(app.includes('indexStatus.textContent=recent?tr("stats.onchain")'));
 assert(explorer.includes('easy("العملة: ","Token: ")'));
 assert(!home.includes('data-i18n="search.button">قلّب'));
 assert(!detail.includes('data-i18n="details.searchButton">قلّب'));
+
+const logoCSS=await read("public/logo-glow-v1.css");
+assert(logoCSS.includes("drop-shadow(0 0 6px"));
+assert(logoCSS.split("{").length===logoCSS.split("}").length);
+for(const page of [home,detail]){
+ assert(page.includes('logo.png?v=1'));
+ assert(page.includes('public/logo-glow-v1.css?v=1'));
+ assert(page.includes('<link rel="icon" href="logo.png?v=1" type="image/png">'));
+}
+assert(home.includes('class="brand-logo"><img'));
+assert(detail.includes('class="detail-brand"')&&detail.includes('class="logo"><span><img'));
+assert(sw.includes('"./logo.png?v=1"'));
+assert(sw.includes('"./public/logo-glow-v1.css?v=1"'));
