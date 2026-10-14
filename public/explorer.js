@@ -156,7 +156,7 @@ function txMetrics(t){
    :t.status==="failed"?easy("فاشلة","Failed"):easy("غير مؤكدة","Unverified")],
   [easy("رقم البلوك","Block / slot"),easyCount(t.block_height)],
   [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
-  [easy("وقت البلوك","Block time"),localWhen(t.block_time)],
+  [easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),utcWhen(t.block_time)],
   [easy("المرسل","Sender"),t.sender?short(t.sender,8):easy("غير متوفر","Unavailable")],
   [easy("المستقبل","Recipient"),t.recipient?short(t.recipient,8):
    t.contract_creation===true?easy("إنشاء عقد","Contract creation"):easy("غير متوفر","Unavailable")],
@@ -196,7 +196,7 @@ function paintTx(t){
   row(tr("details.txHash"),t.tx_hash,true),
   row(easy("رقم البلوك / Slot","Block / Slot"),t.block_height,true),
   row(easy("معرّف البلوك","Block hash"),t.block_hash||easy("غير متوفر","Unavailable"),!!t.block_hash),
-  row(easy("وقت البلوك","Block time"),hasBlockTime(t.block_time)?localWhen(t.block_time):easy("غير متوفر","Unavailable")),
+  row(easy("وقت البلوك","Block time"),hasBlockTime(t.block_time)?utcWhen(t.block_time):easy("غير متوفر","Unavailable")),
   row(tr("details.from"),t.sender||"—",!!t.sender),
   row(tr("details.to"),t.recipient||"—",!!t.recipient),
   ...(chain==="bnb"?[
@@ -231,14 +231,17 @@ function easyCount(v){
  return v!==null&&v!==undefined&&v!==""&&Number.isSafeInteger(n)&&n>=0
   ?n.toLocaleString("en-US"):easy("غير متوفر","Unavailable");
 }
-function localWhen(value){
+// Show a consistent blockchain timestamp to all visitors, regardless of device timezone.
+function utcWhen(value){
  if(!value)return easy("غير متوفر","Unavailable");
  const date=new Date(value);
  if(!Number.isFinite(date.getTime()))return easy("غير متوفر","Unavailable");
  try{
-  return new Intl.DateTimeFormat(document.documentElement.lang==="en"?"en-GB":"ar-MA-u-nu-latn",
-   {dateStyle:"medium",timeStyle:"short"}).format(date);
- }catch{return date.toLocaleString()}
+  return new Intl.DateTimeFormat(document.documentElement.lang==="en"?"en-GB":"ar-MA-u-nu-latn",{
+   timeZone:"UTC",year:"numeric",month:"short",day:"numeric",
+   hour:"2-digit",minute:"2-digit",hourCycle:"h23"
+  }).format(date)+" UTC";
+ }catch{return date.toISOString().slice(0,16).replace("T"," ")+" UTC"}
 }
 function plainSummary(heading,description,metrics,note,tone="normal"){
  const section=$("simpleResult");
@@ -265,7 +268,7 @@ function plainSummary(heading,description,metrics,note,tone="normal"){
  if(note)section.append(tag("p","simple-result-note",note));
 }
 function renderBlockSummary(b){
- const count=easyCount(b.transaction_count),num=easyCount(b.height),date=localWhen(b.block_time);
+ const count=easyCount(b.transaction_count),num=easyCount(b.height),date=utcWhen(b.block_time);
  plainSummary(
   easy("تم العثور على البلوك","Block found"),
   easy("البلوك سجل يضم مجموعة من معاملات الشبكة. عدد المعاملات لا يمثل رصيد محفظة أو مبلغاً مالياً.",
@@ -273,7 +276,7 @@ function renderBlockSummary(b){
   [
    [easy("رقم البلوك","Block number"),num],
    [easy("عدد المعاملات في البلوك","Transactions in block"),count],
-   [easy("وقت تسجيل البلوك (توقيت جهازك)","Block time (your device)"),date],
+   [easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),date],
    [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"]
   ],
   b.source==="rpc_live"
@@ -397,7 +400,7 @@ async function loadBlock(){
  const b=await request("/block",{chain,height:query});
  const fromRpc=b.source==="rpc_live";
  const fields=[row(easy("رقم البلوك / Slot","Block / Slot"),b.height,true),row(easy("المعرّف الكامل للبلوك (Block Hash)","Full block hash"),b.block_hash,true),
-  row(easy("عدد المعاملات داخل البلوك","Transactions inside the block"),b.transaction_count),row(easy("توقيت البلوك الأصلي UTC","Original block time (UTC)"),b.block_time)];
+  row(easy("عدد المعاملات داخل البلوك","Transactions inside the block"),b.transaction_count),row(easy("تاريخ ووقت البلوك (UTC)","Block date and time (UTC)"),utcWhen(b.block_time))];
  if(b.indexed_at)fields.push(row(easy("وقت الفهرسة","Indexed at"),b.indexed_at));
  fields.push(row(tr("details.source"),tr(fromRpc?"details.sourceLive":"details.sourceIndexed")));
  finish((chain==="bnb"?"Block ":"Slot ")+Number(b.height).toLocaleString("en-US"),
