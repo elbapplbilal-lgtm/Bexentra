@@ -1,0 +1,57 @@
+name: Test BEXENTRA Token Markets UI
+on:
+  push:
+    branches:
+      - feat/market-discovery-solscan-inspired-20261014
+    paths:
+      - 'markets.html'
+      - 'public/markets.css'
+      - 'public/markets.js'
+      - 'index.html'
+      - 'explorer.html'
+      - 'sw.js'
+      - 'scripts/test-markets.mjs'
+      - 'scripts/check-market-provider.mjs'
+      - '.github/workflows/test-markets.yml'
+  pull_request:
+    paths:
+      - 'markets.html'
+      - 'public/markets.css'
+      - 'public/markets.js'
+      - 'index.html'
+      - 'explorer.html'
+      - 'sw.js'
+      - 'scripts/test-markets.mjs'
+      - '.github/workflows/test-markets.yml'
+permissions:
+  contents: read
+jobs:
+  markets-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check public/markets.js
+          node --check scripts/test-markets.mjs
+      - name: Install browser tooling
+        run: npm install --no-save --no-audit --no-fund playwright
+      - name: Verify Chrome
+        run: google-chrome --version
+      - name: Test source-only prices, filtering and responsiveness
+        run: node scripts/test-markets.mjs
+      - name: Probe real provider and CORS (non-blocking; public rate limits may vary)
+        continue-on-error: true
+        run: node scripts/check-market-provider.mjs
+      - name: Store mobile page screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bexentra-markets-previews
+          path: ui-test-shots/markets-*.png
+          retention-days: 7
+          if-no-files-found: ignore

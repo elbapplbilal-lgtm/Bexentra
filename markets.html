@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="BEXENTRA Markets — discover real Solana and BNB Chain pools using GeckoTerminal public market data">
+<link rel="icon" href="logo.png?v=2" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>BEXENTRA | Markets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public/markets.css?v=1">
+</head>
+<body>
+<a class="skip" href="#content">تجاوز إلى المحتوى</a>
+<header class="market-header">
+ <a href="./" class="market-brand" aria-label="BEXENTRA home"><img src="logo.png?v=2" alt="" width="42" height="42"><span>BEXENTRA</span></a>
+ <nav class="header-links" aria-label="Main navigation">
+  <a href="./" data-t="home">الرئيسية</a>
+  <a href="./?view=blocks" data-t="blocks">البلوكات</a>
+  <a href="./?view=transactions" data-t="transactions">المعاملات</a>
+  <a href="watchlist.html" data-t="wallets">محافظي</a>
+ </nav>
+ <div class="market-tools">
+  <a class="tool-home" href="explorer.html" aria-label="Search BEXENTRA" title="Search">⌕</a>
+  <label for="marketLang" class="visually-hidden">Language</label>
+  <select id="marketLang" aria-label="Language">
+   <option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option>
+   <option value="de">Deutsch</option><option value="es">Español</option><option value="it">Italiano</option>
+  </select>
+ </div>
+</header>
+<div class="market-strip"><div class="strip-inside">
+ <span><span class="status-pulse" aria-hidden="true"></span><b>BEXENTRA</b> <span data-t="strip">استكشاف بيانات أسواق البلوكتشين</span></span>
+ <span class="strip-source">Powered by <a href="https://www.geckoterminal.com/" target="_blank" rel="noopener noreferrer">GeckoTerminal ↗</a></span>
+</div></div>
+<main class="market-container" id="content">
+ <form class="market-search" id="marketSearch" role="search">
+  <label class="visually-hidden" for="marketQuery" data-t="searchLabel">ابحث عن رمز في النتائج أو عنوان محفظة</label>
+  <input id="marketQuery" maxlength="120" autocomplete="off" spellcheck="false" placeholder="ابحث عن رمز أو عنوان محفظة أو معاملة..." data-placeholder="searchPlaceholder">
+  <button type="submit" aria-label="Search"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg></button>
+ </form>
+ <section class="market-intro" aria-labelledby="marketTitle">
+  <div class="intro-top"><div>
+   <span class="eyebrow">BEXENTRA / <span data-t="explore">استكشاف الأسواق</span></span>
+   <h1 id="marketTitle" data-t="title">لوحة استكشاف الرموز</h1>
+  </div>
+  <a class="api-link" href="api-docs.html" aria-label="BEXENTRA API docs">⌘ <span data-t="api">واجهة API</span> <span aria-hidden="true">↗</span></a></div>
+  <p data-t="description">اكتشف مجمعات التداول الأكثر رواجاً على Solana وBNB Chain، وشاهد الأسعار والسيولة وحجم التداول من مصدر خارجي حقيقي.</p>
+ </section>
+ <div class="market-actions" aria-label="Market filters">
+  <div class="market-chain-picker">
+   <label for="marketChain" data-t="network">الشبكة</label>
+   <select id="marketChain"><option value="solana">◎ Solana</option><option value="bsc">◆ BNB Chain</option></select>
+  </div>
+  <div class="tabs" role="group" aria-label="View">
+   <button type="button" class="tab active" data-view="trending" aria-pressed="true" data-t="trending">الأكثر رواجاً</button>
+   <button type="button" class="tab" data-view="new" aria-pressed="false" data-t="new">الجديد</button>
+   <button type="button" class="tab" data-view="top" aria-pressed="false" data-t="top">الأكثر تداولاً</button>
+  </div>
+  <button id="marketRefresh" class="refresh-btn" type="button" aria-label="Refresh">↻ <span data-t="refresh">تحديث</span></button>
+ </div>
+ <section class="market-data" aria-labelledby="listTitle">
+  <div class="market-data-head"><div>
+   <h2 id="listTitle" data-t="resultsTitle">مجمعات التداول</h2>
+   <p data-t="providerDisclaimer">ترتيب المجمعات من GeckoTerminal، وليس توصية استثمارية أو توثيقاً للعملات.</p>
+  </div><div class="last-update" id="marketUpdated" aria-live="polite">—</div></div>
+  <div class="filters-secondary">
+   <div class="time-chips" role="group" aria-label="Price change period">
+    <button type="button" data-period="h1" aria-pressed="false">1H</button>
+    <button type="button" data-period="h24" aria-pressed="true">24H</button>
+   </div>
+   <label class="sort-picker"><span data-t="sortBy">ترتيب</span>
+    <select id="marketSort">
+     <option value="source" data-t="sourceOrder">ترتيب المصدر</option>
+     <option value="volume" data-t="volumeSort">حجم التداول</option>
+     <option value="liquidity" data-t="liquiditySort">السيولة</option>
+     <option value="change" data-t="changeSort">التغير</option>
+    </select>
+   </label>
+   <span id="resultCount" class="result-count"></span>
+  </div>
+  <div class="market-scroll">
+   <table class="market-table">
+    <thead><tr>
+     <th scope="col" data-t="token">الرمز / المجمع</th>
+     <th scope="col" data-t="price">السعر</th>
+     <th scope="col" id="changeColumn">24H %</th>
+     <th scope="col" data-t="volume">حجم التداول 24H</th>
+     <th scope="col" data-t="liquidity">السيولة</th>
+    </tr></thead>
+    <tbody id="marketRows"><tr><td colspan="5" class="placeholder-row" data-t="loading">جاري جلب البيانات الحقيقية...</td></tr></tbody>
+   </table>
+  </div>
+  <div id="marketError" class="market-error" role="status" hidden></div>
+  <div class="market-footer">
+   <p data-t="footnote">السعر والتغيرات من أسواق DEX، وقد تكون البيانات متأخرة أو ناقصة. ظهور رمز هنا لا يعني أنه آمن.</p>
+   <a href="https://www.geckoterminal.com/" target="_blank" rel="noopener noreferrer"><span data-t="dataSource">عرض مصدر بيانات الأسواق</span> ↗</a>
+  </div>
+ </section>
+ <section class="market-shortcuts" aria-label="Blockchain explorer">
+  <a href="explorer.html?chain=solana&type=address"><span class="shortcut-symbol">◎</span><span><b data-t="solExplorer">مستكشف Solana</b><small data-t="solSub">ابحث عن المحافظ والمعاملات</small></span><span aria-hidden="true">↗</span></a>
+  <a href="explorer.html?chain=bnb&type=address"><span class="shortcut-symbol">◆</span><span><b data-t="bnbExplorer">مستكشف BNB</b><small data-t="bnbSub">البلوكات والعقود والمحافظ</small></span><span aria-hidden="true">↗</span></a>
+ </section>
+</main>
+<footer class="market-site-footer"><span>© BEXENTRA</span><span data-t="footer">بيانات للقراءة فقط · Beta</span></footer>
+<script src="public/markets.js?v=1" defer></script>
+</body>
+</html>
