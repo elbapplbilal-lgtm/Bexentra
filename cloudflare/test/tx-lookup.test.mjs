@@ -81,3 +81,54 @@ test('route validates hash and block hint, never returns fictional transactions'
  assert.equal(data.tx_hash,H);
  assert.equal(data.source,'rpc_block_verified');
 });
+
+test('returns actual BNB value, gas usage, nonce, call selector and verified block time',async()=>{
+ const tx={...block.transactions[0],blockHash:BLOCK,value:'0x2386f26fc10000',
+  gas:'0x186a0',nonce:'0x5',transactionIndex:'0x2',input:'0xa9059cbb'+'0'.repeat(128)};
+ const verifiedBlock={number:'0x'+height.toString(16),hash:BLOCK,timestamp:'0x67000000'};
+ const m=rpcMock({eth_getTransactionByHash:tx,eth_getTransactionReceipt:receipt,
+  eth_getBlockByNumber:verifiedBlock});
+ const res=await lookupBnb(H,height,{},m.fetcher);
+ assert.equal(res.status,200);
+ assert.equal(res.data.native_value_wei,'10000000000000000');
+ assert.equal(res.data.gas_used,'21000');
+ assert.equal(res.data.gas_limit,'100000');
+ assert.equal(res.data.gas_price_wei,'1000000000');
+ assert.equal(res.data.nonce,5);
+ assert.equal(res.data.transaction_index,2);
+ assert.equal(res.data.method_id,'0xa9059cbb');
+ assert.equal(res.data.block_time,new Date(0x67000000*1000).toISOString());
+});
+test('missing value or receipt does not display invented native value or gas',async()=>{
+ const tx={...block.transactions[0],input:'0x',value:undefined,gas:undefined};
+ const m=rpcMock({eth_getTransactionByHash:tx,eth_getTransactionReceipt:null,
+  eth_getBlockByNumber:{number:'0x'+height.toString(16),hash:BLOCK,timestamp:'0x67000000'}});
+ const res=await lookupBnb(H,height,{},m.fetcher);
+ assert.equal(res.status,200);
+ assert.equal(res.data.native_value_wei,null);
+ assert.equal(res.data.gas_used,null);
+ assert.equal(res.data.gas_price_wei,null);
+ assert.equal(res.data.status,null);
+ assert.equal(res.data.method_id,null);
+});
+test('block hash mismatch withholds unverified timestamp and receipt status',async()=>{
+ const tx={...block.transactions[0],blockHash:BLOCK,value:'0x0'};
+ const m=rpcMock({eth_getTransactionByHash:tx,
+  eth_getTransactionReceipt:{...receipt,blockHash:'0x'+'f'.repeat(64)},
+  eth_getBlockByNumber:{number:'0x'+height.toString(16),hash:'0x'+'f'.repeat(64),timestamp:'0x67000000'}});
+ const res=await lookupBnb(H,height,{},m.fetcher);
+ assert.equal(res.data.status,null);
+ assert.equal(res.data.fee_native,null);
+ assert.equal(res.data.block_time,null);
+ assert.equal(res.data.native_value_wei,'0');
+});
+test('verified Solana timestamp and compute unit count are returned without inferred transfers',async()=>{
+ const m=rpcMock({getTransaction:{slot:1234,blockTime:1720000000,
+  transaction:{message:{accountKeys:[SOL]}},
+  meta:{err:null,fee:5000,computeUnitsConsumed:24500}}});
+ const res=await lookupSolana(SOL,{},m.fetcher);
+ assert.equal(res.status,200);
+ assert.equal(res.data.block_time,new Date(1720000000*1000).toISOString());
+ assert.equal(res.data.compute_units,24500);
+ assert.equal(Object.hasOwn(res.data,'native_value_wei'),false);
+});
