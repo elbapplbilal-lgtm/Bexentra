@@ -168,7 +168,7 @@ assert(!prefs.slice(0,prefs.indexOf('  en:{')).includes('مفهرس'));
 assert(!prefs.includes('المعاملات المعروضة'));
 
 const visitorAr=prefs.slice(0,prefs.indexOf('  en:{'));
-assert(visitorAr.includes('"wallet.note":"الرصيد من الشبكة، والقيمة بالدولار تقريبية'));
+assert(visitorAr.includes('"wallet.note":"الرصيد من الشبكة، وقيمته بالدولار تقريبية'));
 for(const text of ["المعاملات المعروضة من الفهرس","وقت الفهرسة","رصيد العملة الأساسية (RPC)"])
  assert(!explorer.includes(text),"Technical visitor copy remains: "+text);
 
