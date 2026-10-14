@@ -15,7 +15,9 @@ const HASH_SOL = /^[1-9A-HJ-NP-Za-km-z]{70,100}$/;
 const STREAM_DURATION_MS = 120_000;
 const SILENCE_TIMEOUT_MS = 45_000;
 const MAX_CLIENTS_PER_ISOLATE = 6; // local protection; not a global quota
+const MAX_TX_LOOKUPS_PER_ISOLATE = 4; // isolate-local backpressure, not global anti-abuse
 let localStreams = 0;
+let activeTxLookups = 0;
 const enc = new TextEncoder();
 
 function integer(value) {
@@ -35,6 +37,16 @@ function json(value, status = 200) {
     'x-content-type-options': 'nosniff'
   }});
 }
+// Prevent concurrent read-only RPC lookups from overwhelming an upstream provider.
+// A global bot/rate limit requires Cloudflare's edge rate limiting outside this code.
+async function withTxCapacity(task){
+ if(activeTxLookups>=MAX_TX_LOOKUPS_PER_ISOLATE)
+  return json({error:"RPC service busy",reason:"rate_limited"},429);
+ activeTxLookups++;
+ try{return await task()}
+ finally{activeTxLookups--}
+}
+
 function freshState(chain) {
   return {
     chain, connected: false, last_event_at: null, last_block: null,
@@ -277,7 +289,7 @@ export default {
     if (u.pathname === '/tx') {
       const origin = request.headers.get('Origin');
       if (origin && origin !== SITE_ORIGIN) return json({error:'Origin not allowed'}, 403);
-      return transactionRoute(request, env);
+      return withTxCapacity(()=>transactionRoute(request,env));
     }
     if (u.pathname !== '/stream') return json({error:'Not found'}, 404);
     const chain = u.searchParams.get('chain');
@@ -298,4 +310,4 @@ export default {
 };
 
 // Export only for isolated tests; production uses the default fetch handler.
-export { observe, snapshot, freshState, getBnbBlock, openStream, configure };
+export { observe, snapshot, freshState, getBnbBlock, openStream, configure, withTxCapacity };
