@@ -91,23 +91,23 @@
     <div class="hero-copy">
       <div class="hero-overline"><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg><span data-i18n="hero.overline">BEXENTRA INDEX · MAINNET</span><i id="heroSignal" class="signal-dot awaiting" aria-hidden="true"></i></div>
       <h1 data-i18n="hero.title">أوضح. أسرع. أذكى.</h1>
-      <p data-i18n="hero.description">استكشف البيانات الحقيقية المفهرسة على BNB Chain وSolana، من واجهة واحدة مصممة للهاتف.</p>
-      <div class="trust-pills"><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg> <span data-i18n="hero.indexed">بيانات مفهرسة</span><i class="pill-arrow" aria-hidden="true">›</i></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg> <span data-i18n="hero.multichain">متعدد الشبكات</span><i class="pill-arrow" aria-hidden="true">›</i></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#shield"></use></svg> <span data-i18n="hero.readonly">قراءة فقط</span><i class="pill-arrow" aria-hidden="true">›</i></span></div>
+      <p data-i18n="hero.description">تابع المحافظ والمعاملات والبلوكات على BNB Chain وSolana بسهولة.</p>
+      <div class="trust-pills"><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#database"></use></svg> <span data-i18n="hero.indexed">معلومات الشبكة</span><i class="pill-arrow" aria-hidden="true">›</i></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#network"></use></svg> <span data-i18n="hero.multichain">متعدد الشبكات</span><i class="pill-arrow" aria-hidden="true">›</i></span><span><svg class="mini-icon" aria-hidden="true"><use href="public/neon-icons.svg#shield"></use></svg> <span data-i18n="hero.readonly">قراءة فقط</span><i class="pill-arrow" aria-hidden="true">›</i></span></div>
     </div>
 
     <form id="globalSearch" class="hero-search">
       <div class="search-mark"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#scan"></use></svg></div>
-      <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك" data-i18n-placeholder="search.placeholder" aria-label="Blockchain search">
-      <select id="searchType" aria-label="نوع البحث"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
-      <button type="submit"><svg class="search-btn-icon ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg><span data-i18n="search.button">استكشف</span></button>
+      <input id="globalInput" autocomplete="off" spellcheck="false" placeholder="قلب على أي محفظة، معاملة، أو بلوك..." data-i18n-placeholder="search.placeholder" aria-label="Blockchain search">
+      <select id="searchType" aria-label="نوع البحث"><option value="auto">كل الشبكات</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
+      <button type="submit"><svg class="search-btn-icon ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg><span data-i18n="search.button">قلّب</span></button>
     </form>
     <div id="globalResult" class="search-result" role="status"></div>
 
     <div class="quick-grid">
-      <a href="?view=blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">أحدث بيانات الشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <a href="?view=transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">آخر نشاط مفهرس</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <a href="explorer.html?type=address" aria-label="محافظ العملات الرقمية"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#scan"></use></svg></span><div><b data-i18n="quick.address">المحافظ</b><small data-i18n="quick.addressSub">رصيد BNB وSOL والنشاط</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
-      <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB + Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="?view=blocks"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><div><b data-i18n="quick.blocks">البلوكات</b><small data-i18n="quick.blocksSub">آخر البلوكات فالشبكة</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="?view=transactions"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#transactions"></use></svg></span><div><b data-i18n="quick.transactions">المعاملات</b><small data-i18n="quick.transactionsSub">شوف آخر التحويلات</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="explorer.html?type=address" aria-label="محافظ العملات الرقمية"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#scan"></use></svg></span><div><b data-i18n="quick.address">المحافظ</b><small data-i18n="quick.addressSub">شوف الرصيد والنشاط ديالك</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
+      <a href="#stats"><span class="quick-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><div><b data-i18n="quick.networks">الشبكات</b><small data-i18n="quick.networksSub">BNB Chain و Solana</small></div><svg class="quick-arrow" aria-hidden="true"><use href="public/neon-icons.svg#chevron"></use></svg></a>
     </div>
   </section>
 
@@ -115,17 +115,17 @@
     <div class="section-title"><div><span class="title-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#activity"></use></svg></span><b data-i18n="stats.title">معلومات الشبكة</b></div><button id="quickRefresh" type="button" aria-label="تحديث بيانات الشبكة"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#refresh"></use></svg><span data-i18n="quick.refresh">تحديث</span></button><span id="statsLive" class="live-label" data-i18n="stats.checking">جاري التحقق</span></div>
     <div id="streamMeta" class="stream-meta" hidden><span class="stream-pulse" aria-hidden="true"></span><span id="streamRate"></span></div>
     <div class="stats-grid">
-      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">المعاملات المعروضة</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">أحدث النتائج المتاحة فقط</em></article>
-      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة تحديث البيانات</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
-      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة المختارة</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
-      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><small id="summaryBlockLabel" data-i18n="stats.lastBlock">أحدث بلوك مسجل</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#document"></use></svg></span><small data-i18n="stats.visibleTx">آخر المعاملات</small><strong id="summaryTx">—</strong><em data-i18n="stats.latestSample">آخر المعاملات</em></article>
+      <article><span class="stat-icon green"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#activity"></use></svg></span><small data-i18n="stats.status">حالة الشبكة</small><strong id="indexStatus" class="status-wait">● فحص...</strong><em id="indexStatusNote">—</em></article>
+      <article><span class="stat-icon blue"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#network"></use></svg></span><small data-i18n="stats.network">الشبكة</small><strong id="summaryNetwork">BNB Smart Chain</strong><em>Mainnet</em></article>
+      <article><span class="stat-icon purple"><svg class="ui-icon" aria-hidden="true"><use href="public/feature-icons-3d.svg#blocks"></use></svg></span><small id="summaryBlockLabel" data-i18n="stats.lastBlock">آخر بلوك</small><strong id="summaryHeight">—</strong><em id="summaryChainLabel">BNB Chain</em></article>
     </div>
     <div class="hidden-metrics" aria-hidden="true"><b id="metricNetwork">BNB Chain</b><b id="metricHeight">—</b><b id="metricBlocks">—</b><b id="metricUpdated">—</b></div>
   </section>
 
   <section id="blocks" class="data-card">
     <div class="data-head"><div><span class="data-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#blocks"></use></svg></span><h2 data-i18n="data.blocks">أحدث البلوكات</h2></div><button id="refreshBlocks" type="button" data-i18n="data.showAll" aria-controls="recentBlocks" aria-expanded="false">عرض الكل ›</button></div>
-    <div id="recentBlocks" class="feed">جاري تحميل فهرس BEXENTRA...</div>
+    <div id="recentBlocks" class="feed">كنجيبو آخر البلوكات...</div>
   </section>
 
   <section id="transactions" class="data-card data-v29">
@@ -156,10 +156,10 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=14" defer></script>
+<script src="public/preferences.js?v=15" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
-<script src="public/app.js?v=46" defer></script>
+<script src="public/app.js?v=47" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
-<script src="public/realtime-client.js?v=2" defer></script>
+<script src="public/realtime-client.js?v=3" defer></script>
 </body>
 </html>

@@ -57,19 +57,19 @@
     <div>
       <span id="detailKicker" class="eyebrow"><i></i> BEXENTRA DETAIL</span>
       <h1 id="detailTitle">جاري تحميل البيانات...</h1>
-      <p id="detailSubtitle" data-i18n="details.subtitle">يتم جلب البيانات من فهرس BEXENTRA العام.</p>
+      <p id="detailSubtitle" data-i18n="details.subtitle">تفاصيل المحافظ والمعاملات والبلوكات.</p>
     </div>
     <div class="detail-network-badge"><small>NETWORK</small><strong id="detailNetwork">—</strong></div>
   </section>
 
   <form id="detailSearch" class="global-search detail-search">
     <div class="search-icon"><svg class="ui-icon" aria-hidden="true"><use href="public/neon-icons.svg#search"></use></svg></div>
-    <input id="detailInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="search.placeholder" placeholder="عنوان محفظة، Tx Hash أو رقم بلوك">
-    <select id="detailType"><option value="auto">بحث ذكي</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
-    <button data-i18n="details.searchButton">بحث</button>
+    <input id="detailInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="search.placeholder" placeholder="قلب على أي محفظة، معاملة، أو بلوك...">
+    <select id="detailType"><option value="auto">كل الشبكات</option><option value="address">عنوان</option><option value="tx">معاملة</option><option value="block">بلوك</option></select>
+    <button data-i18n="details.searchButton">قلّب</button>
   </form>
 
-  <p class="result-search-hint" data-i18n="details.searchHelp">رقم فقط = بلوك، رمز معاملة طويل = معاملة، عنوان محفظة = نشاط المحفظة.</p>
+  <p class="result-search-hint" data-i18n="details.searchHelp">دخل رقم البلوك أو عنوان المحفظة أو رقم المعاملة.</p>
   <section id="searchWelcome" class="search-welcome" aria-labelledby="searchWelcomeHeading" hidden>
     <h2 id="searchWelcomeHeading" data-i18n="scan.welcome">ماذا تريد أن تستكشف؟</h2>
     <p data-i18n="scan.welcomeText">ابحث في البيانات العامة للبلوكات والمعاملات والمحافظ.</p>
@@ -100,10 +100,10 @@
       <div class="wallet-summary-card"><span data-i18n="wallet.usd">قيمة الرصيد بالدولار (تقريبية)</span><strong id="walletFiatValue" data-i18n="wallet.unavailable">غير متوفرة</strong></div>
       <div class="wallet-summary-card"><span data-i18n="wallet.holdings">حيازات الرموز</span><strong id="walletTokenHoldings" data-i18n="wallet.unavailable">غير متوفرة</strong></div>
     </div>
-    <p class="wallet-info" id="walletSourceNote" data-i18n="wallet.note">الرصيد يأتي من RPC إذا توفر. تقييم الدولار وحيازات التوكنات غير محسوبين، والنشاط المفهرس ليس التاريخ الكامل.</p>
+    <p class="wallet-info" id="walletSourceNote" data-i18n="wallet.note">نعرض الرصيد الحقيقي عند وصول بيانات الشبكة. سجل المعاملات قد لا يكون كاملاً.</p>
   </section>
   <nav id="walletTabs" class="wallet-tabs" aria-label="أقسام العنوان" hidden>
-    <a href="#addressActivity" data-i18n="wallet.tabTransactions">المعاملات المفهرسة</a>
+    <a href="#addressActivity" data-i18n="wallet.tabTransactions">آخر المعاملات</a>
     <a id="walletTokenTab" href="#tokenActivity" data-i18n="wallet.tabTransfers">تحويلات BEP-20</a>
     <a href="#detailOverview" data-i18n="wallet.tabInfo">مزيد من المعلومات</a>
   </nav>
@@ -130,7 +130,7 @@
     </div>
     <aside class="detail-side-card">
       <span class="kicker">BEXENTRA INDEX</span>
-      <h3 id="detailSideTitle" data-i18n="details.sideTitle">بيانات مفهرسة</h3>
+      <h3 id="detailSideTitle" data-i18n="details.sideTitle">معلومات إضافية</h3>
       <p id="detailSideText" data-i18n="details.sideText">هذه الصفحة تعرض فقط البيانات التي وصلت إلى فهرس BEXENTRA الحالي، وليست نسخة كاملة من تاريخ الشبكة.</p>
       <div class="read-only-pill">✓ READ ONLY</div>
     </aside>
@@ -166,7 +166,7 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=14" defer></script>
+<script src="public/preferences.js?v=15" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/explorer.js?v=49" defer></script>

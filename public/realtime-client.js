@@ -22,11 +22,11 @@
   meta.hidden=false;
   const isEnglish=document.documentElement.lang==="en";
   rate.textContent=isEnglish
-   ?"Updates received in the last second: "+payload.observed_since_last_tick
-   :"التحديثات التي وصلتنا خلال آخر ثانية: "+payload.observed_since_last_tick;
+   ?"New updates now: "+payload.observed_since_last_tick
+   :payload.observed_since_last_tick+" عملية جديدة دابا";
   rate.title=isEnglish
-   ?"Shows updates received by BEXENTRA, not all transactions on the network."
-   :"هذا عدد التحديثات التي وصلت للمستكشف، وليس مجموع معاملات الشبكة.";
+   ?"These are updates received by BEXENTRA, not all network transactions."
+   :"هاد العدد ديال العمليات اللي وصلات لـ BEXENTRA فقط، ماشي جميع عمليات الشبكة.";
  };
  const connect=()=>{
   stop();
