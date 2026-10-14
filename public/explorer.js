@@ -69,6 +69,155 @@ async function verifiedTransaction(chain,hash,observedHeight){
  if(!verified)throw original;
  return tx;
 }
+
+/* Optional live detail enhancement. BEXENTRA only accepts results from the
+   configured read-only Worker, with matching chain/hash/height. */
+const isDecimal=v=>typeof v==="string"&&/^\d{1,78}$/.test(v);
+const hasBlockTime=v=>typeof v==="string"&&Number.isFinite(Date.parse(v));
+function nativeAmount(value,unit="BNB",places=18){
+ if(!isDecimal(value))return easy("غير متوفر","Unavailable");
+ try{
+  const x=BigInt(value),base=10n**BigInt(places);
+  const whole=(x/base).toString(),decimal=(x%base).toString()
+   .padStart(places,"0").replace(/0+$/,"");
+  return whole+(decimal?"."+decimal:"")+" "+unit;
+ }catch{return easy("غير متوفر","Unavailable")}
+}
+function validatedCount(v){
+ if(typeof v==="string"&&/^\d{1,32}$/.test(v))return v;
+ return typeof v==="number"&&Number.isSafeInteger(v)&&v>=0?String(v):null;
+}
+function txLiveFields(base,live){
+ if(!base||!live||base.chain!==live.chain||typeof base.tx_hash!=="string"
+  ||typeof live.tx_hash!=="string"||
+  (base.chain==="bnb"
+   ?base.tx_hash.toLowerCase()!==live.tx_hash.toLowerCase()
+   :base.tx_hash!==live.tx_hash)||
+  Number(base.block_height)!==Number(live.block_height)||
+  !["rpc_live","rpc_block_verified"].includes(live.source))return base;
+ if(base.sender&&live.sender&&base.sender.toLowerCase()!==live.sender.toLowerCase())return base;
+ if(base.recipient&&live.recipient&&base.recipient.toLowerCase()!==live.recipient.toLowerCase())return base;
+ const add={
+  sender:live.sender||base.sender,recipient:live.recipient||base.recipient,
+  // A newer receipt-confirmed outcome supersedes an older indexed status.
+  status:["success","failed"].includes(live.status)?live.status:base.status,
+  fee_native:isDecimal(live.fee_native)?live.fee_native:base.fee_native,
+  source:live.source
+ };
+ for(const field of ["native_value_wei","gas_used","gas_limit","gas_price_wei"]){
+  if(isDecimal(live[field]))add[field]=live[field];
+ }
+ for(const field of ["nonce","transaction_index","compute_units"]){
+  const valid=validatedCount(live[field]);
+  if(valid!==null)add[field]=valid;
+ }
+ if(hasBlockTime(live.block_time))add.block_time=live.block_time;
+ if(/^0x[0-9a-fA-F]{64}$/.test(live.block_hash||""))add.block_hash=live.block_hash;
+ if(/^0x[0-9a-fA-F]{8}$/.test(live.method_id||""))add.method_id=live.method_id;
+ if(live.contract_creation===true)add.contract_creation=true;
+ return {...base,...add};
+}
+async function liveWorkerDetails(hash,height){
+ const endpoint=String(window.BEXENTRA_STREAM_BASE||"").replace(/\/+$/,"");
+ if(!/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(endpoint))return null;
+ const url=new URL(endpoint+"/tx");
+ url.searchParams.set("chain",chain);url.searchParams.set("hash",hash);
+ if(chain==="bnb"&&Number.isSafeInteger(Number(height))&&Number(height)>=0)
+  url.searchParams.set("height",String(height));
+ try{
+  const controller=new AbortController();
+  const kill=setTimeout(()=>controller.abort(),12000);
+  let response;
+  try{response=await fetch(url,{credentials:"omit",mode:"cors",
+   headers:{Accept:"application/json"},signal:controller.signal})}
+  finally{clearTimeout(kill)}
+  return response.ok?await response.json():null;
+ }catch{return null}
+}
+async function extraBlockTime(height){
+ if(!Number.isSafeInteger(Number(height))||Number(height)<0)return null;
+ try{
+  const block=await request("/block",{chain,height});
+  return block&&block.chain===chain&&Number(block.height)===Number(height)&&
+   hasBlockTime(block.block_time)?block:null;
+ }catch{return null}
+}
+function kindOfTx(t){
+ if(chain!=="bnb")return easy("معاملة على Solana","Solana transaction");
+ if(t.contract_creation===true)return easy("إنشاء عقد ذكي","Contract deployment");
+ if(t.method_id)return easy("معاملة تحتوي استدعاء / بيانات","Transaction with call data");
+ if(t.native_value_wei!=null)
+  return easy("عملية بدون بيانات استدعاء معروفة","Transaction with no known call data");
+ return easy("نوع العملية غير متوفر","Type unavailable");
+}
+function txMetrics(t){
+ const result=[
+  [easy("الحالة","Execution status"),t.status==="success"?easy("ناجحة","Successful")
+   :t.status==="failed"?easy("فاشلة","Failed"):easy("غير مؤكدة","Unverified")],
+  [easy("رقم البلوك","Block / slot"),easyCount(t.block_height)],
+  [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
+  [easy("وقت البلوك","Block time"),localWhen(t.block_time)],
+  [easy("المرسل","Sender"),t.sender?short(t.sender,8):easy("غير متوفر","Unavailable")],
+  [easy("المستقبل","Recipient"),t.recipient?short(t.recipient,8):
+   t.contract_creation===true?easy("إنشاء عقد","Contract creation"):easy("غير متوفر","Unavailable")],
+  [easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)]
+ ];
+ if(chain==="bnb"){
+  result.splice(3,0,[easy("BNB المرسلة مباشرة","Direct BNB value"),
+   nativeAmount(t.native_value_wei)]);
+  result.push([easy("الغاز المستعمل","Gas used"),t.gas_used!=null?easyCount(t.gas_used):easy("غير متوفر","Unavailable")]);
+  result.push([easy("سعر الغاز","Gas price"),t.gas_price_wei!=null
+    ?nativeAmount(t.gas_price_wei,"Gwei",9):easy("غير متوفر","Unavailable")]);
+  result.push([easy("نوع العملية","Operation type"),kindOfTx(t)]);
+ }else if(t.compute_units!=null)result.push([easy("الوحدات الحسابية","Compute units"),easyCount(t.compute_units)]);
+ return result;
+}
+function txNote(t){
+ const source=["rpc_live","rpc_block_verified","indexed_plus_rpc"].includes(t.source)
+ ?easy("المعلومات مأخوذة من بيانات شبكة أو من فهرس مع تحقق مباشر.","Data originates from RPC or from indexed data enhanced with live verification.")
+ :easy("بعض البيانات من فهرس BEXENTRA الجزئي وقد لا تكون جميع التفاصيل متوفرة.","Some data comes from the partial BEXENTRA index.");
+ if(chain!=="bnb")return source;
+ if(t.native_value_wei===null||t.native_value_wei===undefined)return easy(
+  "القيمة المحوّلة غير متاحة من المصدر الحالي. لا يمكن اعتبارها صفرًا. ",
+  "Transfer value is unavailable; this must not be treated as zero. ")+source;
+ return t.native_value_wei==="0"
+ ?easy("قيمة BNB المباشرة تساوي صفراً، لكن قد تتضمن العملية تحويل توكنات أو تفاعلاً مع عقد ذكي. ",
+       "Direct BNB value is zero, but token transfers or smart-contract interactions may still be present. ")+source
+ :easy("القيمة المذكورة هي BNB المباشرة ولا تشمل تحويلات التوكنات المحتملة. ",
+        "This is the direct BNB value and does not include any token transfers. ")+source;
+}
+function paintTx(t){
+ finish(tr("details.txTitle"),t.source==="rpc_block_verified"?tr("details.blockVerifiedSource"):
+  t.source==="rpc_live"?tr("details.liveTxSource"):
+  t.source==="indexed_plus_rpc"?tr("details.augmentedSource"):short(t.tx_hash,18),[
+  row(tr("details.txHash"),t.tx_hash,true),
+  row(easy("رقم البلوك / Slot","Block / Slot"),t.block_height,true),
+  row(easy("معرّف البلوك","Block hash"),t.block_hash||easy("غير متوفر","Unavailable"),!!t.block_hash),
+  row(easy("وقت البلوك","Block time"),hasBlockTime(t.block_time)?localWhen(t.block_time):easy("غير متوفر","Unavailable")),
+  row(tr("details.from"),t.sender||"—",!!t.sender),
+  row(tr("details.to"),t.recipient||"—",!!t.recipient),
+  ...(chain==="bnb"?[
+   row(easy("BNB المرسلة مباشرة","Direct BNB value"),nativeAmount(t.native_value_wei)),
+   row(easy("الغاز المستعمل","Gas used"),t.gas_used??easy("غير متوفر","Unavailable")),
+   row(easy("حد الغاز","Gas limit"),t.gas_limit??easy("غير متوفر","Unavailable")),
+   row(easy("سعر الغاز","Gas price"),t.gas_price_wei!=null?nativeAmount(t.gas_price_wei,"Gwei",9):easy("غير متوفر","Unavailable")),
+   row(easy("نوع العملية","Operation type"),kindOfTx(t)),
+   row(easy("معرّف الوظيفة","Method ID"),t.method_id??easy("غير متوفر","Unavailable")),
+   row(easy("رقم المعاملة للحساب","Nonce"),t.nonce??easy("غير متوفر","Unavailable")),
+   row(easy("ترتيب المعاملة في البلوك","Transaction index"),t.transaction_index??easy("غير متوفر","Unavailable"))
+  ]:t.compute_units!=null?[row(easy("الوحدات الحسابية","Compute units"),t.compute_units)]:[]),
+  row(easy("حالة التنفيذ","Execution status"),["success","failed"].includes(t.status)
+   ?tr(t.status==="success"?"details.confirmed":"details.failed"):tr("details.unavailable")),
+  row(easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)),
+  ...(t.indexed_at?[row(easy("وقت الفهرسة","Indexed at"),t.indexed_at)]:[]),
+  row(tr("details.source"),tr(["rpc_live","indexed_plus_rpc","rpc_block_verified"].includes(t.source)
+    ?"details.sourceLive":"details.sourceIndexed"))
+ ],t.tx_hash,"tx");
+ showProvenance(t.source);
+ renderTxSummary(t);
+ const guide=$("detailEducation");if(guide)guide.hidden=false;
+}
+
 function row(label,value,copy=false){const d=document.createElement("div");d.className="explorer-field";const l=document.createElement("span");l.textContent=label;const wrap=document.createElement("div");const b=document.createElement("b");b.textContent=esc(value);wrap.append(b);if(copy&&value){const c=document.createElement("button");c.type="button";c.className="mini-copy";c.textContent=tr("details.copy");c.onclick=()=>copyText(value,c);wrap.append(c)}d.append(l,wrap);return d}
 async function copyText(value,button){try{await navigator.clipboard.writeText(String(value));button.textContent=tr("details.copyDone");setTimeout(()=>button.textContent=tr("details.copy"),1200)}catch{}}
 
@@ -131,32 +280,15 @@ function renderBlockSummary(b){
          "Source: BEXENTRA's partial index, which may lag behind the latest block."));
 }
 function renderTxSummary(t){
- const st=t.status==="success"?easy("ناجحة ✅","Successful ✓"):
-  t.status==="failed"?easy("فشلت ❌","Failed ✕"):
-  easy("حالة التنفيذ غير مؤكدة","Execution status not confirmed");
- const from=t.sender?short(t.sender,7):easy("غير متوفر","Unavailable");
- const to=t.recipient?short(t.recipient,7):easy("غير متوفر","Unavailable");
- const source=["rpc_live","rpc_block_verified","indexed_plus_rpc"].includes(t.source)
-  ?easy("بيانات جُلبت أو تحقّقنا من بعضها عبر الشبكة","Data retrieved or partially verified through the network")
-  :easy("بيانات مفهرسة في BEXENTRA","Indexed BEXENTRA data");
+ const st=t.status==="success"?easy("نجح تنفيذ المعاملة","Transaction execution succeeded"):
+   t.status==="failed"?easy("فشل تنفيذ المعاملة","Transaction execution failed"):
+   easy("تم العثور على المعاملة — حالة التنفيذ غير مؤكدة","Transaction found — execution status unverified");
  plainSummary(
-  t.status==="success"?easy("نجح تنفيذ المعاملة","Transaction execution succeeded"):
-  t.status==="failed"?easy("فشل تنفيذ المعاملة","Transaction execution failed"):
-  easy("تم العثور على المعاملة، وحالة التنفيذ غير مؤكدة","Transaction found; execution status unavailable"),
-  easy("هذه نتيجة لمعاملة واحدة، وليست السجل الكامل لمحفظة.","This is one transaction, not a complete wallet statement."),
-  [
-   [easy("حالة المعاملة","Status"),st],
-   [easy("البلوك اللي تسجلات فيه","Included in block"),easyCount(t.block_height)],
-   [easy("المرسل","Sender"),from],
-   [easy("المستقبل","Recipient"),to],
-   [easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)]
-  ],
-  easy("قيمة الأصول المحوّلة غير متاحة في هذه النتيجة ولا يمكن اعتبارها صفراً. "+source+
-       " يمكن الاطلاع على العناوين الكاملة ضمن قسم التفاصيل التقنية.",
-       "Transfer amount is not available in this result and must not be assumed to be zero. "+
-        source+". Expand technical details to see full addresses."),
-  t.status==="success"?"success":t.status==="failed"?"failed":"normal");
+  st,easy("يتم عرض البيانات الفعلية المتوفرة عن هذه المعاملة دون افتراض مبالغ أو نتائج غير مؤكدة.",
+    "Only available transaction data is shown. Unverified amounts or outcomes are never assumed."),
+  txMetrics(t),txNote(t),t.status==="success"?"success":t.status==="failed"?"failed":"normal");
 }
+
 function renderTokenOnlySummary(t,transfers){
  plainSummary(
   easy("لقينا سجلات تحويل توكنات","Indexed token transfer records found"),
@@ -255,23 +387,29 @@ async function loadTx(){
   $("tokenCount").textContent=transfers.length+" EVENTS";
   renderTokenEvents(transfers,"");
   renderTokenOnlySummary(t,transfers);
-  const g=$("detailEducation");if(g)g.hidden=false;
+  const guide=$("detailEducation");if(guide)guide.hidden=false;
   return;
  }
- finish(tr("details.txTitle"),t.source==="rpc_block_verified"?tr("details.blockVerifiedSource"):t.source==="rpc_live"?tr("details.liveTxSource"):t.source==="indexed_plus_rpc"?tr("details.augmentedSource"):short(t.tx_hash,18),[
-  row(tr("details.txHash"),t.tx_hash,true),
-  row(easy("رقم البلوك / Slot","Block / Slot"),t.block_height,true),
-  row(tr("details.from"),t.sender||"—",!!t.sender),
-  row(tr("details.to"),t.recipient||"—",!!t.recipient),
-  row(easy("حالة التنفيذ","Execution status"),t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):(t.status||tr("details.unavailable"))),
-  row(easy("رسوم الشبكة","Network fee"),formatNativeFee(t.fee_native,chain)),
-  ...(t.indexed_at?[row(easy("وقت الفهرسة","Indexed at"),t.indexed_at)]:[]),
-  row(tr("details.source"),tr(t.source==="rpc_live"||t.source==="indexed_plus_rpc"||t.source==="rpc_block_verified"?"details.sourceLive":"details.sourceIndexed"))
- ],t.tx_hash,"tx");
- showProvenance(t.source);
- renderTxSummary(t);
- const g=$("detailEducation");if(g)g.hidden=false;
+ paintTx(t);
+ // Progressive enrichment: show the existing verified result immediately, then
+ // request independently verified RPC fields without blocking the interface.
+ const originalQuery=query,originalChain=chain;
+ void Promise.allSettled([liveWorkerDetails(t.tx_hash,t.block_height),
+   t.block_time?Promise.resolve(null):extraBlockTime(t.block_height)])
+  .then(([live,block])=>{
+    if(query!==originalQuery||chain!==originalChain)return;
+    let enriched=t;
+    if(live.status==="fulfilled"&&live.value)enriched=txLiveFields(enriched,live.value);
+    if(!hasBlockTime(enriched.block_time)&&block.status==="fulfilled"&&block.value){
+      enriched={...enriched,block_time:block.value.block_time};
+      // BNB block hash from the index is still explicitly labeled as block data.
+      if(/^0x[0-9a-fA-F]{64}$/.test(block.value.block_hash||""))
+       enriched.block_hash=block.value.block_hash;
+    }
+    paintTx(enriched);
+  }).catch(()=>{});
 }
+
 // Read only the BEP-20 transfers indexed so far; amounts are raw base units.
 function renderTokenEvents(transfers,address){
  const feed=$("tokenFeed");
