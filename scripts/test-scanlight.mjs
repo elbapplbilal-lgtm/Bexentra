@@ -226,7 +226,7 @@ for(const page of [home,detail]){
 }
 assert(home.includes('id="homeMenuNetwork"'));
 assert(detail.includes('id="detailMenuNetwork"'));
-assert(sw.includes('bexentra-shell-v91-compact-menu-search'));
+assert(sw.includes('bexentra-shell-v92-no-network-dot'));
 for(const translationKey of ["searchTitle","searchPlaceholder","searchNetwork","searchNote"])
  assert.equal(prefs.split('"bnav.'+translationKey+'":').length,3);
 
