@@ -1,0 +1,26 @@
+name: BEXENTRA Production Resilience Smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check-resilience.mjs'
+      - '.github/workflows/check-resilience.yml'
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check browser API and Worker syntax before network probes
+        run: |
+          node --check public/search-input.js
+          node --check public/explorer.js
+          node --check cloudflare/src/tx-lookup.js
+      - name: Probe real BNB/Solana sources with three concurrent requests maximum
+        run: node scripts/check-resilience.mjs
