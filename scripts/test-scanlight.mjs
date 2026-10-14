@@ -65,7 +65,8 @@ assert(app.includes('refreshIndexedBlockSample(chain)'));
 assert(app.includes('blocks(chain,12)'));
 assert(app.includes('heights.has(height)'));
 assert(app.includes('block._indexed_sample'));
-assert(app.includes('Network + partial index'));
+assert(app.includes('Recent data and saved records'));
+assert(app.includes('بيانات حديثة وسجلات محفوظة'));
 assert(app.includes('pageView!=="blocks"'));
 
 const explorerLight=await read("public/scanlight-detail-v2.css");
