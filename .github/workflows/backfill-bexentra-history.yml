@@ -1,0 +1,38 @@
+name: BEXENTRA Bounded History Backfill
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '29 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: bexentra-historical-backfill
+  cancel-in-progress: false
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BNB_RPC_URL: ${{ secrets.BNB_RPC_URL }}
+      SOLANA_RPC_URL: ${{ secrets.SOLANA_RPC_URL }}
+      BACKFILL_BLOCK_LIMIT: '8'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate bounded plan before using RPC
+        run: node --test test/gap-planner.test.js
+      - name: Install backend dependency
+        run: npm install --no-audit --no-fund
+      - name: Backfill limited older blocks only
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::warning::No DATABASE_URL; historical backfill skipped."
+            exit 0
+          fi
+          timeout --signal=TERM --kill-after=10s 110s node src/repair-gaps.js || test "$?" -eq 124
