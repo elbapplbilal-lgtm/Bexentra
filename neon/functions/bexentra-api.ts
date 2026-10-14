@@ -327,16 +327,49 @@ export default async function handler(req){
    );
    return json({chain,address,transfers:r.rows,coverage:"indexed_only"});
   }
+  // Current native balance is independent of the partial indexed transaction history.
+  if(u.pathname.endsWith("/balance")){
+   let address=u.searchParams.get("address")||"";
+   if(chain==="bnb"&&!address.startsWith("0x")&&/^[0-9a-fA-F]{40}$/.test(address))address="0x"+address;
+   if(!(chain==="bnb"?BNB_ADDRESS:SOL_ADDRESS).test(address))return json({error:"Invalid address"},400);
+   try{
+    const raw=chain==="bnb"
+     ?await chainRpc("bnb","eth_getBalance",[address,"latest"],{retryNull:true})
+     :await chainRpc("solana","getBalance",[address,{commitment:"finalized"}],{retryNull:true});
+    const value=chain==="bnb"?baseWei(raw):hexNum(raw?.value);
+    if(value===null||value===undefined)throw Error("Balance unavailable");
+    return json({chain,address,native_balance:String(value),native_unit:chain==="bnb"?"BNB":"SOL",
+     observed_at:new Date().toISOString(),source:"rpc_live",coverage:"current_native_balance_only"});
+   }catch{return json({error:"Balance RPC unavailable",reason:"rpc_unavailable"},503)}
+  }
+  // Stable keyset pagination, bounded and explicitly limited to indexed records.
   if(u.pathname.endsWith("/address")){
    let address=u.searchParams.get("address")||"";
-   if(chain==="bnb"&&!address.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(address))address="0x"+address;
+   if(chain==="bnb"&&!address.startsWith("0x")&&/^[0-9a-fA-F]{40}$/.test(address))address="0x"+address;
    if(!(chain==="bnb"?BNB_ADDRESS:SOL_ADDRESS).test(address))
     return json({error:"Invalid address for selected chain"},400);
-   const sql=chain==="bnb"
-    ?"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (lower(sender)=lower($2) OR lower(recipient)=lower($2)) ORDER BY block_height DESC LIMIT $3"
-    :"SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at FROM indexed_transactions WHERE chain=$1 AND (sender=$2 OR recipient=$2) ORDER BY block_height DESC LIMIT $3";
-   const r=await db().query(sql,[chain,address,limit]);
-   return json({chain,address,transactions:r.rows});
+   const height=u.searchParams.get("before_height");
+   const hash=u.searchParams.get("before_hash");
+   if((height===null)!==(hash===null))return json({error:"Incomplete cursor"},400);
+   if(height!==null&&(!/^\d{1,16}$/.test(height)||!Number.isSafeInteger(Number(height))||
+      !(chain==="bnb"?BNB_HASH:SOL_SIGNATURE).test(hash||"")))
+    return json({error:"Invalid cursor"},400);
+   const key=chain==="bnb"?"lower(tx_hash)":"tx_hash";
+   const addr=chain==="bnb"?"(lower(sender)=lower($2) OR lower(recipient)=lower($2))"
+     :"(sender=$2 OR recipient=$2)";
+   const cursor=height!==null;
+   const sql="SELECT chain,tx_hash,block_height,sender,recipient,status,fee_native,indexed_at "+
+    "FROM indexed_transactions WHERE chain=$1 AND "+addr+" "+
+    (cursor?"AND (block_height<$3 OR (block_height=$3 AND "+key+"<$4)) ":"")+
+    "ORDER BY block_height DESC, "+key+" DESC LIMIT $"+(cursor?"5":"3");
+   const args=cursor?[chain,address,Number(height),chain==="bnb"?hash.toLowerCase():hash,limit+1]
+     :[chain,address,limit+1];
+   const data=await db().query(sql,args);
+   const rows=data.rows.slice(0,limit),hasMore=data.rows.length>limit;
+   const last=rows.at(-1);
+   return json({chain,address,transactions:rows,coverage:"indexed_only",
+     has_more:hasMore,next_cursor:hasMore&&last?{before_height:Number(last.block_height),
+      before_hash:last.tx_hash}:null});
   }
   return json({error:"Not found"},404);
  }catch(e){console.error(e);return json({error:"Service unavailable"},503)}
