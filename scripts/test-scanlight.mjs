@@ -253,3 +253,14 @@ assert(sw.includes('"./public/i18n-extra.js?v=1"'));
 assert(sw.includes('"./public/settings-polish-v2.css?v=1"'));
 assert(prefs.includes('language:["ar","en","fr","de","es","it"]'));
 assert(explorer.includes('"fr":"fr-FR"'));
+
+const allLocaleLabels=new Function("window","return (function(){"+locales+"return window.BexentraLocales})()")({});
+for(const code of ["fr","de","es","it"]){
+ const translations=allLocaleLabels[code];
+ assert(Object.keys(translations).length>=200,"Too few translated labels for "+code);
+ for(const key of ["menu.home","search.button","stats.title","wallet.title","details.searchHelp","settings.subtitle"]){
+  assert(typeof translations[key]==="string"&&translations[key].length>0,code+" missing "+key);
+ }
+}
+assert(prefs.includes('const t=k=>'));
+assert(prefs.includes('dict[code]={...dict.en,...(window.BexentraLocales?.[code]||{})}'));

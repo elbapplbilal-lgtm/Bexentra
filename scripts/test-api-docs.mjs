@@ -26,7 +26,7 @@ for(const path of [home,detail]){
  assert(path.includes('<a href="api-docs.html" data-i18n="bnav.apiSoon">وثائق API</a>'));
  assert(!path.includes('data-i18n="bnav.apiSoon">وثائق API</span>'));
 }
-for(const target of ["api-docs.html","public/api-docs.css?v=1","public/api-docs.js?v=1","public/openapi.json"])
+for(const target of ["api-docs.html","public/api-docs.css?v=1","public/api-docs.js?v=2","public/openapi.json"])
  assert(sw.includes('"./'+target+'"'),"Missing service-worker asset: "+target);
 assert(html.includes('id="tester"')&&html.includes('id="apiResponse"')&&html.includes('id="runRequest"'));
 assert(html.includes('id="langToggle"')&&html.includes('data-en='));
@@ -46,3 +46,5 @@ console.log("PASS BEXENTRA API documentation: 10 implemented routes, examples, n
 
 assert(html.includes('<span class="mark"><img src="logo.png?v=2"'));
 assert(html.includes('logo-glow-v1.css?v=2'));
+
+assert(js.includes('saved==="ar"?"ar":"en"'),"API documentation defaults to English for non-Arabic browser language");
