@@ -22,8 +22,11 @@
   meta.hidden=false;
   const isEnglish=document.documentElement.lang==="en";
   rate.textContent=isEnglish
-   ?"Observed last second: "+payload.observed_since_last_tick+" (sample)"
-   :"أحداث مرصودة فآخر ثانية: "+payload.observed_since_last_tick+" (عينة)";
+   ?"Updates received in the last second: "+payload.observed_since_last_tick
+   :"التحديثات التي وصلتنا خلال آخر ثانية: "+payload.observed_since_last_tick;
+  rate.title=isEnglish
+   ?"Shows updates received by BEXENTRA, not all transactions on the network."
+   :"هذا عدد التحديثات التي وصلت للمستكشف، وليس مجموع معاملات الشبكة.";
  };
  const connect=()=>{
   stop();
