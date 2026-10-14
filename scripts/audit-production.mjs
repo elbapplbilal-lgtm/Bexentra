@@ -66,7 +66,7 @@ for(const chain of ["bnb","solana"]){
   }
   const balance=await get(api,"/balance?chain="+chain+"&address="+encodeURIComponent(address),21000);
   mark(chain+" native balance RPC (or explicit outage)",balance,x=>
-   x.status===200&&x.body.source==="rpc_live"&&/^\\d+$/.test(x.body.native_balance||"")||
+   x.status===200&&x.body.source==="rpc_live"&&/^\d+$/.test(x.body.native_balance||"")||
    x.status===503&&x.body.reason==="rpc_unavailable");
   console.log("ADDRESS_COVERAGE",JSON.stringify({chain,rows:a.body.transactions?.length??null,
    indexed_only:a.body.coverage??"not-labeled",has_more:a.body.has_more??null,
