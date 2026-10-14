@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="public/realtime.css?v=1">
 <link rel="stylesheet" href="public/neon-reference-v5.css?v=1">
 <link rel="stylesheet" href="public/neon-reference-v6.css?v=1">
+<link rel="stylesheet" href="public/visitor-guide.css?v=1">
 <link rel="stylesheet" href="public/category-view.css?v=1">
 </head>
 <body class="bex-home bex-reference neon-fidelity">
@@ -55,6 +56,17 @@
     <p id="categorySubtitle" data-i18n="category.subtitle">أحدث البيانات المتاحة من شبكة البلوكتشين. اضغط على أي صف لعرض تفاصيله.</p>
     <p id="categoryMeta" class="category-meta" role="status" aria-live="polite">جاري تحميل البيانات…</p>
   </section>
+  <details id="categoryEducation" class="visitor-guide">
+ <summary><span class="guide-signal" aria-hidden="true"></span><span data-i18n="guide.summary">كيف تنتقل المعاملة من المحفظة إلى البلوك؟</span><span class="guide-chevron" aria-hidden="true">⌄</span></summary>
+ <div class="guide-body">
+ <p data-i18n="guide.intro">لفهم المعلومات التي يعرضها المستكشف، يمكن تتبع رحلة المعاملة عبر أربع مراحل:</p>
+ <ol class="guide-steps">
+ <li><b>1</b><div><h3 data-i18n="guide.s1">توقيع المعاملة</h3><p data-i18n="guide.p1">تُنشأ المعاملة داخل المحفظة ويُوقّع عليها رقمياً دون نشر المفتاح الخاص.</p></div></li>
+ <li><b>2</b><div><h3 data-i18n="guide.s2">إرسالها إلى الشبكة</h3><p data-i18n="guide.p2">تُرسل المعاملة للمدققين وقد تبقى قيد الانتظار قبل إدراجها.</p></div></li>
+ <li><b>3</b><div><h3 data-i18n="guide.s3">تسجيلها في بلوك</h3><p data-i18n="guide.p3">يضم المدقق معاملات إلى بلوك جديد وفق قواعد الشبكة.</p></div></li>
+ <li><b>4</b><div><h3 data-i18n="guide.s4">فحص النتيجة</h3><p data-i18n="guide.p4">يمكن البحث عن رقم البلوك أو معرّف المعاملة للاطلاع على معلوماتها.</p></div></li>
+ </ol><p class="guide-caveat" data-i18n="guide.caveat">وجود المعاملة في بلوك لا يعني بالضرورة نجاح تنفيذها؛ وقد تكون المعاملة تفاعلاً مع عقد ذكي وليس تحويل أموال فقط.</p></div>
+</details>
   <section class="hero-card">
     <img class="reference-globe" src="public/orbit-globe.svg" alt="" aria-hidden="true" width="760" height="470"><div class="world-glow" aria-hidden="true"></div><div class="grid-glow" aria-hidden="true"></div><div class="hero-beam" aria-hidden="true"></div><div class="hero-shine" aria-hidden="true"></div>
     <div class="chain-cube sol-cube"><img src="public/solana-mark.svg" alt="Solana"></div>
@@ -128,9 +140,9 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=7" defer></script>
+<script src="public/preferences.js?v=9" defer></script>
 <script src="public/search-input.js?v=1" defer></script>
-<script src="public/app.js?v=42" defer></script>
+<script src="public/app.js?v=43" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/realtime-client.js?v=1" defer></script>
 </body>
