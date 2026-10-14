@@ -6,12 +6,16 @@ on:
       - 'watchlist.html'
       - 'public/watchlist*'
       - 'scripts/test-watchlist.mjs'
+      - 'scripts/test-service-worker.mjs'
+      - 'sw.js'
       - '.github/workflows/test-wallet-watchlist.yml'
   pull_request:
     paths:
       - 'watchlist.html'
       - 'public/watchlist*'
       - 'scripts/test-watchlist.mjs'
+      - 'scripts/test-service-worker.mjs'
+      - 'sw.js'
       - '.github/workflows/test-wallet-watchlist.yml'
 permissions:
   contents: read
@@ -29,8 +33,12 @@ jobs:
           node --check public/watchlist.js
           node --check public/watchlist-utils.mjs
           node --check scripts/test-watchlist.mjs
+          node --check scripts/test-service-worker.mjs
+          node --check sw.js
       - name: Public wallet data validation tests
         run: node --test scripts/test-watchlist.mjs
+      - name: Preserve offline explorer and wallet navigation
+        run: node --test scripts/test-service-worker.mjs
       - name: Confirm HTML loads expected assets and homepage links to feature
         run: |
           node --input-type=module -e "
