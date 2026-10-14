@@ -227,4 +227,57 @@ await scenario("Invalid BNB/Solana hash address and limits avoid RPC",async()=>{
  assert.equal(h.rpcCalls.length,0);
 });
 
+
+await scenario("Reject invalid wallet addresses and tampered pagination cursors",async()=>{
+ const h=makeHandler({rpc:{}});
+ for(const path of [
+  "/address?chain=bnb&address=not-wallet",
+  "/balance?chain=solana&address=invalid!",
+  "/address?chain=bnb&address="+addressFrom+"&before_height=42",
+  "/address?chain=bnb&address="+addressFrom+"&before_height=42&before_hash=bad"
+ ])assert.equal((await h.request(path)).status,400,path);
+ assert.equal(h.rpcCalls.length,0);
+ assert.equal(h.queries.length,0);
+});
+await scenario("Current BNB balance uses exact RPC wei and never infers indexed totals",async()=>{
+ const h=makeHandler({rpc:{eth_getBalance:"0xde0b6b3a7640000"}});
+ const r=await h.request("/balance?chain=bnb&address="+addressFrom);
+ assert.equal(r.status,200);
+ assert.equal(r.data.native_balance,"1000000000000000000");
+ assert.equal(r.data.native_unit,"BNB");
+ assert.equal(r.data.coverage,"current_native_balance_only");
+});
+await scenario("Current SOL balance comes from confirmed RPC lamports",async()=>{
+ const h=makeHandler({rpc:{getBalance:{context:{slot:123},value:10000000}}});
+ const r=await h.request("/balance?chain=solana&address="+solSignature.slice(0,44));
+ assert.equal(r.status,200);
+ assert.equal(r.data.native_balance,"10000000");
+ assert.equal(r.data.native_unit,"SOL");
+});
+await scenario("Balance RPC outage does not fabricate a zero balance",async()=>{
+ const h=makeHandler({rpc:{fail:true}});
+ const r=await h.request("/balance?chain=bnb&address="+addressFrom);
+ assert.equal(r.status,503);
+ assert.equal(r.data.reason,"rpc_unavailable");
+});
+await scenario("Indexed address cursor remains stable across same-height transactions",async()=>{
+ const rows=Array.from({length:3},(_,i)=>({chain:"bnb",
+  tx_hash:"0x"+String(i+1).padStart(64,"0"),block_height:100-i,
+  sender:addressFrom,recipient:addressTo}));
+ const h=makeHandler({rpc:{},dbRows:{transactions:rows}});
+ const p=await h.request("/address?chain=bnb&address="+addressFrom+"&limit=2");
+ assert.equal(p.status,200);
+ assert.equal(p.data.transactions.length,2);
+ assert.equal(p.data.has_more,true);
+ assert.equal(p.data.coverage,"indexed_only");
+ assert.equal(p.data.next_cursor.before_height,99);
+ const q=await h.request("/address?chain=bnb&address="+addressFrom+
+  "&limit=2&before_height=99&before_hash="+rows[1].tx_hash);
+ assert.equal(q.status,200);
+ const sql=h.queries.at(-1);
+ assert(sql.sql.includes("block_height<$3"));
+ assert(sql.sql.includes("lower(tx_hash)<$4"));
+ assert.equal(sql.args[4],3);
+});
+
 console.log("BEXENTRA live API:",passed,"scenarios passed");
