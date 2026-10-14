@@ -1,0 +1,48 @@
+name: Verify BEXENTRA Pro Explorer + BEP20
+on:
+  push:
+    branches: ['feat/bexentra-scan-grade-bep20-and-ui-20261014']
+    paths:
+      - 'backend/src/token-indexer.js'
+      - 'backend/src/token-transfer-batch.js'
+      - 'backend/test/token-transfer-batch.test.js'
+      - 'index.html'
+      - 'explorer.html'
+      - 'public/explorer-pro-v1.css'
+      - 'public/coverage-note.js'
+      - 'sw.js'
+      - 'scripts/test-explorer-pro.mjs'
+      - '.github/workflows/test-explorer-pro.yml'
+  pull_request:
+    paths:
+      - 'backend/src/token-indexer.js'
+      - 'backend/src/token-transfer-batch.js'
+      - 'backend/test/token-transfer-batch.test.js'
+      - 'index.html'
+      - 'explorer.html'
+      - 'public/explorer-pro-v1.css'
+      - 'public/coverage-note.js'
+      - 'sw.js'
+      - 'scripts/test-explorer-pro.mjs'
+      - '.github/workflows/test-explorer-pro.yml'
+permissions:
+  contents: read
+jobs:
+  static-and-token-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check backend/src/token-transfer-batch.js
+          node --check backend/src/token-indexer.js
+          node --check public/coverage-note.js
+          node --check sw.js
+      - name: Verify Transfer parser and batches
+        run: node --test backend/test/token-transfer-batch.test.js
+      - name: Verify explorer visual and data-source contracts
+        run: node scripts/test-explorer-pro.mjs
