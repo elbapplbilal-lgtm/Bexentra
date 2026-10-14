@@ -309,6 +309,7 @@ function prepareWalletProfile(address){
  const profile=$("walletProfile");
  if(!profile)return;
  profile.hidden=false;
+ document.body.classList.add("wallet-loaded");
  $("walletTabs").hidden=false;
  $("walletTokenTab").hidden=chain!=="bnb";
  $("walletFullAddress").textContent=address;
@@ -346,6 +347,7 @@ function renderAddressSummary(address,count,balance=null){
     "Index coverage is partial, not a full history. Native balance is a point-in-time reading and excludes token balances."));
 }
 function showSearchWelcome(){
+ document.body.classList.remove("wallet-loaded");
  $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("detailLoading").hidden=true;$("detailError").hidden=true;$("detailOverview").hidden=true;
  $("addressActivity").hidden=true;$("tokenActivity").hidden=true;
@@ -364,6 +366,7 @@ function showSearchWelcome(){
 }
 
 function showError(msg,title){
+ document.body.classList.remove("wallet-loaded");
  $("walletProfile").hidden=true;$("walletTabs").hidden=true;
  $("simpleResult").hidden=true;
  const g=$("detailEducation");if(g)g.hidden=true;
@@ -385,7 +388,7 @@ function showError(msg,title){
   actions.append(retry,verify);$("detailError").append(actions);
  }
 }
-function start(title){$("walletProfile").hidden=true;$("walletTabs").hidden=true;$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
+function start(title){document.body.classList.remove("wallet-loaded");$("walletProfile").hidden=true;$("walletTabs").hidden=true;$("simpleResult").hidden=true;const g=$("detailEducation");if(g)g.hidden=true;showProvenance("indexed");$("detailLoading").hidden=false;$("detailError").hidden=true;$("detailOverview").hidden=true;$("addressActivity").hidden=true;$("tokenActivity").hidden=true;$("detailTitle").textContent=title;$("detailNetwork").textContent=chain==="bnb"?"BNB CHAIN":"SOLANA"}
 function showProvenance(source){
  const live=source==="rpc_live"||source==="indexed_plus_rpc"||source==="rpc_block_verified";
  const title=$("detailSideTitle"),message=$("detailSideText");
