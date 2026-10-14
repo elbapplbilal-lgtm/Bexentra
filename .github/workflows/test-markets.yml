@@ -11,6 +11,7 @@ on:
       - 'explorer.html'
       - 'sw.js'
       - 'scripts/test-markets.mjs'
+      - 'scripts/check-market-provider.mjs'
       - '.github/workflows/test-markets.yml'
   pull_request:
     paths:
@@ -43,6 +44,9 @@ jobs:
         run: google-chrome --version
       - name: Test source-only prices, filtering and responsiveness
         run: node scripts/test-markets.mjs
+      - name: Probe real provider and CORS (non-blocking; public rate limits may vary)
+        continue-on-error: true
+        run: node scripts/check-market-provider.mjs
       - name: Store mobile page screenshots for review
         if: always()
         uses: actions/upload-artifact@v4
