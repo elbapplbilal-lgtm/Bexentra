@@ -1,0 +1,54 @@
+name: Verify BEXENTRA Wallet Watchlist
+on:
+  push:
+    branches: ['feat/free-wallet-watchlist-2026-10-14']
+    paths:
+      - 'watchlist.html'
+      - 'public/watchlist*'
+      - 'scripts/test-watchlist.mjs'
+      - 'scripts/test-service-worker.mjs'
+      - 'sw.js'
+      - '.github/workflows/test-wallet-watchlist.yml'
+  pull_request:
+    paths:
+      - 'watchlist.html'
+      - 'public/watchlist*'
+      - 'scripts/test-watchlist.mjs'
+      - 'scripts/test-service-worker.mjs'
+      - 'sw.js'
+      - '.github/workflows/test-wallet-watchlist.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check script syntax
+        run: |
+          node --check public/watchlist.js
+          node --check public/watchlist-utils.mjs
+          node --check scripts/test-watchlist.mjs
+          node --check scripts/test-service-worker.mjs
+          node --check sw.js
+      - name: Public wallet data validation tests
+        run: node --test scripts/test-watchlist.mjs
+      - name: Preserve offline explorer and wallet navigation
+        run: node --test scripts/test-service-worker.mjs
+      - name: Confirm HTML loads expected assets and homepage links to feature
+        run: |
+          node --input-type=module -e "
+          import fs from 'node:fs';
+          const page=fs.readFileSync('watchlist.html','utf8');
+          const home=fs.readFileSync('index.html','utf8');
+          const sw=fs.readFileSync('sw.js','utf8');
+          for(const asset of ['public/watchlist.css?v=1','public/watchlist.js?v=1']){
+            if(!page.includes(asset))throw Error('Missing asset '+asset);
+          }
+          if(!home.includes('href=\"watchlist.html\"'))throw Error('Missing homepage watchlist link');
+          if(!sw.includes('watchlist-utils.mjs'))throw Error('Missing PWA asset');
+          "

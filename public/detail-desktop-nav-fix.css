@@ -1,0 +1,16 @@
+/* BEXENTRA · desktop-site detail navigation alignment.
+   Loaded after ScanLight and settings styles to resolve conflicting !important
+   left:0 (ScanLight) + translateX(-50%) (legacy nav-rescue) at >=840px.
+   Normal Android viewport navigation remains unchanged. */
+@media (min-width:840px){
+ body.detail-v31.light-mode .bottom-nav.bottom-v30 {
+  display:grid!important;
+  position:fixed!important;
+  left:50%!important;
+  right:auto!important;
+  width:min(820px,calc(100vw - 24px))!important;
+  max-width:min(820px,calc(100vw - 24px))!important;
+  transform:translateX(-50%)!important;
+  box-sizing:border-box!important;
+ }
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06112c">
+<meta name="description" content="BEXENTRA public address watchlist for BNB Chain and Solana. Saved on this device only.">
+<link rel="icon" href="logo.png?v=2" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>BEXENTRA | محافظي</title>
+<link rel="stylesheet" href="public/watchlist.css?v=1">
+</head>
+<body class="watchlist-page">
+<header class="watch-header">
+  <a href="./" class="watch-brand"><img src="logo.png?v=2" alt="" width="42" height="42"><span>BEXENTRA</span></a>
+  <nav aria-label="BEXENTRA"><a href="./" data-wl="home">الرئيسية</a><a href="explorer.html" data-wl="explorer">المستكشف</a></nav>
+  <label class="language-label"><span data-wl="language">اللغة</span><select id="watchLanguage" aria-label="Language">
+    <option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option><option value="it">Italiano</option>
+  </select></label>
+</header>
+<main class="watch-shell">
+  <section class="watch-hero" aria-labelledby="watchTitle">
+    <div class="watch-overline">BEXENTRA · WALLET WATCHLIST</div>
+    <h1 id="watchTitle" data-wl="title">محافظي المفضلة</h1>
+    <p data-wl="intro">احفظ عناوين BNB Chain وSolana العمومية وتابع أرصدتها الأصلية، بلا ربط المحفظة.</p>
+    <div class="watch-privacy">🔒 <span data-wl="privacy">العناوين محفوظة في هذا المتصفح فقط. طلبات الرصيد تمر عبر API عام. لا تدخل المفتاح الخاص أو كلمات الاسترداد.</span></div>
+  </section>
+  <section class="watch-panel" aria-labelledby="watchAddTitle">
+    <h2 id="watchAddTitle" data-wl="addTitle">إضافة محفظة</h2>
+    <form id="watchForm" novalidate>
+      <label><span data-wl="network">الشبكة</span><select name="chain" id="watchChain"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select></label>
+      <label class="watch-address-field"><span data-wl="address">عنوان المحفظة العمومي</span><input id="watchAddress" name="address" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="60" required placeholder="0x... / Solana address"></label>
+      <label class="watch-label-field"><span data-wl="nickname">اسم اختياري</span><input id="watchLabel" name="label" maxlength="30" autocomplete="off" placeholder="My wallet"></label>
+      <button type="submit" data-wl="addButton">+ حفظ العنوان</button>
+    </form>
+    <p id="watchMessage" role="status" aria-live="polite" class="watch-message"></p>
+  </section>
+  <section class="watch-panel" aria-labelledby="watchListTitle">
+    <div class="watch-section-header"><div><h2 id="watchListTitle" data-wl="savedTitle">العناوين المحفوظة</h2><p id="watchCounter"></p></div><button id="watchRefreshAll" type="button" data-wl="refreshAll">تحديث الكل</button></div>
+    <div id="watchList" class="watch-list" aria-live="polite"></div>
+  </section>
+  <footer><p data-wl="disclaimer">يعرض الرصيد الأصلي الحالي فقط، ولا يشمل رموز BEP-20 أو SPL. سجل المعاملات في المستكشف جزئي حسب تغطية الفهرسة. لا توجد تنبيهات في الخلفية.</p><a href="./" data-wl="back">العودة إلى BEXENTRA</a></footer>
+</main>
+<script type="module" src="public/watchlist.js?v=1"></script>
+</body>
+</html>
