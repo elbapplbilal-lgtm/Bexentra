@@ -53,3 +53,10 @@ assert(fixes.includes('color:#174870!important'));
 assert(fixes.includes('background:#eaf4fe!important'));
 assert(fixes.includes('#recentTransactions .reference-row .feed-side'));
 assert(fixes.includes('box-shadow:none!important'));
+
+const categoryCss=await read("public/category-view.css");
+assert(home.includes("category-view.css?v=4")&&sw.includes("category-view.css?v=4"));
+assert(categoryCss.includes("bex-scanlight.light-mode.category-view"));
+assert(categoryCss.includes(".feed{\n min-height:0!important"));
+assert(categoryCss.includes("background:#fff!important"));
+assert(categoryCss.split("{").length===categoryCss.split("}").length);
