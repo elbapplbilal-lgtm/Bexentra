@@ -338,6 +338,7 @@ function prepareWalletProfile(address){
  $("walletFiatValue").textContent=tr("wallet.unavailable");
  $("walletTokenHoldings").textContent=tr("wallet.unavailable");
  $("walletSourceNote").textContent=tr("wallet.note");
+ window.BexentraIdentity?.mount(address,chain);
 }
 function setVerifiedWalletBalance(address,value){
  if(!value||value.chain!==chain||value.source!=="rpc_live"||

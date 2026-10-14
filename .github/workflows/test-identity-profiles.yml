@@ -1,0 +1,49 @@
+name: Test BEXENTRA ENS and SNS Identity Profiles
+on:
+  push:
+    branches:
+      - feat/verified-address-labels-web3bio-20261014
+    paths:
+      - 'public/identity-utils.js'
+      - 'public/identity-profile.js'
+      - 'public/identity-profile.css'
+      - 'explorer.html'
+      - 'public/explorer.js'
+      - 'sw.js'
+      - 'scripts/test-identity-utils.mjs'
+      - 'scripts/test-identity-browser.mjs'
+      - '.github/workflows/test-identity-profiles.yml'
+  pull_request:
+    paths:
+      - 'public/identity-utils.js'
+      - 'public/identity-profile.js'
+      - 'public/identity-profile.css'
+      - 'explorer.html'
+      - 'public/explorer.js'
+      - 'sw.js'
+      - 'scripts/test-identity-utils.mjs'
+      - 'scripts/test-identity-browser.mjs'
+      - '.github/workflows/test-identity-profiles.yml'
+permissions:
+  contents: read
+jobs:
+  identity-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check script syntax and pure identity tests
+        run: |
+          node --check public/identity-utils.js
+          node --check public/identity-profile.js
+          node --check public/explorer.js
+          node --test scripts/test-identity-utils.mjs
+      - name: Install test-only browser automation
+        run: npm install --no-save --no-audit --no-fund playwright
+      - name: Verify browser
+        run: google-chrome --version
+      - name: Test real mobile wallet profile UI with mocked Web3.bio and blockchain data
+        run: node scripts/test-identity-browser.mjs

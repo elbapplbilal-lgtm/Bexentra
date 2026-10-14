@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="public/settings-polish-v2.css?v=1">
 <link rel="stylesheet" href="public/detail-desktop-nav-fix.css?v=1">
 <link rel="stylesheet" href="public/explorer-pro-v1.css?v=1">
+<link rel="stylesheet" href="public/identity-profile.css?v=1">
 </head>
 <body class="detail-page detail-v31 light-mode">
 <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
@@ -119,6 +120,18 @@
       <div class="wallet-summary-card"><span data-i18n="wallet.holdings">العملات الأخرى</span><strong id="walletTokenHoldings" data-i18n="wallet.unavailable">غير متوفرة</strong></div>
     </div>
     <p class="wallet-info" id="walletSourceNote" data-i18n="wallet.note">نعرض الرصيد الحقيقي عند وصول بيانات الشبكة. سجل المعاملات قد لا يكون كاملاً.</p>
+    <aside class="wallet-identity" id="walletIdentity" hidden aria-label="هوية المحفظة من Web3.bio">
+      <div class="identity-head">
+        <div><strong id="identityTitle">الهوية الرقمية للمحفظة</strong>
+          <p id="identitySubtitle">ابحث عن اسم ENS أو SNS مرتبط بهذا العنوان.</p>
+        </div>
+        <button type="button" class="identity-lookup" id="identityLookup">استكشاف هوية المحفظة</button>
+      </div>
+      <p class="identity-privacy" id="identityPrivacy">عند الضغط، غادي يتشارك العنوان العمومي فقط مع Web3.bio.</p>
+      <p class="identity-status" id="identityStatus" role="status" aria-live="polite"></p>
+      <div class="identity-result" id="identityResult" hidden></div>
+      <p class="identity-caveat" id="identityCaveat">أسماء ENS وSNS لا تثبت الهوية الحقيقية.</p>
+    </aside>
   </section>
   <nav id="walletTabs" class="wallet-tabs" aria-label="أقسام العنوان" hidden>
     <a href="#addressActivity" data-i18n="wallet.tabTransactions">آخر المعاملات</a>
@@ -188,6 +201,8 @@
 <script src="public/preferences.js?v=19" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
+<script src="public/identity-utils.js?v=1" defer></script>
+<script src="public/identity-profile.js?v=1" defer></script>
 <script src="public/explorer.js?v=52" defer></script>
 </body>
 </html>
