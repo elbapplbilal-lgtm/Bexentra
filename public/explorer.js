@@ -303,16 +303,22 @@ function renderTokenOnlySummary(t,transfers){
   easy("الكمية الخام ماشي بالضرورة عدد التوكنات الحقيقي؛ خاص decimals ديال التوكن.",
        "Raw amount must be adjusted by token decimals before interpreting the token quantity."));
 }
-function renderAddressSummary(address,count){
- plainSummary(
-  easy("نتائج البحث عن العنوان","Address search results"),
-  easy("يُعرض النشاط المتاح في فهرس BEXENTRA فقط، وليس السجل الكامل أو رصيد المحفظة.",
-       "Only activity currently in BEXENTRA's partial index is shown. This is not a balance or a full account history."),
-  [[easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
-   [easy("المعاملات اللي باينة عندنا","Transactions visible in our index"),easyCount(count)],
-   [easy("العنوان","Address"),short(address,8)]],
-  easy("عدد المعاملات المعروض لا يمثل إجمالي نشاط المحفظة. يمكن الرجوع إلى مستكشف خارجي موثوق للتحقق من معلومات إضافية.",
-       "This count is not the address's lifetime total, and we do not show its balance. Use external verification if needed."));
+function renderAddressSummary(address,count,balance=null){
+ const items=[
+ [easy("الشبكة","Network"),chain==="bnb"?"BNB Chain":"Solana"],
+ [easy("المعاملات المعروضة من الفهرس","Transactions shown from index"),easyCount(count)],
+ [easy("العنوان","Address"),short(address,8)]
+ ];
+ if(balance&&balance.source==="rpc_live"&&balance.chain===chain&&
+  balance.address.toLowerCase()===address.toLowerCase()&&isDecimal(balance.native_balance))
+  items.unshift([easy("رصيد العملة الأساسية (RPC)","Native balance (live RPC)"),
+   nativeAmount(balance.native_balance,chain==="bnb"?"BNB":"SOL",chain==="bnb"?18:9)]);
+ plainSummary(easy("نتائج البحث عن العنوان","Address search results"),
+  easy("المعاملات الظاهرة متاحة في فهرس BEXENTRA. الرصيد عند توفره يُقرأ مباشرة من الشبكة.",
+    "Transactions shown are indexed by BEXENTRA. Native balance, when available, comes from live network RPC."),
+  items,
+  easy("الفهرس جزئي وليس السجل الكامل. رصيد العملة الأساسية قراءة لحظية قد تتغير، ولا يشمل أرصدة التوكنات.",
+    "Index coverage is partial, not a full history. Native balance is a point-in-time reading and excludes token balances."));
 }
 function showSearchWelcome(){
  $("detailLoading").hidden=true;$("detailError").hidden=true;$("detailOverview").hidden=true;
@@ -493,7 +499,84 @@ async function loadTokenTransfers(address){
   renderTokenEvents(transfers,address);
  }catch(e){count.textContent="—";feed.textContent=tr("details.tokenFailed")+" "+e.message}
 }
-async function loadAddress(){start(tr("details.loadAddress"));if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;const data=await request("/address",{chain,address:query,limit:"40"});const txs=data.transactions||[];finish(tr("details.addressTitle"),short(query,18)+" · "+txs.length+" "+tr("details.indexedTxSummary"),[row(tr("details.address"),query,true),row(tr("details.indexedTx"),txs.length),row(tr("details.network"),chain==="bnb"?"BNB Smart Chain":"Solana")],query,"address");$("addressActivity").hidden=false;renderAddressSummary(query,txs.length);$("addressCount").textContent=txs.length+" TX";const feed=$("addressFeed");feed.replaceChildren();if(chain==="bnb")await loadTokenTransfers(query);if(!txs.length){feed.textContent=tr("details.noActivity");return}txs.forEach(t=>{const r=document.createElement("a");r.className="feed-row clickable";r.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);const from=String(t.sender||"");const to=String(t.recipient||"");const own=String(query).toLowerCase();const outgoing=from.toLowerCase()===own;const incoming=to.toLowerCase()===own;const direction=outgoing&&incoming?"IN / OUT":outgoing?"OUT":incoming?"IN":"غير محدد";const i=document.createElement("span");i.className="feed-icon";i.textContent=direction==="IN"?"↓":direction==="OUT"?"↑":"⇄";const m=document.createElement("div");m.className="feed-main";const b=document.createElement("b");b.textContent=short(t.tx_hash,12);const info=document.createElement("small");info.textContent=direction+" · "+(outgoing?"إلى: "+short(to||"—",8):incoming?"من: "+short(from||"—",8):"Block "+esc(t.block_height));const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+(t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):t.status==="indexed"?tr("details.indexed"):esc(t.status));m.append(b,info,meta);const side=document.createElement("span");side.className="feed-side";side.textContent=direction;r.append(i,m,side);feed.append(r)})}
+let walletCount=0,walletBalance=null,walletCursor=null;
+const seenWalletTransactions=new Set();
+function addAddressRow(t,address){
+ const row=document.createElement("a");row.className="feed-row clickable";
+ row.href="explorer.html?chain="+encodeURIComponent(chain)+"&type=tx&q="+encodeURIComponent(t.tx_hash);
+ const sender=String(t.sender||""),recipient=String(t.recipient||"");
+ const own=address.toLowerCase(),sent=sender.toLowerCase()===own,received=recipient.toLowerCase()===own;
+ const direction=sent&&received?"IN / OUT":sent?"OUT":received?"IN":"—";
+ const icon=document.createElement("span");icon.className="feed-icon";
+ icon.textContent=sent?"↑":received?"↓":"⇄";
+ const main=document.createElement("div");main.className="feed-main";
+ const hash=document.createElement("b");hash.textContent=short(t.tx_hash,12);
+ const info=document.createElement("small");
+ info.textContent=direction+" · "+(sent?easy("إلى: ","To: ")+short(recipient,8):
+  received?easy("من: ","From: ")+short(sender,8):"Block "+esc(t.block_height));
+ const meta=document.createElement("small");meta.textContent="Block "+esc(t.block_height)+" · "+
+  (t.status==="success"?tr("details.confirmed"):t.status==="failed"?tr("details.failed"):
+  easy("غير مؤكدة","Unverified"));
+ const side=document.createElement("span");side.className="feed-side";side.textContent=direction;
+ main.append(hash,info,meta);row.append(icon,main,side);return row;
+}
+function insertWalletPage(data,address){
+ const feed=$("addressFeed");
+ for(const tx of Array.isArray(data.transactions)?data.transactions:[]){
+  if(typeof tx?.tx_hash!=="string")continue;
+  const key=chain==="bnb"?tx.tx_hash.toLowerCase():tx.tx_hash;
+  if(seenWalletTransactions.has(key))continue;
+  seenWalletTransactions.add(key);feed.append(addAddressRow(tx,address));walletCount++;
+ }
+ $("addressCount").textContent=walletCount+" TX";
+ walletCursor=data.has_more&&data.next_cursor?data.next_cursor:null;
+ renderAddressSummary(address,walletCount,walletBalance);
+}
+function offerMoreWallet(address){
+ $("walletLoadMore")?.remove();
+ if(!walletCursor)return;
+ const btn=document.createElement("button");btn.id="walletLoadMore";
+ btn.type="button";btn.className="wallet-load-more";
+ btn.textContent=easy("عرض معاملات مفهرسة أقدم","Load older indexed transactions");
+ btn.onclick=async()=>{
+  const previous=walletCursor;if(!previous)return;
+  btn.disabled=true;btn.textContent=easy("جاري التحميل…","Loading…");
+  try{
+   const result=await request("/address",{chain,address,limit:"40",
+    before_height:previous.before_height,before_hash:previous.before_hash});
+   btn.remove();insertWalletPage(result,address);
+   if(walletCursor&&walletCursor.before_hash===previous.before_hash&&
+      walletCursor.before_height===previous.before_height)walletCursor=null;
+   offerMoreWallet(address);
+  }catch{
+   btn.disabled=false;
+   btn.textContent=easy("تعذّر التحميل — إعادة المحاولة","Load failed — retry");
+  }
+ };
+ $("addressFeed").append(btn);
+}
+async function loadAddress(){
+ start(tr("details.loadAddress"));
+ if(chain==="bnb"&&!query.startsWith("0x")&&/^[a-fA-F0-9]{40}$/.test(query))query="0x"+query;
+ const data=await request("/address",{chain,address:query,limit:"40"});
+ walletCount=0;walletBalance=null;walletCursor=null;seenWalletTransactions.clear();
+ finish(tr("details.addressTitle"),short(query,18)+" · "+(data.transactions?.length||0)+" "+
+  tr("details.indexedTxSummary"),[
+  row(tr("details.address"),query,true),
+  row(tr("details.network"),chain==="bnb"?"BNB Smart Chain":"Solana"),
+  row(easy("التغطية","Coverage"),easy("فهرس جزئي","Partial index"))
+ ],query,"address");
+ $("addressActivity").hidden=false;$("addressFeed").replaceChildren();
+ insertWalletPage(data,query);
+ if(!walletCount)$("addressFeed").textContent=tr("details.noActivity");
+ offerMoreWallet(query);
+ const address=query,network=chain;
+ void request("/balance",{chain:network,address}).then(b=>{
+  if(query!==address||chain!==network||b.chain!==network||b.source!=="rpc_live")return;
+  walletBalance=b;renderAddressSummary(address,walletCount,b);
+ }).catch(()=>{});
+ if(chain==="bnb")void loadTokenTransfers(address);
+}
 function showSearchError(error){
  const message=tr("search."+error);
  showError(message,tr("details.lookupErrorTitle"));
