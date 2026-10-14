@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="BEXENTRA read-only blockchain API documentation for BNB Chain and Solana.">
+<link rel="icon" href="public/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="public/api-docs.css?v=1">
+<title>BEXENTRA | API Documentation</title>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="./" aria-label="BEXENTRA Home"><span class="mark">B</span><b>BEXENTRA</b></a>
+<div class="top-actions"><a href="./" data-ar="الرئيسية" data-en="Home">الرئيسية</a><a href="explorer.html" data-ar="المستكشف" data-en="Explorer">المستكشف</a>
+<button type="button" id="langToggle" aria-label="Switch language">EN</button></div></header>
+<main class="layout">
+<nav class="toc" aria-label="API sections">
+<strong data-ar="محتويات الوثائق" data-en="Contents">محتويات الوثائق</strong>
+<a href="#getting-started" data-ar="البدء السريع" data-en="Getting started">البدء السريع</a>
+<a href="#tester" data-ar="تجربة API" data-en="API tester">تجربة API</a>
+<a href="#routes" data-ar="المسارات المتاحة" data-en="Available endpoints">المسارات المتاحة</a>
+<a href="#health" data-ar="حالة الخدمة" data-en="Service health">حالة الخدمة</a>
+<a href="#live" data-ar="أحدث بيانات الشبكة" data-en="Latest network sample">أحدث بيانات الشبكة</a>
+<a href="#blocks" data-ar="أحدث البلوكات المحفوظة" data-en="Indexed blocks">أحدث البلوكات المحفوظة</a>
+<a href="#block" data-ar="تفاصيل بلوك" data-en="Block details">تفاصيل بلوك</a>
+<a href="#transactions" data-ar="المعاملات المحفوظة" data-en="Indexed transactions">المعاملات المحفوظة</a>
+<a href="#tx" data-ar="تفاصيل معاملة" data-en="Transaction details">تفاصيل معاملة</a>
+<a href="#address" data-ar="نشاط محفظة مفهرس" data-en="Indexed wallet activity">نشاط محفظة مفهرس</a>
+<a href="#balance" data-ar="الرصيد الحقيقي للعملة الأساسية" data-en="Verified native balance">الرصيد الحقيقي للعملة الأساسية</a>
+<a href="#token-transfers" data-ar="تحويلات BEP‑20" data-en="BEP‑20 transfers">تحويلات BEP‑20</a>
+<a href="#price" data-ar="السعر التقريبي بالدولار" data-en="USD reference quote">السعر التقريبي بالدولار</a>
+<a href="#errors" data-ar="الأخطاء والحدود" data-en="Errors and limits">الأخطاء والحدود</a>
+<a href="public/openapi.json" download data-ar="مواصفات OpenAPI" data-en="OpenAPI specification">مواصفات OpenAPI</a>
+</nav>
+<div class="content">
+<section class="hero" id="getting-started">
+<div class="eyebrow">BEXENTRA <span>·</span> DEVELOPERS <span>·</span> V1</div>
+<h1 data-ar="وثائق واجهة برمجة التطبيقات" data-en="API Documentation">وثائق واجهة برمجة التطبيقات</h1>
+<p class="intro" data-ar="استكشف البيانات العامة على BNB Chain وSolana عبر طلبات قراءة آمنة. هذه الوثائق تصف الوظائف المتاحة فعلاً في API." data-en="Read public BNB Chain and Solana data through read-only requests. These docs describe currently implemented API features.">استكشف البيانات العامة على BNB Chain وSolana عبر طلبات قراءة آمنة. هذه الوثائق تصف الوظائف المتاحة فعلاً في API.</p>
+<div class="chips"><span class="chip live">GET · JSON</span><span class="chip" data-ar="قراءة فقط" data-en="Read only">قراءة فقط</span><span class="chip">BNB Chain + Solana</span></div>
+</section>
+<section class="section">
+<h2 data-ar="رابط الخدمة" data-en="Base URL">رابط الخدمة</h2>
+<p data-ar="أضف مساراً مثل /blocks أو /balance إلى العنوان التالي." data-en="Append a path such as /blocks or /balance to the following URL.">أضف مساراً مثل /blocks أو /balance إلى العنوان التالي.</p>
+<div class="base-url" dir="ltr"><code id="apiBase">https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech</code><button type="button" id="copyBase" data-ar="نسخ" data-en="Copy">نسخ</button></div>
+<div class="info-grid"><div><b data-ar="الشبكات" data-en="Networks">الشبكات</b><p><code>bnb</code> / <code>solana</code></p></div><div><b data-ar="حد النتائج" data-en="Result limit">حد النتائج</b><p><code>limit=1…50</code> <span data-ar="(افتراضي 8)" data-en="(default 8)"> (افتراضي 8)</span></p></div><div><b data-ar="المصادقة" data-en="Authentication">المصادقة</b><p data-ar="لا يحتاج مفتاح API حالياً" data-en="No API key currently required">لا يحتاج مفتاح API حالياً</p></div></div>
+<div class="notice"><b data-ar="مهم للمطورين" data-en="Developer note">مهم للمطورين</b><p data-ar="الخدمة متاحة للقراءة العامة، ولكن CORS في المتصفحات يسمح حالياً بموقع BEXENTRA على GitHub Pages فقط. استخدام API من مواقع أخرى داخل المتصفح يحتاج إعداد CORS مستقل. لا يوجد ضمان لتوفر الخدمة أو سرعة الطلبات." data-en="The API is read-only, but browser CORS currently allows the BEXENTRA GitHub Pages origin only. Other browser origins require a CORS policy change. Uptime and response speed are not guaranteed.">الخدمة متاحة للقراءة العامة، ولكن CORS في المتصفحات يسمح حالياً بموقع BEXENTRA على GitHub Pages فقط. استخدام API من مواقع أخرى داخل المتصفح يحتاج إعداد CORS مستقل. لا يوجد ضمان لتوفر الخدمة أو سرعة الطلبات.</p></div>
+</section>
+<section class="section test-section" id="tester">
+<div class="section-title"><div><h2 data-ar="جرّب API مباشرة" data-en="Try the API">جرّب API مباشرة</h2><p data-ar="طلبات GET فقط. النتائج تأتي من الخدمة فعلياً، وليست بيانات تجريبية." data-en="GET requests only. Results come from the running API, not sample data.">طلبات GET فقط. النتائج تأتي من الخدمة فعلياً، وليست بيانات تجريبية.</p></div><span class="method">GET</span></div>
+<div class="test-controls"><label><span data-ar="المسار" data-en="Endpoint">المسار</span><select id="pathPicker"><option value="/health">/health</option><option value="/live">/live</option><option value="/blocks">/blocks</option><option value="/block">/block</option><option value="/transactions">/transactions</option><option value="/tx">/tx</option><option value="/address">/address</option><option value="/balance">/balance</option><option value="/token-transfers">/token-transfers</option><option value="/price">/price</option></select></label>
+<label><span data-ar="الشبكة" data-en="Chain">الشبكة</span><select id="chainPicker"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select></label>
+<label id="inputWrap" hidden><span id="inputLabel">address</span><input id="requestInput" autocomplete="off" spellcheck="false" dir="ltr" placeholder="Address / transaction hash / block height"></label>
+<label id="limitWrap" hidden><span>limit</span><input id="limitInput" type="number" min="1" max="50" value="8" inputmode="numeric"></label></div>
+<div class="test-actions"><button type="button" id="runRequest" class="run-btn" data-ar="إرسال الطلب" data-en="Send request">إرسال الطلب</button><button id="copyRequest" type="button" class="quiet-btn" data-ar="نسخ الطلب" data-en="Copy request">نسخ الطلب</button><code id="requestPreview" dir="ltr"></code></div>
+<div class="response"><div class="response-title"><b data-ar="استجابة API" data-en="API response">استجابة API</b><span id="requestStatus" role="status" aria-live="polite" data-ar="لم يُرسل طلب بعد" data-en="No request sent">لم يُرسل طلب بعد</span></div><pre id="apiResponse" dir="ltr" tabindex="0"></pre></div>
+</section>
+<section class="section" id="routes"><div class="section-title"><div><h2 data-ar="المسارات المتاحة" data-en="Available endpoints">المسارات المتاحة</h2><p data-ar="كل المسارات تقبل GET وتعيد JSON. اختر أي مسار لتجربته." data-en="Every endpoint accepts GET and returns JSON. You can test each endpoint above.">كل المسارات تقبل GET وتعيد JSON. اختر أي مسار لتجربته.</p></div><a href="public/openapi.json" class="spec-link" data-ar="OpenAPI JSON ↗" data-en="OpenAPI JSON ↗">OpenAPI JSON ↗</a></div>
+<div class="routes">
+<article class="route" id="health" data-path="/health" data-category="system">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/health</code><span class="route-label" data-ar="حالة الخدمة" data-en="Service health">حالة الخدمة</span></div>
+ <p class="route-about" data-ar="التحقق من اتصال خدمة BEXENTRA بقاعدة البيانات." data-en="Check API service and database connectivity.">التحقق من اتصال خدمة BEXENTRA بقاعدة البيانات.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="لا توجد معاملات مطلوبة" data-en="No parameters required">لا توجد معاملات مطلوبة</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/health" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/health</code></div>
+ <button class="try-btn" type="button" data-try-route="/health" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="live" data-path="/live" data-category="live">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/live</code><span class="route-label" data-ar="أحدث بيانات الشبكة" data-en="Latest network sample">أحدث بيانات الشبكة</span></div>
+ <p class="route-about" data-ar="يعرض عيّنة من معاملات أحدث بلوك متاح، أو سجلات محفوظة عند تعذّر الاتصال. ليس كل معاملات الشبكة." data-en="Shows a sample from the most recent available block or saved records if live RPC fails. Not every network transaction.">يعرض عيّنة من معاملات أحدث بلوك متاح، أو سجلات محفوظة عند تعذّر الاتصال. ليس كل معاملات الشبكة.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain: bnb أو solana · limit: من 1 إلى 50 (الافتراضي 8)" data-en="chain: bnb or solana · limit: 1–50 (default 8)">chain: bnb أو solana · limit: من 1 إلى 50 (الافتراضي 8)</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/live" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/live?chain=bnb&amp;limit=8</code></div>
+ <button class="try-btn" type="button" data-try-route="/live" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="blocks" data-path="/blocks" data-category="indexed">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/blocks</code><span class="route-label" data-ar="أحدث البلوكات المحفوظة" data-en="Indexed blocks">أحدث البلوكات المحفوظة</span></div>
+ <p class="route-about" data-ar="قائمة البلوكات التي خزّنها فهرس BEXENTRA، وليست كل البلوكات التاريخية." data-en="Blocks saved in the BEXENTRA index, not the complete blockchain history.">قائمة البلوكات التي خزّنها فهرس BEXENTRA، وليست كل البلوكات التاريخية.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · limit: من 1 إلى 50" data-en="chain · limit: 1–50">chain · limit: من 1 إلى 50</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/blocks" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/blocks?chain=bnb&amp;limit=10</code></div>
+ <button class="try-btn" type="button" data-try-route="/blocks" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="block" data-path="/block" data-category="lookup">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/block</code><span class="route-label" data-ar="تفاصيل بلوك" data-en="Block details">تفاصيل بلوك</span></div>
+ <p class="route-about" data-ar="يبحث عن بلوك برقم height؛ يستخدم السجلات المتاحة أو الشبكة إذا لم يكن مفهرساً." data-en="Look up a block by height; checks saved records or network RPC when not indexed.">يبحث عن بلوك برقم height؛ يستخدم السجلات المتاحة أو الشبكة إذا لم يكن مفهرساً.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · height: رقم بلوك صحيح" data-en="chain · height: a non-negative block/slot number">chain · height: رقم بلوك صحيح</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/block" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/block?chain=bnb&amp;height=127195710</code></div>
+ <button class="try-btn" type="button" data-try-route="/block" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="transactions" data-path="/transactions" data-category="indexed">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/transactions</code><span class="route-label" data-ar="المعاملات المحفوظة" data-en="Indexed transactions">المعاملات المحفوظة</span></div>
+ <p class="route-about" data-ar="أحدث المعاملات التي وصلت إلى الفهرس. ليست تغطية شاملة لكل المعاملات." data-en="Latest transactions in the index; coverage is incomplete.">أحدث المعاملات التي وصلت إلى الفهرس. ليست تغطية شاملة لكل المعاملات.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · limit: من 1 إلى 50" data-en="chain · limit: 1–50">chain · limit: من 1 إلى 50</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/transactions" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/transactions?chain=bnb&amp;limit=10</code></div>
+ <button class="try-btn" type="button" data-try-route="/transactions" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="tx" data-path="/tx" data-category="lookup">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/tx</code><span class="route-label" data-ar="تفاصيل معاملة" data-en="Transaction details">تفاصيل معاملة</span></div>
+ <p class="route-about" data-ar="ابحث عن معاملة بالهاش. حالة التنفيذ والرسوم لا تُعرض باعتبارها مؤكدة إلا بعد التحقق من الشبكة." data-en="Lookup by hash. Execution status and fees are only marked verified when confirmed by chain data.">ابحث عن معاملة بالهاش. حالة التنفيذ والرسوم لا تُعرض باعتبارها مؤكدة إلا بعد التحقق من الشبكة.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · hash: معرّف المعاملة · height اختياري على BNB فقط" data-en="chain · hash: transaction identifier · optional height on BNB only">chain · hash: معرّف المعاملة · height اختياري على BNB فقط</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/tx" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/tx?chain=bnb&amp;hash=0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</code></div>
+ <button class="try-btn" type="button" data-try-route="/tx" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="address" data-path="/address" data-category="indexed">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/address</code><span class="route-label" data-ar="نشاط محفظة مفهرس" data-en="Indexed wallet activity">نشاط محفظة مفهرس</span></div>
+ <p class="route-about" data-ar="صفحة معاملات العنوان المحفوظة. للتنقل بين الصفحات استعمل before_height وbefore_hash معاً." data-en="Saved transaction history for an address. Pagination uses before_height and before_hash together.">صفحة معاملات العنوان المحفوظة. للتنقل بين الصفحات استعمل before_height وbefore_hash معاً.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · address · limit (1–50) · before_height وbefore_hash اختياريان معاً" data-en="chain · address · limit (1–50) · optional paired before_height and before_hash">chain · address · limit (1–50) · before_height وbefore_hash اختياريان معاً</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/address" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/address?chain=bnb&amp;address=0x0000000000000000000000000000000000000000&amp;limit=20</code></div>
+ <button class="try-btn" type="button" data-try-route="/address" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="balance" data-path="/balance" data-category="live">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/balance</code><span class="route-label" data-ar="الرصيد الحقيقي للعملة الأساسية" data-en="Verified native balance">الرصيد الحقيقي للعملة الأساسية</span></div>
+ <p class="route-about" data-ar="الرصيد الحالي من RPC بوحدة wei على BNB وlamports على Solana. لا يشمل أرصدة التوكنات." data-en="Current RPC-native balance in wei for BNB or lamports for SOL. Does not include token holdings.">الرصيد الحالي من RPC بوحدة wei على BNB وlamports على Solana. لا يشمل أرصدة التوكنات.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain · address: عنوان صحيح للشبكة" data-en="chain · address: valid address for the selected chain">chain · address: عنوان صحيح للشبكة</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/balance" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/balance?chain=bnb&amp;address=0x0000000000000000000000000000000000000000</code></div>
+ <button class="try-btn" type="button" data-try-route="/balance" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="token-transfers" data-path="/token-transfers" data-category="indexed">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/token-transfers</code><span class="route-label" data-ar="تحويلات BEP‑20" data-en="BEP‑20 transfers">تحويلات BEP‑20</span></div>
+ <p class="route-about" data-ar="تحويلات الرموز المحفوظة للعناوين على BNB فقط. amount_raw كمية أولية قبل ضبط decimals." data-en="Saved BEP‑20 transfers on BNB only. amount_raw is unscaled and must use token decimals.">تحويلات الرموز المحفوظة للعناوين على BNB فقط. amount_raw كمية أولية قبل ضبط decimals.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain=bnb · address · limit: من 1 إلى 50" data-en="chain=bnb · address · limit: 1–50">chain=bnb · address · limit: من 1 إلى 50</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/token-transfers" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/token-transfers?chain=bnb&amp;address=0x0000000000000000000000000000000000000000&amp;limit=20</code></div>
+ <button class="try-btn" type="button" data-try-route="/token-transfers" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article>
+<article class="route" id="price" data-path="/price" data-category="market">
+ <div class="route-head"><span class="method">GET</span><code dir="ltr">/price</code><span class="route-label" data-ar="السعر التقريبي بالدولار" data-en="USD reference quote">السعر التقريبي بالدولار</span></div>
+ <p class="route-about" data-ar="سعر حديث من CoinGecko لـ BNB أو SOL، مع توقيت السعر. قد لا يتوفر عند انقطاع المصدر." data-en="Recent BNB or SOL USD quote from CoinGecko, with its source timestamp. May be unavailable.">سعر حديث من CoinGecko لـ BNB أو SOL، مع توقيت السعر. قد لا يتوفر عند انقطاع المصدر.</p>
+ <div class="params"><b data-ar="المعاملات المطلوبة" data-en="Parameters">المعاملات المطلوبة</b><p data-ar="chain: bnb أو solana" data-en="chain: bnb or solana">chain: bnb أو solana</p></div>
+ <div class="example-title"><span data-ar="مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)" data-en="Example request (replace illustrative IDs with real values)">مثال طلب (استبدل أي معرّف نموذجي بقيمة حقيقية)</span>
+  <button class="copy-btn" type="button" data-copy-route="/price" data-ar="نسخ الرابط" data-en="Copy URL">نسخ الرابط</button>
+ </div>
+ <div class="code-line" dir="ltr"><code>https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech/price?chain=bnb</code></div>
+ <button class="try-btn" type="button" data-try-route="/price" data-ar="جرّب هذا المسار" data-en="Try this endpoint">جرّب هذا المسار</button>
+</article></div>
+</section>
+<section class="section" id="errors"><h2 data-ar="الأخطاء والحدود" data-en="Errors and limitations">الأخطاء والحدود</h2>
+<div class="error-row"><code>200</code><p data-ar="نجح الطلب، لكن تحقق من source وcoverage لمعرفة مصدر البيانات ومدى اكتمالها." data-en="Successful request; inspect source and coverage to understand the data provenance and completeness.">نجح الطلب، لكن تحقق من source وcoverage لمعرفة مصدر البيانات ومدى اكتمالها.</p></div>
+<div class="error-row"><code>400</code><p data-ar="مُعامل غير صحيح، مثل عنوان محفظة غير صالح أو limit خارج المدى." data-en="Invalid input such as a malformed address or out-of-range limit.">مُعامل غير صحيح، مثل عنوان محفظة غير صالح أو limit خارج المدى.</p></div>
+<div class="error-row"><code>404</code><p data-ar="لم تُعثر على المعاملة أو البلوك ضمن النتائج التي أمكن التحقق منها." data-en="Block or transaction was not found in the data that could be verified.">لم تُعثر على المعاملة أو البلوك ضمن النتائج التي أمكن التحقق منها.</p></div>
+<div class="error-row"><code>503</code><p data-ar="المصدر أو قاعدة البيانات غير متاحة حالياً؛ لا تفترض أن الرصيد صفر." data-en="Upstream source or database is unavailable; never interpret this as a zero balance.">المصدر أو قاعدة البيانات غير متاحة حالياً؛ لا تفترض أن الرصيد صفر.</p></div>
+<div class="notice"><b data-ar="دقة البيانات" data-en="Data accuracy">دقة البيانات</b><p data-ar="مسارات /blocks و/transactions و/address و/token-transfers تعتمد على فهرس جزئي؛ /balance قراءة RPC للحظة الطلب؛ /price سعر سوق خارجي قد يتأخر. القيم native_balance وfee_native تُعرض بوحدات الشبكة الأولية (wei أو lamports). حالة null لا تعني نجاحاً أو فشلاً." data-en="/blocks, /transactions, /address and /token-transfers use a partial index. /balance is a point-in-time RPC read. /price is an external market quote. native_balance and fee_native are in native base units (wei or lamports). A null status means unknown, not success or failure.">مسارات /blocks و/transactions و/address و/token-transfers تعتمد على فهرس جزئي؛ /balance قراءة RPC للحظة الطلب؛ /price سعر سوق خارجي قد يتأخر. القيم native_balance وfee_native تُعرض بوحدات الشبكة الأولية (wei أو lamports). حالة null لا تعني نجاحاً أو فشلاً.</p></div>
+</section>
+<footer><span>© BEXENTRA</span><a href="./" data-ar="العودة إلى المستكشف" data-en="Back to explorer">العودة إلى المستكشف</a></footer>
+</div></main>
+<script src="public/api-docs.js?v=1" defer></script>
+</body></html>

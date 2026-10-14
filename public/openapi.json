@@ -1,0 +1,731 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BEXENTRA Public Blockchain API",
+    "version": "1.0.0",
+    "description": "Read-only BNB Chain and Solana API. Index-based endpoints have partial coverage. Live RPC and external market price sources may be unavailable. Browser CORS currently permits only https://elbapplbilal-lgtm.github.io."
+  },
+  "servers": [
+    {
+      "url": "https://br-old-sun-b5txcoym-bexentraapi.compute.c-7.us-east-2.aws.neon.tech",
+      "description": "BEXENTRA Neon public API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Network"
+    },
+    {
+      "name": "Indexed records"
+    },
+    {
+      "name": "Lookup"
+    },
+    {
+      "name": "Market"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Service health",
+        "description": "Check API service and database connectivity. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Network"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/live": {
+      "get": {
+        "summary": "Latest network sample",
+        "description": "Shows a sample from the most recent available block or saved records if live RPC fails. Not every network transaction. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Network"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/blocks": {
+      "get": {
+        "summary": "Indexed blocks",
+        "description": "Blocks saved in the BEXENTRA index, not the complete blockchain history. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Indexed records"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/block": {
+      "get": {
+        "summary": "Block details",
+        "description": "Look up a block by height; checks saved records or network RPC when not indexed. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "required": true,
+            "description": "Non-negative block height or Solana slot.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "summary": "Indexed transactions",
+        "description": "Latest transactions in the index; coverage is incomplete. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Indexed records"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tx": {
+      "get": {
+        "summary": "Transaction details",
+        "description": "Lookup by hash. Execution status and fees are only marked verified when confirmed by chain data. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Lookup"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "name": "hash",
+            "in": "query",
+            "required": true,
+            "description": "BNB transaction hash or Solana signature.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "required": false,
+            "description": "BNB observed block height hint; validated against block contents.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/address": {
+      "get": {
+        "summary": "Indexed wallet activity",
+        "description": "Saved transaction history for an address. Pagination uses before_height and before_hash together. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Indexed records"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Address for selected chain.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before_height",
+            "in": "query",
+            "required": false,
+            "description": "Pagination cursor block height; supply both together.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "before_hash",
+            "in": "query",
+            "required": false,
+            "description": "Pagination cursor transaction hash; supply both together.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balance": {
+      "get": {
+        "summary": "Verified native balance",
+        "description": "Current RPC-native balance in wei for BNB or lamports for SOL. Does not include token holdings. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Network"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Address for selected chain.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/token-transfers": {
+      "get": {
+        "summary": "BEP‑20 transfers",
+        "description": "Saved BEP‑20 transfers on BNB only. amount_raw is unscaled and must use token decimals. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Indexed records"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "description": "Address for selected chain.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/price": {
+      "get": {
+        "summary": "USD reference quote",
+        "description": "Recent BNB or SOL USD quote from CoinGecko, with its source timestamp. May be unavailable. This endpoint does not guarantee complete chain history.",
+        "tags": [
+          "Market"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/chain"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON result with route-specific data and available source/coverage metadata.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Record not found / not verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Data service or provider temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "chain": {
+        "name": "chain",
+        "in": "query",
+        "description": "Supported chain (default bnb).",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "bnb",
+            "solana"
+          ],
+          "default": "bnb"
+        }
+      },
+      "limit": {
+        "name": "limit",
+        "in": "query",
+        "required": false,
+        "description": "Number of records, default 8.",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50,
+          "default": 8
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  }
+}
