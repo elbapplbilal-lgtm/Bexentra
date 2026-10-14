@@ -91,3 +91,10 @@
 .detail-v31 .simple-result-note{font-size:clamp(11px,2.8vw,13px)!important}
 @media(max-width:375px){.detail-v31 .simple-result-metric{padding:10px 8px!important}}
 @media(min-width:740px){.detail-v31 .simple-result-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+
+.detail-v31 .wallet-load-more{display:block!important;width:100%!important;min-height:44px!important;
+ margin:11px auto 6px!important;padding:9px 12px!important;border:1px solid #389ff1!important;
+ border-radius:13px!important;background:linear-gradient(140deg,#124780,#0a2760)!important;
+ color:#eaf8ff!important;font:800 13px/1.6 "Cairo",sans-serif!important;cursor:pointer!important}
+.detail-v31 .wallet-load-more:focus-visible{outline:2px solid #75edff!important;outline-offset:2px!important}
+.detail-v31 .wallet-load-more:disabled{opacity:.6!important}
