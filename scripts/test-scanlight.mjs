@@ -46,7 +46,7 @@ const quickStart=home.indexOf('<div class="quick-grid">');
 const quickEnd=home.indexOf('\n    </div>',quickStart);
 assert(quickStart>=0&&quickEnd>quickStart,"Quick grid should have a closing container");
 const quick=home.slice(quickStart,quickEnd);
-assert.equal((quick.match(/<a\\s/g)||[]).length,4,"Exactly four quick actions inside the grid");
+assert.equal(quick.split('<a ').length-1,4,"Exactly four quick actions inside the grid");
 assert(!quick.includes('id="quickRefresh"'),"Refresh should not take a fifth tile");
 assert(app.includes('aria-expanded')&&app.includes('e.key==="Escape"'));
 assert(fixes.includes("text-shadow:none!important")&&fixes.includes("z-index:160!important"));
