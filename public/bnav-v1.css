@@ -50,3 +50,71 @@ body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bna
 body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-home,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-home,body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-settings,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-settings{font:400 14px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;min-height:46px!important;padding:8px 7px!important}
 body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-submenu>a,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-submenu>a{font:400 12.5px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;min-height:36px!important;padding:7px 11px!important}
 body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-unavailable,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-unavailable{font-size:12px!important;min-height:35px!important}
+
+/* BEXENTRA compact mobile navigation — visitor-scale text, no page zoom. */
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-group > summary,
+body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-group > summary{
+ font:400 13px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;
+ min-height:44px!important;padding:8px 7px!important;letter-spacing:0!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-home,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-home,
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-settings,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-settings{
+ font:400 13px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;
+ min-height:44px!important;padding:8px 7px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-submenu > a,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-submenu > a{
+ font:400 12px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;
+ min-height:38px!important;padding:8px 10px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-unavailable,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-unavailable{
+ font:400 11.5px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;
+ padding:7px 10px!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-safety,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-safety{font:400 10.5px/1.75 "Noto Sans Arabic",system-ui,sans-serif!important;}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-section,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-section{
+ display:block!important;box-sizing:border-box!important;
+ margin:14px 5px 5px!important;padding:14px 12px!important;
+ background:#f6fafc!important;color:#253e50!important;
+ border:1px solid #e6eef3!important;border-radius:12px!important;box-shadow:none!important;
+ font:400 12px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-section h3,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-section h3{
+ margin:0 0 8px!important;padding:0!important;background:transparent!important;
+ color:#263d4f!important;font:600 13px/1.6 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-section .bnav-search-form,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-section .bnav-search-form{
+ display:flex!important;flex-direction:column!important;gap:7px!important;margin:0!important;padding:0!important;
+ border:0!important;background:transparent!important;box-shadow:none!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-select-label,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-select-label{
+ display:block!important;margin:0!important;color:#647888!important;
+ font:400 11px/1.5 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-form select,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-form select{
+ display:block!important;box-sizing:border-box!important;width:100%!important;min-height:39px!important;
+ margin:0!important;padding:6px 10px!important;border:1px solid #dce8ef!important;border-radius:8px!important;
+ background:#fff!important;color:#27465b!important;box-shadow:none!important;
+ font:400 12px/1.65 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-row,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-row{
+ display:flex!important;align-items:stretch!important;gap:6px!important;margin:0!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;min-width:0!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-row input,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-row input{
+ display:block!important;min-width:0!important;flex:1!important;height:41px!important;padding:7px 10px!important;
+ border:1px solid #dce8ef!important;border-radius:8px!important;background:#fff!important;
+ color:#233c50!important;box-shadow:none!important;
+ font:400 12px/1.5 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-row button,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-row button{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ min-width:61px!important;min-height:41px!important;margin:0!important;padding:7px 11px!important;
+ border:0!important;border-radius:8px!important;background:#0781b7!important;color:#fff!important;
+ box-shadow:none!important;font:600 12px/1.5 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu .bnav-search-section > p,body.detail-v31.light-mode .detail-menu.bnav-menu .bnav-search-section > p{
+ margin:9px 0 0!important;padding:0!important;border:0!important;
+ color:#718392!important;font:400 10.5px/1.7 "Noto Sans Arabic",system-ui,sans-serif!important;
+}
+body.bex-home.neon-fidelity.bex-scanlight.light-mode .mobile-menu.bnav-menu details.bnav-group:not([open]) > .bnav-submenu,
+body.detail-v31.light-mode .detail-menu.bnav-menu details.bnav-group:not([open]) > .bnav-submenu{display:none!important}

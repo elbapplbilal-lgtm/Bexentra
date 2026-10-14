@@ -109,7 +109,7 @@ assert(streamClient.includes('" عملية جديدة دابا"'));
 assert(streamClient.includes("ماشي جميع عمليات الشبكة"));
 assert(home.includes("realtime-client.js?v=3")&&sw.includes("realtime-client.js?v=3"));
 assert(home.includes("app.js?v=48")&&sw.includes("app.js?v=48"));
-assert(home.includes("preferences.js?v=17")&&detail.includes("preferences.js?v=17")&&sw.includes("preferences.js?v=17"));
+assert(home.includes("preferences.js?v=18")&&detail.includes("preferences.js?v=18")&&sw.includes("preferences.js?v=18"));
 for(const key of ["stats.title","stats.visibleTx","stats.status","stats.network","stats.onchain","stats.onchainSlow","stats.latestSample"])
  assert.equal(prefs.split('"'+key+'":').length,3,"Visitor label needs Arabic and English: "+key);
 assert(prefs.includes('"stats.onchain":"مباشر الآن ●"'));
@@ -122,13 +122,13 @@ const navCss=await read("public/bnav-v1.css");
 assert(navCss.includes("Noto Sans Arabic"));
 assert(navCss.split("{").length===navCss.split("}").length);
 for(const page of [home,detail]){
- assert(page.includes('bnav-v1.css?v=2'));
+ assert(page.includes('bnav-v1.css?v=3'));
  for(const group of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language"])
   assert(page.includes('data-section="'+group+'"'),"Menu section missing: "+group);
  assert(page.includes('data-pref-theme="light"')&&page.includes('data-pref-language="ar"'));
  assert(page.includes('data-i18n="bnav.soon"'));
 }
-assert(sw.includes('bnav-v1.css?v=2')&&sw.includes('preferences.js?v=17'));
+assert(sw.includes('bnav-v1.css?v=3')&&sw.includes('preferences.js?v=18'));
 for(const k of ["chain","validators","tokens","nfts","resources","api","more","explorers","appearance","language","blocks","txs","wallets","validatorsSoon","contract","tokensSoon","nftsSoon","search","solSearch","apiSoon","about","aboutText","bnb","sol","soon","settings","safety"])
  assert.equal(prefs.split('"bnav.'+k+'":').length,3,"Missing bilingual label "+k);
 
@@ -209,3 +209,23 @@ assert.equal(png.readUInt32BE(16),128,"PNG width");
 assert.equal(png.readUInt32BE(20),128,"PNG height");
 assert(logoCSS.includes("background-image:none!important"));
 assert(logoCSS.includes("visibility:visible!important"));
+
+assert(navCss.includes('font:400 13px/1.65'));
+assert(navCss.includes('min-height:44px!important'));
+assert(navCss.includes('bnav-search-row'));
+for(const page of [home,detail]){
+ assert(page.includes('bnav-v1.css?v=3'));
+ assert(page.includes('preferences.js?v=18'));
+ assert(page.includes('data-i18n="bnav.chain">تقنية البلوك تشين'));
+ assert(page.includes('class="bnav-search-form" action="explorer.html" method="get"'));
+ assert(page.includes('name="q" type="search"'));
+ assert(page.includes('name="chain"'));
+ assert(page.includes('option value="solana"'));
+ assert(page.includes('data-i18n="bnav.searchNote"'));
+ assert(page.includes('data-i18n="bnav.searchTitle"'));
+}
+assert(home.includes('id="homeMenuNetwork"'));
+assert(detail.includes('id="detailMenuNetwork"'));
+assert(sw.includes('bexentra-shell-v91-compact-menu-search'));
+for(const translationKey of ["searchTitle","searchPlaceholder","searchNetwork","searchNote"])
+ assert.equal(prefs.split('"bnav.'+translationKey+'":').length,3);

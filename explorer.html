@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="public/bex-scanlight-v1.css?v=2">
 <link rel="stylesheet" href="public/scanlight-detail-v2.css?v=1">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="public/bnav-v1.css?v=2">
+<link rel="stylesheet" href="public/bnav-v1.css?v=3">
 <link rel="stylesheet" href="public/logo-glow-v1.css?v=2">
 </head>
 <body class="detail-page detail-v31 light-mode">
@@ -40,7 +40,7 @@
 <aside id="detailMenu" class="detail-menu bnav-menu" aria-hidden="true" aria-label="قائمة BEXENTRA" hidden>
 <div class="detail-menu-head"><b>BEXENTRA</b><button id="detailMenuClose" class="detail-menu-close" type="button" aria-label="إغلاق القائمة">×</button></div>
 <a class="bnav-home" href="./" data-i18n="menu.home">الرئيسية</a>
-<details class="bnav-group" data-section="chain"><summary><span data-i18n="bnav.chain">تقنية البلوكتشين</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><a href="./?view=blocks" data-i18n="bnav.blocks">أحدث البلوكات</a><a href="./?view=transactions" data-i18n="bnav.txs">أحدث المعاملات</a><a href="explorer.html?chain=bnb&type=address" data-i18n="bnav.wallets">المحافظ والعناوين</a></div></details>
+<details class="bnav-group" data-section="chain"><summary><span data-i18n="bnav.chain">تقنية البلوك تشين</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><a href="./?view=blocks" data-i18n="bnav.blocks">أحدث البلوكات</a><a href="./?view=transactions" data-i18n="bnav.txs">أحدث المعاملات</a><a href="explorer.html?chain=bnb&type=address" data-i18n="bnav.wallets">المحافظ والعناوين</a></div></details>
 <details class="bnav-group" data-section="validators"><summary><span data-i18n="bnav.validators">المدققون</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-unavailable"><span data-i18n="bnav.validatorsSoon">قائمة المدققين</span><small data-i18n="bnav.soon">قريباً</small></div></div></details>
 <details class="bnav-group" data-section="tokens"><summary><span data-i18n="bnav.tokens">الرموز</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><a href="explorer.html?chain=bnb&type=address" data-i18n="bnav.contract">البحث بعنوان عقد</a><div class="bnav-unavailable"><span data-i18n="bnav.tokensSoon">دليل الرموز</span><small data-i18n="bnav.soon">قريباً</small></div></div></details>
 <details class="bnav-group" data-section="nfts"><summary><span data-i18n="bnav.nfts">NFTs</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-unavailable"><span data-i18n="bnav.nftsSoon">استكشاف NFTs</span><small data-i18n="bnav.soon">قريباً</small></div></div></details>
@@ -51,6 +51,20 @@
 <details class="bnav-group" data-section="appearance"><summary><span data-i18n="bnav.appearance">المظهر</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-choices"><button type="button" data-pref-theme="light" data-i18n="settings.light">فاتح</button><button type="button" data-pref-theme="dark" data-i18n="settings.dark">داكن</button></div></div></details>
 <details class="bnav-group" data-section="language"><summary><span data-i18n="bnav.language">اللغة</span><i class="bnav-arrow" aria-hidden="true"></i></summary><div class="bnav-submenu"><div class="bnav-choices"><button type="button" data-pref-language="ar" data-i18n="settings.arabic">العربية</button><button type="button" data-pref-language="en" data-i18n="settings.english">English</button></div></div></details>
 <button type="button" class="bnav-settings" data-open-settings data-i18n="bnav.settings">إعدادات الموقع</button>
+
+<section class="bnav-search-section" aria-label="بحث BEXENTRA">
+ <h3 data-i18n="bnav.searchTitle">مستكشف BNB Chain وSolana</h3>
+ <form class="bnav-search-form" action="explorer.html" method="get" role="search">
+  <label class="bnav-select-label" for="detailMenuNetwork" data-i18n="bnav.searchNetwork">اختر الشبكة</label>
+  <select id="MENU_NETWORK" name="chain" aria-label="الشبكة"><option value="bnb">BNB Chain</option><option value="solana">Solana</option></select>
+  <div class="bnav-search-row">
+   <input name="q" type="search" required maxlength="500" autocomplete="off" spellcheck="false"
+    placeholder="عنوان محفظة، معاملة، أو رقم بلوك..." data-i18n-placeholder="bnav.searchPlaceholder">
+   <button type="submit" data-i18n="search.button">بحث</button>
+  </div>
+ </form>
+ <p data-i18n="bnav.searchNote">البحث يدعم المحافظ والمعاملات والبلوكات. البحث بأسماء العملات والنطاقات قريباً.</p>
+</section>
 <p class="bnav-safety" data-i18n="bnav.safety">معلومات عامة للقراءة فقط. لا تشارك كلمات الاسترداد أو مفاتيح المحفظة.</p>
 </aside>
 <main class="detail-shell">
@@ -167,7 +181,7 @@
     </div>
   </section>
 </div>
-<script src="public/preferences.js?v=17" defer></script>
+<script src="public/preferences.js?v=18" defer></script>
 <script src="public/search-input.js?v=3" defer></script>
 <script src="public/realtime-config.js?v=2" defer></script>
 <script src="public/explorer.js?v=51" defer></script>
