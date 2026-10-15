@@ -1,0 +1,164 @@
+/* BEXENTRA home v1 — completely new, mobile-first first screen.
+   Inspired by clean explorer usability, with original branding and real data. */
+body.bex-home-redesign{--teal:#00a995;--ink:#10233a;--muted:#738197;--stroke:#e9edf2;--bg:#fff;
+ background:#fff!important;color:#172738!important;padding-bottom:82px;
+ font-family:"Cairo","Manrope",system-ui,sans-serif!important}
+body.bex-home-redesign .market-header{position:relative;height:83px;padding:0 28px;
+ border-bottom:1px solid #edf0f4;box-shadow:none;direction:ltr;gap:8px}
+body.bex-home-redesign .market-brand{color:#072841;font-weight:900;font-size:27px;letter-spacing:-.055em}
+body.bex-home-redesign .market-brand img{width:48px;height:48px}
+body.bex-home-redesign .header-links{flex:1;justify-content:center;gap:18px}
+.home-header-tools{display:flex;align-items:center;gap:7px;direction:ltr;flex:none}
+.head-icon{width:42px;height:42px;display:grid;place-items:center;border:1px solid #e2e8ee;
+ border-radius:12px;background:#fff;color:#4b5f72;cursor:pointer;text-decoration:none}
+.head-icon:first-child{color:#02a999}
+.head-icon:hover{background:#f2faf9;border-color:#bce8e0}
+.home-network-ticker{background:white;border-bottom:1px solid #f1f3f7}
+.ticker-inner{max-width:1250px;margin:auto;padding:10px 25px;min-height:76px;display:flex;
+ align-items:center;gap:21px;justify-content:space-between;direction:ltr;overflow-x:auto;scrollbar-width:none}
+.network-selector{display:flex;align-items:center;gap:8px;padding:7px 11px;min-width:160px;
+ border:1px solid #e0e7ee;border-radius:13px;flex:none;height:50px;direction:ltr}
+.network-selector img{width:26px;height:26px;object-fit:contain}
+.network-selector select{max-width:134px;min-width:0;background:transparent;border:0;color:#2b3c53;
+ font:800 13px "Manrope",system-ui,sans-serif;outline:none}
+.ticker-stat{display:flex;flex-direction:column;justify-content:center;text-align:center;gap:0;white-space:nowrap;
+ padding:0 22px;border-left:1px solid #dae2ea;direction:rtl}
+.ticker-stat small{color:#708196;font-size:10px;font-weight:600}
+.ticker-stat strong{color:#1d3148;font-size:15px;font-weight:800;direction:ltr}
+.source-badge{font-size:9px;background:#ecf8ff;color:#167dad;border-radius:5px;padding:2px 5px}
+body.bex-home-redesign .market-container{max-width:1240px;padding:29px 26px 65px}
+body.bex-home-redesign .market-search{box-shadow:0 2px 12px #28486709;border-radius:14px;
+ border:1px solid #e0e6ed;background:#fff;min-height:74px;margin:0 0 33px;
+ padding:7px;grid-template-columns:minmax(0,1fr) 63px}
+body.bex-home-redesign .market-search input{font-size:15px;direction:rtl;text-align:start}
+body.bex-home-redesign .market-search button{height:56px;width:58px;
+ border-radius:11px;background:linear-gradient(135deg,#00ae9f,#00947d);box-shadow:none}
+body.bex-home-redesign .market-intro{border-bottom:0;padding:0 0 23px}
+body.bex-home-redesign .market-intro .eyebrow{display:none}
+body.bex-home-redesign .market-intro h1{font-size:clamp(25px,3.3vw,34px);
+ line-height:1.5;margin:0 0 12px;color:#13273b;font-weight:900}
+body.bex-home-redesign .market-intro p{font-size:14px;color:#708090;line-height:1.8;
+ font-weight:500;margin:0;max-width:930px}
+body.bex-home-redesign .market-intro .api-link{font-size:12px;border:1px solid #e2e9f0;
+ color:#3a526b;background:#fff;padding:10px 14px}
+body.bex-home-redesign .market-actions{padding:12px 0 18px;display:flex;gap:11px;align-items:center}
+body.bex-home-redesign .market-actions .home-tabs{gap:8px;flex-wrap:wrap}
+body.bex-home-redesign .market-actions .tab{background:#f8f9fb;color:#566b81;border:1px solid #e4e9ee;
+ border-radius:11px;font-size:12px;padding:10px 13px;font-weight:750;box-shadow:none}
+body.bex-home-redesign .market-actions .tab.active{background:#00a68f;border-color:#00a68f;color:#fff}
+.home-filter-link{padding:10px 13px;border-radius:11px;border:1px solid #e6ebf0;
+ color:#6a788b;background:#fbfbfc;font-size:12px;font-weight:650;text-decoration:none}
+body.bex-home-redesign .market-actions .refresh-btn{border:1px solid #e2e8ee;color:#5d7181;
+ background:#fff;box-shadow:none}
+body.bex-home-redesign .market-data{background:transparent;box-shadow:none;border:0;border-radius:0;overflow:visible}
+body.bex-home-redesign .market-data-head{padding:0 0 9px;display:flex;align-items:center;gap:10px}
+body.bex-home-redesign .market-data-head h2{font-size:17px}
+body.bex-home-redesign .market-data-head p{font-size:11px;line-height:1.6;color:#7a8797}
+body.bex-home-redesign .filters-secondary{padding:10px 0 15px;gap:10px}
+body.bex-home-redesign .time-chips{background:#fff;border:1px solid #e8edf2;border-radius:10px}
+body.bex-home-redesign .time-chips button{border-radius:8px;padding:9px 14px;color:#63798b}
+body.bex-home-redesign .time-chips button[aria-pressed=true]{background:#00a58f;color:white}
+body.bex-home-redesign .sort-picker select{background:#fff;border:1px solid #e4e8ee;border-radius:9px;padding:9px}
+body.bex-home-redesign .result-count{font-weight:700}
+body.bex-home-redesign .market-scroll{border:1px solid #eef1f5;border-radius:13px;overflow-x:auto}
+body.bex-home-redesign .market-table{white-space:nowrap;table-layout:fixed}
+body.bex-home-redesign .market-table thead{background:#f5f7fa}
+body.bex-home-redesign .market-table th{border:0;font-size:11px;color:#6d7e93;
+ padding:14px 14px;text-align:start}
+body.bex-home-redesign .market-table td{padding:17px 14px;border-bottom:1px solid #e9edf2;background:#fff;font-size:12px}
+body.bex-home-redesign .market-table tbody tr:hover td{background:#f6fcfa}
+body.bex-home-redesign .coin-name a{font-size:13px;color:#1d3449}
+body.bex-home-redesign .coin-badge{background:#e9f8f4;color:#008e84;border-color:#d2f0e8;border-radius:50%}
+body.bex-home-redesign .coin-change.up{color:#009e72}
+body.bex-home-redesign .coin-change.down{color:#e04c51}
+body.bex-home-redesign .market-error{border-radius:10px;margin-top:8px}
+body.bex-home-redesign .market-footer{background:transparent;padding:13px 3px 19px;border-top:0}
+body.bex-home-redesign .market-shortcuts{margin-top:12px}
+body.bex-home-redesign .market-shortcuts>a{background:#fff;box-shadow:none;border-radius:11px}
+body.bex-home-redesign .market-site-footer{display:none}
+.home-popover{position:absolute;top:72px;right:90px;z-index:260;width:min(270px,90vw);
+ display:flex;flex-direction:column;gap:11px;background:white;border:1px solid #dce5ec;
+ padding:17px;border-radius:14px;box-shadow:0 12px 35px #14233a1e}
+.home-popover[hidden],.home-side-menu[hidden],.home-menu-overlay[hidden]{display:none!important}
+.home-popover select{height:42px;border:1px solid #dce5ed;border-radius:9px;padding:0 8px}
+.home-popover a{font-size:12px;color:#087e91}
+.home-menu-overlay{position:fixed;inset:0;background:#152c416b;z-index:301}
+.home-side-menu{position:fixed;z-index:302;top:0;right:0;height:100dvh;width:min(330px,83vw);
+ background:#fff;box-shadow:0 0 35px #1f355832;display:flex;flex-direction:column;gap:6px;padding:20px 15px;
+ overflow-y:auto}
+.home-side-menu .menu-title{display:flex;align-items:center;justify-content:space-between;padding:0 5px 12px;
+ border-bottom:1px solid #e6edf2;font:900 18px Manrope,sans-serif;color:#15314b}
+.home-side-menu .menu-title button{background:#eef6fa;border:1px solid #e2edf3;border-radius:8px;width:34px;height:34px;font-size:22px}
+.home-side-menu a{display:block;text-decoration:none;border:1px solid #edf0f4;border-radius:10px;color:#314a5e;
+ font-weight:750;font-size:13px;padding:12px 14px}
+.home-side-menu a:hover{background:#edf8f5;color:#009986}
+.home-bottom-nav{position:fixed;z-index:100;bottom:0;inset-inline:0;min-height:68px;padding:7px 10px calc(7px + env(safe-area-inset-bottom));
+ display:none;justify-content:space-between;background:#fff;border-top:1px solid #e6e9ee;
+ box-shadow:0 -5px 16px #16294109}
+.home-bottom-nav>a{width:25%;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:0;text-decoration:none;color:#697e90;border-radius:11px;font-size:11px;font-weight:750}
+.home-bottom-nav>a.selected{background:#e9faf5;color:#00a78e}
+.home-bottom-nav .bottom-icon{height:26px;font-family:system-ui,sans-serif;font-size:26px;line-height:26px}
+body.bex-home-redesign.home-dark{background:#101e2c!important;color:#e3eff7!important}
+.home-dark .home-header,.home-dark .home-network-ticker,.home-dark .market-search,.home-dark .market-data,.home-dark .home-bottom-nav,
+.home-dark .head-icon,.home-dark .home-popover,.home-dark .home-side-menu,.home-dark .market-scroll,.home-dark .market-table td{
+ background:#152838!important;color:#e3ecf3!important;border-color:#305064!important}
+.home-dark .market-intro h1,.home-dark .market-brand,.home-dark .ticker-stat strong,.home-dark .market-table td,
+.home-dark .market-data-head h2,.home-dark .coin-name a{color:#e3eef4!important}
+.home-dark .market-table thead{background:#1c3546!important}
+.home-dark .market-search input,.home-dark select{color:#e3eef4!important;background:transparent!important}
+@media(max-width:850px){
+ body.bex-home-redesign .market-header{height:73px;padding:0 15px}
+ body.bex-home-redesign .market-brand{font-size:21px;letter-spacing:-.05em}
+ body.bex-home-redesign .market-brand img{width:41px;height:41px}
+ .home-header-tools{gap:5px}.head-icon{width:38px;height:39px;border-radius:10px}
+ .home-popover{top:67px;right:52px}
+ body.bex-home-redesign .market-container{padding:23px 16px 65px}
+}
+@media(max-width:600px){
+ body.bex-home-redesign{padding-bottom:80px}
+ body.bex-home-redesign .market-header{height:72px;padding:0 13px}
+ body.bex-home-redesign .market-brand{font-size:19px}
+ body.bex-home-redesign .market-brand img{width:38px;height:38px}
+ .home-header-tools{gap:5px}.head-icon{width:35px;height:36px}
+ .head-icon svg{width:20px;height:20px}
+ .home-bottom-nav{display:flex}
+ .ticker-inner{min-height:71px;gap:8px;padding:10px 11px}
+ .network-selector{min-width:142px;height:43px;padding:5px 7px;gap:5px}
+ .network-selector img{width:22px;height:22px}
+ .network-selector select{max-width:110px;font-size:12px}
+ .ticker-stat{border-left:1px solid #e6eaf0;min-width:100px;padding:0 11px}
+ .ticker-stat small{font-size:10px}.ticker-stat strong{font-size:13px}
+ .ticker-source{display:none}
+ body.bex-home-redesign .market-container{padding:24px 14px 88px}
+ body.bex-home-redesign .market-search{min-height:66px;grid-template-columns:minmax(0,1fr) 55px;margin:0 0 24px}
+ body.bex-home-redesign .market-search button{width:51px;height:49px}
+ body.bex-home-redesign .market-search input{font-size:13px;padding:8px 7px}
+ body.bex-home-redesign .market-intro h1{font-size:26px;margin-bottom:8px}
+ body.bex-home-redesign .market-intro p{font-size:12px;line-height:1.9}
+ body.bex-home-redesign .market-intro .api-link{font-size:10px;padding:8px 10px}
+ body.bex-home-redesign .market-actions{padding:9px 0 18px;gap:7px}
+ body.bex-home-redesign .market-actions .home-tabs{gap:6px}
+ body.bex-home-redesign .market-actions .tab{font-size:11px;padding:9px 12px}
+ body.bex-home-redesign .market-actions .refresh-btn{margin-inline-start:auto;padding:9px}
+ body.bex-home-redesign .market-data-head{gap:8px;padding:0 0 9px}
+ body.bex-home-redesign .market-data-head h2{font-size:15px}
+ body.bex-home-redesign .market-data-head p{font-size:10px}
+ body.bex-home-redesign .filters-secondary{padding:9px 0 15px}
+ body.bex-home-redesign .market-table th{font-size:10px;padding:12px 9px}
+ body.bex-home-redesign .market-table td{padding:15px 9px}
+ body.bex-home-redesign .market-table th:nth-child(1){width:40%}
+ body.bex-home-redesign .market-table th:nth-child(2){width:28%}
+ body.bex-home-redesign .market-table th:nth-child(3){width:32%}
+ body.bex-home-redesign .coin-name a{font-size:12px}
+ body.bex-home-redesign .coin-badge{width:29px;height:29px;flex-basis:29px}
+ body.bex-home-redesign .coin-change{font-size:11px}
+}
+@media(max-width:385px){
+ body.bex-home-redesign .market-brand{font-size:17px;gap:4px}
+ body.bex-home-redesign .market-brand img{width:34px;height:34px}
+ .home-header-tools{gap:3px}.head-icon{width:31px;height:34px;border-radius:8px}
+ .head-icon svg{width:18px;height:18px}
+ body.bex-home-redesign .market-container{padding-inline:11px}
+ body.bex-home-redesign .market-intro h1{font-size:23px}
+}
