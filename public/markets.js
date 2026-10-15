@@ -36,7 +36,7 @@
     symbol:String(base.symbol||"").slice(0,20),mint,pool,
     price:nonnegative(a.base_token_price_usd),volume:nonnegative(a.volume_usd?.h24),
     liquidity:nonnegative(a.reserve_in_usd),
-    h1:number(a.price_change_percentage?.h1),h24:number(a.price_change_percentage?.h24)};
+    h1:number(a.price_change_percentage?.h1),h6:number(a.price_change_percentage?.h6),h24:number(a.price_change_percentage?.h24)};
   });
  }
  const el=(tag,cl,content)=>{const x=document.createElement(tag);if(cl)x.className=cl;if(content!==undefined)x.textContent=content;return x};
@@ -72,7 +72,7 @@
   document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
   document.querySelectorAll("[data-t]").forEach(x=>x.textContent=d[x.dataset.t]||translations.en[x.dataset.t]||"");
   document.querySelectorAll("[data-placeholder]").forEach(x=>x.placeholder=d[x.dataset.placeholder]||"");
-  $("changeColumn").textContent=S.period==="h1"?"1H %":"24H %";paint();updateMeta();
+  $("changeColumn").textContent=S.period==="h1"?"1H %":S.period==="h6"?"6H %":"24H %";paint();updateMeta();
  }
  async function load(){
   const id=++generation;if(controller)controller.abort();
@@ -92,12 +92,12 @@
   finally{clearTimeout(timeout);if(id===generation){controller=null;$("marketRefresh").disabled=false}}
  }
  function boot(){
-  let lang="ar",chain="solana";try{lang=localStorage.getItem("bexentra-language")||"ar";chain=localStorage.getItem("bexentra-market-network")||"solana"}catch{}
+  let lang="ar",chain=document.body.classList.contains("bex-home-redesign")?"bsc":"solana";try{lang=localStorage.getItem("bexentra-language")||"ar";chain=localStorage.getItem("bexentra-market-network")||(document.body.classList.contains("bex-home-redesign")?"bsc":"solana")}catch{}
   $("marketLang").value=translations[lang]?lang:"ar";S.chain=["solana","bsc"].includes(chain)?chain:"solana";$("marketChain").value=S.chain;
   $("marketLang").addEventListener("change",()=>{try{localStorage.setItem("bexentra-language",$("marketLang").value)}catch{}labels()});
   $("marketChain").addEventListener("change",()=>{S.chain=$("marketChain").value;S.search="";$("marketQuery").value="";try{localStorage.setItem("bexentra-market-network",S.chain)}catch{}load()});
   document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{S.mode=b.dataset.view;document.querySelectorAll(".tab").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-pressed",String(x===b))});load()}));
-  document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{S.period=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));$("changeColumn").textContent=S.period==="h1"?"1H %":"24H %";paint()}));
+  document.querySelectorAll("[data-period]").forEach(b=>b.addEventListener("click",()=>{S.period=b.dataset.period;document.querySelectorAll("[data-period]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));$("changeColumn").textContent=S.period==="h1"?"1H %":S.period==="h6"?"6H %":"24H %";paint()}));
   $("marketSort").addEventListener("change",()=>{S.sort=$("marketSort").value;paint()});
   $("marketRefresh").addEventListener("click",load);
   $("marketSearch").addEventListener("submit",e=>{
