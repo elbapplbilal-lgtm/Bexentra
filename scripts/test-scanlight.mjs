@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 const read=p=>readFile(new URL("../"+p,import.meta.url),"utf8");
 const [home,detail,css,prefs,explorer,sw,fixes,app]=await Promise.all([
- read("index.html"),read("explorer.html"),read("public/bex-scanlight-v1.css"),
+ read("classic.html"),read("explorer.html"),read("public/bex-scanlight-v1.css"),
  read("public/preferences.js"),read("public/explorer.js"),read("sw.js"),read("public/scanlight-mobile-fixes.css"),read("public/app.js")
 ]);
 // Preserve the existing production search, menus, and read-only navigation.
