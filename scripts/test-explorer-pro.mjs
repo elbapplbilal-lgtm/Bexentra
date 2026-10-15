@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {readFile} from "node:fs/promises";
 const read=path=>readFile(new URL("../"+path,import.meta.url),"utf8");
 const [home,details,style,locale,sw,indexer,batch]=await Promise.all([
- read("index.html"),read("explorer.html"),read("public/explorer-pro-v1.css"),
+ read("classic.html"),read("explorer.html"),read("public/explorer-pro-v1.css"),
  read("public/coverage-note.js"),read("sw.js"),read("backend/src/token-indexer.js"),
  read("backend/src/token-transfer-batch.js")
 ]);
