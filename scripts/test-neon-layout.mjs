@@ -13,7 +13,7 @@ const css=await readFile(path.join(root,"public/neon-reference-v5.css"),"utf8")+
 const parseErrors=[];
 csstree.parse(css,{onParseError:e=>parseErrors.push(String(e.message||e))});
 assert.deepEqual(parseErrors,[],"Style parser should not report invalid CSS");
-const index=await readFile(path.join(root,"index.html"),"utf8");
+const index=await readFile(path.join(root,"classic.html"),"utf8");
 assert(index.includes('class="bex-home bex-reference neon-fidelity'), "Neon dashboard classes must remain present");
 assert(index.indexOf('public/neon-reference-v5.css?v=1')>index.indexOf('public/mobile-layout-stability.css'),
  "Neon overrides must load after previous mobile layout patches");
@@ -84,7 +84,7 @@ try{
     return route.abort("failed"); // ensure fallback font layout is robust
    return route.continue();
   });
-  await page.goto("http://127.0.0.1:"+port+"/",{waitUntil:"domcontentloaded"});
+  await page.goto("http://127.0.0.1:"+port+"/classic.html",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.getElementById("summaryHeight")?.textContent?.includes("128"),{timeout:15000});
   const rects=await page.evaluate(()=>{
    const rect=selector=>{const e=document.querySelector(selector);if(!e)return null;
@@ -160,7 +160,7 @@ try{
    await page.waitForSelector("#detailError:not([hidden])");
    assert(await page.locator("#detailError .error-actions a").count()===1,
     "An unverified manual hash offers an external verifier instead of an unqualified index claim");
-   await page.goto("http://127.0.0.1:"+port+"/",{waitUntil:"domcontentloaded"});
+   await page.goto("http://127.0.0.1:"+port+"/classic.html",{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>document.querySelector("#recentTransactions .reference-row .feed-main a"),{timeout:15000});
    await page.locator("#recentTransactions .reference-row .feed-main a").first().click();
    await page.waitForURL(/explorer\.html\?.*height=128000123/,{timeout:10000});

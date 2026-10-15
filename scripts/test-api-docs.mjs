@@ -3,7 +3,7 @@ import {readFile} from "node:fs/promises";
 const read=p=>readFile(new URL("../"+p,import.meta.url),"utf8");
 const [html,css,js,manifest,home,detail,sw,api]=await Promise.all([
  read("api-docs.html"),read("public/api-docs.css"),read("public/api-docs.js"),
- read("public/openapi.json"),read("index.html"),read("explorer.html"),
+ read("public/openapi.json"),read("classic.html"),read("explorer.html"),
  read("sw.js"),read("neon/functions/bexentra-api.ts")
 ]);
 const schema=JSON.parse(manifest);

@@ -1,0 +1,60 @@
+name: Verify BEXENTRA New Leaderboard Homepage
+on:
+  push:
+    branches:
+      - feat/bexentra-home-leaderboard-redesign-20261015
+    paths:
+      - 'index.html'
+      - 'classic.html'
+      - 'public/home-leaderboard.css'
+      - 'public/home-leaderboard.js'
+      - 'public/markets.js'
+      - 'sw.js'
+      - 'scripts/test-home-leaderboard.mjs'
+      - '.github/workflows/test-home-leaderboard.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'classic.html'
+      - 'public/home-leaderboard.css'
+      - 'public/home-leaderboard.js'
+      - 'public/markets.js'
+      - 'sw.js'
+      - 'scripts/test-home-leaderboard.mjs'
+      - '.github/workflows/test-home-leaderboard.yml'
+permissions:
+  contents: read
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check redesigned JavaScript syntax
+        run: |
+          node --check public/home-leaderboard.js
+          node --check public/markets.js
+          node --check sw.js
+          node --check scripts/test-home-leaderboard.mjs
+      - name: Install browser test tools
+        run: npm install --no-save --no-audit --no-fund playwright
+      - name: Verify browser
+        run: google-chrome --version
+      - name: Check new homepage, search, actual-data provenance, i18n and Android widths
+        run: node scripts/test-home-leaderboard.mjs
+      - name: Preserve legacy blockchain views and API contract
+        run: |
+          node scripts/test-scanlight.mjs
+          node scripts/test-api-docs.mjs
+          node scripts/test-explorer-pro.mjs
+      - name: Save phone screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bexentra-home-leaderboard-mobile
+          path: ui-test-shots/home-redesign-*.png
+          if-no-files-found: ignore
+          retention-days: 7
