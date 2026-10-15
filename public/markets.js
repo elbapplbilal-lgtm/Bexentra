@@ -50,13 +50,14 @@
   $("resultCount").textContent=S.updated?values.length+" "+t("results"):"";
   if(values.length===0){const tr=el("tr"),td=el("td","placeholder-row",S.updated?(S.search?t("searchNo"):t("noData")):t("loading"));td.colSpan=5;tr.append(td);box.append(tr);return}
   const fragment=document.createDocumentFragment();
-  for(const p of values){
+  for(const [rank,p] of values.entries()){
    const tr=el("tr"),first=el("td"),wrap=el("div","coin-cell"),symbol=el("div","coin-badge",(p.symbol||p.name).slice(0,1).toUpperCase()),info=el("div","coin-name");
    const ext=p.pool?"https://www.geckoterminal.com/"+S.chain+"/pools/"+encodeURIComponent(p.pool):"https://www.geckoterminal.com/";
    const detail="explorer.html?chain="+(S.chain==="bsc"?"bnb":"solana")+"&type=address&q="+encodeURIComponent(p.mint||"");
    const a=el("a","",p.symbol||p.name);a.href=p.mint?detail:ext;
    if(!p.mint){a.target="_blank";a.rel="noopener noreferrer"}
    info.append(a,el("small","",p.symbol&&p.name!==p.symbol?p.name:(p.pool?p.pool.slice(0,11)+"…":"DEX")));
+   if(document.body.classList.contains("bex-home-redesign"))wrap.append(el("span","home-rank",String(rank+1)));
    wrap.append(symbol,info);first.append(wrap);
    const price=el("td"),n=el("span",p.price===null?"coin-number missing":"coin-number",usd(p.price));price.append(n);
    const diff=el("td"),c=p[S.period];diff.append(el("span","coin-change "+(c===null?"flat":c>0?"up":c<0?"down":"flat"),change(c)));
@@ -72,6 +73,7 @@
   document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
   document.querySelectorAll("[data-t]").forEach(x=>x.textContent=d[x.dataset.t]||translations.en[x.dataset.t]||"");
   document.querySelectorAll("[data-placeholder]").forEach(x=>x.placeholder=d[x.dataset.placeholder]||"");
+  if(document.body.classList.contains("bex-home-redesign"))$("marketTitle").textContent=lang==="ar"?"لوحة متصدري الرموز":lang==="en"?"Token leaderboard":d.title;
   $("changeColumn").textContent=S.period==="h1"?"1H %":S.period==="h6"?"6H %":"24H %";paint();updateMeta();
  }
  async function load(){
