@@ -82,6 +82,7 @@ try{
   assert.equal(await page.locator("#marketChain").inputValue(),"bsc","Home starts on BNB");
   assert((await page.locator("#homeHeight").innerText()).includes("127"),"Live block height from API");
   assert((await page.locator("#marketRows").innerText()).includes("-1.23%"),"Real provider change shown");
+  assert.equal(await page.locator(".home-rank").first().innerText(),"1","Market row rank is visible");
   assert(providerCalls>0);
   const metrics=await page.evaluate(()=>{
    const table=document.querySelector(".market-data").getBoundingClientRect();
@@ -105,7 +106,7 @@ try{
   await page.locator("#homeThemeToggle").click();
   await page.locator("#homeSettingsToggle").click();
   await page.locator("#marketLang").selectOption("en");
-  assert.equal(await page.locator("#marketTitle").innerText(),"Token discovery board");
+  assert.equal(await page.locator("#marketTitle").innerText(),"Token leaderboard");
   await page.locator("#homeSettingsToggle").click();
   await page.screenshot({path:path.join(root,"ui-test-shots","home-redesign-"+width+".png"),fullPage:true});
   await page.locator("#marketQuery").fill("127568901");
