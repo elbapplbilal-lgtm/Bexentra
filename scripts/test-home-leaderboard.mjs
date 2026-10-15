@@ -31,7 +31,7 @@ const server=createServer(async(req,res)=>{
  if(file!==root&&!file.startsWith(root+path.sep)){res.writeHead(403).end();return}
  try{
   const content=await readFile(pathname==="/"?path.join(root,"index.html"):file);
-  res.writeHead(200,{"content-type":mime[path.extname(file)]||"application/octet-stream"}).end(content);
+  res.writeHead(200,{"content-type":pathname==="/"?"text/html; charset=utf-8":(mime[path.extname(file)]||"application/octet-stream")}).end(content);
  }catch{res.writeHead(404).end("missing")}
 });
 await new Promise(done=>server.listen(0,"127.0.0.1",done));
