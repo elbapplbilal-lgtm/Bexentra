@@ -160,7 +160,7 @@ try{
    await page.waitForSelector("#detailError:not([hidden])");
    assert(await page.locator("#detailError .error-actions a").count()===1,
     "An unverified manual hash offers an external verifier instead of an unqualified index claim");
-   await page.goto("http://127.0.0.1:"+port+"/",{waitUntil:"domcontentloaded"});
+   await page.goto("http://127.0.0.1:"+port+"/classic.html",{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>document.querySelector("#recentTransactions .reference-row .feed-main a"),{timeout:15000});
    await page.locator("#recentTransactions .reference-row .feed-main a").first().click();
    await page.waitForURL(/explorer\.html\?.*height=128000123/,{timeout:10000});
