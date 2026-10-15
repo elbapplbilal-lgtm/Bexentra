@@ -162,3 +162,7 @@ body.bex-home-redesign.home-dark{background:#101e2c!important;color:#e3eff7!impo
  body.bex-home-redesign .market-container{padding-inline:11px}
  body.bex-home-redesign .market-intro h1{font-size:23px}
 }
+
+/* Genuine current-list rank: changes with selected source/filter/sort. */
+body.bex-home-redesign .home-rank{min-width:17px;text-align:center;color:#8998a8;font:700 12px/1.3 Manrope,system-ui,sans-serif;direction:ltr;flex:none}
+@media(max-width:385px){body.bex-home-redesign .home-rank{min-width:13px;font-size:11px}}
