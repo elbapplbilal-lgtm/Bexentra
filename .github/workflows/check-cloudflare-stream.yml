@@ -1,0 +1,20 @@
+name: Verify Cloudflare Production Live Events
+on:
+  pull_request:
+    paths:
+      - 'scripts/check-cloudflare-stream.mjs'
+      - '.github/workflows/check-cloudflare-stream.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify deployed BNB and Solana SSE transactions from public upstreams
+        run: node scripts/check-cloudflare-stream.mjs
